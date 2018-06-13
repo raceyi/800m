@@ -1,0 +1,10 @@
+page-customer-contact {
+    ion-title{
+        height:calc((44/667)*100vh);
+        background-color:$default-color;
+        .toolbar-title-ios{
+            color:white !important;
+        }
+    }
+
+}

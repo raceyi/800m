@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {StorageProvider} from '../../providers/storage/storage';
+import {HomePage} from '../home/home';
 
 /**
  * Generated class for the GreetingPage page.
@@ -25,6 +26,6 @@ export class GreetingPage {
   }
 
   start(){
-    
+    this.navCtrl.push(HomePage);
   }
 }

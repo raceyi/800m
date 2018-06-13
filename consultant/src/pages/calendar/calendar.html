@@ -1,0 +1,44 @@
+<!--
+  Generated template for the CalendarPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>일정</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+
+<ion-calendar type="string" format="YYYY-MM-DD"  [(ngModel)]="date" (onChange)="onChange($event)">
+</ion-calendar>
+
+<ion-row padding>
+  <ion-col style="color:#41A6FF;font-size:4vw;">
+6월 13일 수요일 
+  </ion-col>
+</ion-row>
+
+<ion-row class="event" style="border:solid 1px #C3E3FF;">
+  <ion-col text-left>
+    <span style="font-size:3.7vw;">홍길동님</span><br>
+    <span style="font-size:3.7vw;color:#8B8B8B;">신규가입 안내 상담</span>
+  </ion-col>
+  <ion-col text-right>
+    전화상담
+  </ion-col>
+</ion-row>
+
+<ion-row class="event" style="border:solid 1px #C3E3FF;">
+  <ion-col text-left>
+    <span style="font-size:3.7vw;">이선영님</span><br>
+    <span style="font-size:3.7vw;color:#8B8B8B;">엽체 납부 상담</span>
+  </ion-col>
+  <ion-col text-right>
+    고객 미팅 
+  </ion-col>
+</ion-row>
+</ion-content>
