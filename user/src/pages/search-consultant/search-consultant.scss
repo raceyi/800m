@@ -1,0 +1,49 @@
+page-search-consultant {
+    .company{
+        font-size:7.2vw;
+        color: #41A6FF;
+        padding-top:calc((52/375)*100vw);
+    }
+
+    .greetings{
+        font-size:7.2vw;
+        color: #60e0c3;
+        padding-top:calc((70/375)*100vw);
+    }
+
+    .guide{
+        padding-top:calc((38/375)*100vw);
+    }
+
+    .input-text{
+        padding-top:calc((38/375)*100vw);
+        color:#41A6FF;
+        margin-left:calc((53/375)*100vw);
+        margin-right:calc((53/375)*100vw);
+
+        input{
+            border-bottom:solid 1px #41A6FF;
+        }
+         ::-webkit-input-placeholder {
+            text-align: center;
+            color:#41A6FF;
+        }
+
+        :-moz-placeholder { /* Firefox 18- */
+            text-align: center;  
+            color:#41A6FF;
+        }
+
+        ::-moz-placeholder {  /* Firefox 19+ */
+            text-align: center;  
+            color:#41A6FF;
+        }
+
+        :-ms-input-placeholder {  
+            text-align: center; 
+            color:#41A6FF;
+
+        }    
+    }
+}
+

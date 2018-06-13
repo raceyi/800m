@@ -1,0 +1,35 @@
+<!--
+  Generated template for the SearchConsultantPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-content>
+
+<ion-row>
+  <ion-col class="company" text-center>
+    <b>800M</b>
+  </ion-col>
+</ion-row>
+
+<ion-row>
+  <ion-col class="greetings" text-center>
+  {{storage.name}}님<br>
+  반갑습니다.
+  </ion-col>
+</ion-row>
+
+<ion-row>
+  <ion-col text-center class="guide" style="font-size:4.2vw;">
+지금바로 담당 설계사님을 찾아보세요.
+  </ion-col>
+</ion-row>
+<ion-row class="input-text">
+      <ion-col col-10 no-padding no-margin text-center>
+          <ion-input type="number"  placeholder="설계사 ID" [(ngModel)]="password"></ion-input>
+      </ion-col>
+      <ion-col col-2>
+          <ion-icon (click)="search()" name="ios-search" ></ion-icon>
+      </ion-col>
+</ion-row>
+</ion-content>

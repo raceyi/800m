@@ -1,0 +1,81 @@
+<!--
+  Generated template for the SignupPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+rgb 65 166 255
+<ion-content padding style="background-color:#41A6FF;color:white;">
+
+    <ion-row>
+        <ion-col text-center style="font-size:5.8vw;"><b>회원정보등록</b></ion-col>
+    </ion-row>
+    <ion-row>
+        <ion-col col-4>
+          &nbsp;
+        </ion-col>
+        <ion-col col-4>
+          <ion-row>
+            <ion-col  style="border-bottom:solid 1px;" col-3>
+            </ion-col>
+            <ion-col col-1>
+            </ion-col>
+            <ion-col  style="border-bottom:solid 3px;" col-3>
+            </ion-col>
+            <ion-col col-1>
+            </ion-col>
+            <ion-col  style="border-bottom:solid 1px;" col-3>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+        <ion-col col-4>
+          &nbsp;
+        </ion-col>
+    </ion-row>
+
+    <ion-row class="name">
+      <ion-col text-center>
+      <span style="font-size:6.6vw;letter-spacing: -0.4pt">{{name}}</span><span style="font-size:4.5vw;">&nbsp;님</span>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col col-2>
+      </ion-col>
+      <ion-col text-left style="font-size:4.5vw;">
+      생년월일 &nbsp;&nbsp;{{birthYear}}.{{birthMonth}}.{{birthDay}}
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col col-2>
+      </ion-col>
+      <ion-col text-left style="font-size:4.5vw;">
+      휴대전화 &nbsp;&nbsp;{{phone}}
+      </ion-col>
+    </ion-row>
+    <ion-row class="email" no-padding no-margin>
+      <ion-col class="input-text" no-padding no-margin text-center>
+        <ion-input type="email" placeholder="이메일" [(ngModel)]="email"></ion-input>
+      </ion-col>
+    </ion-row>
+    <ion-row class="password" no-padding no-margin>
+      <ion-col class="input-text" no-padding no-margin text-center>
+        <ion-input type="password" placeholder="비밀번호" [(ngModel)]="password"></ion-input>
+      </ion-col>
+    </ion-row>
+    <ion-row class="password" no-padding no-margin>
+      <ion-col class="input-text" no-padding no-margin text-center>
+        <ion-input type="password" placeholder="비밀번호 확인" [(ngModel)]="password"></ion-input>
+      </ion-col>
+    </ion-row>
+
+</ion-content>
+<ion-footer>
+  <ion-row>
+    <ion-col text-left>
+      <button style="font-size:5vw;" ion-button (click)="cancel()"><b> < 이전 </b></button>
+    </ion-col>
+    <ion-col text-right>
+      <button style="font-size:5vw;" ion-button (click)="signup()"><b> 다음 ></b></button>
+    </ion-col>
+  </ion-row>
+</ion-footer>

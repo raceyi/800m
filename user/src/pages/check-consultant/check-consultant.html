@@ -1,0 +1,44 @@
+<!--
+  Generated template for the CheckConsultantPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-content>
+<ion-row>
+  <ion-col class="company" text-center>
+    <b>800M</b>
+  </ion-col>
+</ion-row>
+
+<ion-row>
+  <ion-col class="statement" style="font-size:4.2vw;" text-center>
+  {{storage.consultantName}}설계사님이 맞나요?
+  </ion-col>
+</ion-row>
+
+<ion-row>
+<ion-col text-center>
+<img class="consultant-img" src="assets/imgs/songmee.png">
+</ion-col>
+</ion-row>
+
+<ion-row>
+<ion-col class="name" text-center>
+<b style="font-size:5.3vw;">{{storage.consultantName}}</b>설계사님
+</ion-col>
+</ion-row>
+
+<ion-row>
+  <ion-col text-center class="check-button">
+    <button round ion-button full (click)="found()"> <b>네, 맞습니다.</b></button>
+  </ion-col>
+</ion-row>
+
+<ion-row>
+  <ion-col text-center class="check-button">
+    <button round ion-button full> <b>아니오, 다시 찾겠습니다.</b></button>
+  </ion-col>
+</ion-row>
+
+</ion-content>

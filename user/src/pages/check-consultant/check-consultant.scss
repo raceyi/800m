@@ -1,0 +1,35 @@
+page-check-consultant {
+    .company{
+        font-size:7.2vw;
+        color: #41A6FF;
+        padding-top:calc((52/667)*100vh);
+        padding-bottom:calc((41/667)*100vh);
+    }
+
+    .statement{
+        padding-bottom:calc((68/667)*100vh);
+    }
+
+    .check-button{
+        button{
+            color: rgba(#41A6FF, 0.71);
+            border:solid 1px rgba(#41A6FF, 0.71);
+            background-color:rgba(#c1e2ff,0.31);  
+            span{
+                color: #41A6FF;
+            }
+        }
+        margin-left:calc((53/375)*100vw);
+        margin-right:calc((53/375)*100vw);
+    }
+    .consultant-img{
+       // margin-top: calc((68/667)*100vh);
+        width: calc((80/375)*100vw);
+        height:calc((80/375)*100vw);
+    }
+
+    .name{
+        padding-bottom:calc((72/667)*100vh);
+        color: #41A6FF;        
+    }
+}
