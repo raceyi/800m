@@ -1,3 +1,62 @@
 page-insurance {
+   .name{
+       padding-top:calc((50/375)*100vw);
+       padding-bottom:calc((16/375)*100vw);
+   }
+   .explain{
+        padding-bottom:calc((42/375)*100vw);
+   }
 
+   
+
+   .email{
+       padding-top:calc((84/375)*100vw);
+   }
+
+   .password{
+       padding-top:calc((31/375)*100vw);
+   }
+
+   .insurance-list{
+        .item-block:first-child {
+            border: 0px; 
+        }       
+        .item-block:last-child {
+            border: 0px; 
+        } 
+        .item-block .item-inner {
+            border: 0px;
+        }
+
+       .label-ios {
+           margin: 0px; 
+       }
+
+       ion-item{
+            background-color:#41A6FF;
+            .insurance{
+                    font-size:4vw;
+                    margin:calc((5/375)*100vw);
+                    ion-col{
+                        padding-top:calc((11/375)*100vw);
+                        height:calc((40/375)*100vw);
+                    }
+                    .insurance-name{
+                        padding-left:calc((10/375)*100vw);
+                    }
+                    .insurance-month{
+                        padding-right:calc((10/375)*100vw);
+                    }
+            }
+       }
+
+   }
+
+   .index{
+        font-size:4vw;
+        ion-col{
+            padding-top:calc((16/375)*100vw);
+            height:calc((50/375)*100vw);
+        }       
+   }
 }

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {StorageProvider} from '../../providers/storage/storage';
+import {InsurancePage} from '../insurance/insurance';
 
 /**
  * Generated class for the SocialNumberPage page.
@@ -40,6 +41,7 @@ export class SocialNumberPage {
 */
 
   checkSocialNumber(){
-    
+      this.navCtrl.push(InsurancePage);
   }
+
 }

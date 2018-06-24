@@ -4,15 +4,98 @@
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
-<ion-header>
+<ion-content padding style="background-color:#41A6FF;color:white;">
 
-  <ion-navbar>
-    <ion-title>insurance</ion-title>
-  </ion-navbar>
+    <ion-row>
+        <ion-col text-center style="font-size:5.8vw;"><b>보험 및 납부 정보</b></ion-col>
+    </ion-row>
+    <ion-row>
+        <ion-col col-4>
+          &nbsp;
+        </ion-col>
+        <ion-col col-4>
+          <ion-row>
+            <ion-col  style="border-bottom:solid 1px;" col-3>
+            </ion-col>
+            <ion-col col-1>
+            </ion-col>
+            <ion-col  style="border-bottom:solid 1px;" col-3>
+            </ion-col>
+            <ion-col col-1>
+            </ion-col>
+            <ion-col  style="border-bottom:solid 3px;" col-3>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+        <ion-col col-4>
+          &nbsp;
+        </ion-col>
+    </ion-row>
 
-</ion-header>
+    <ion-row class="name">
+      <ion-col text-center>
+      <span style="font-size:6.6vw;letter-spacing: -0.4pt">{{storage.name}}</span><span style="font-size:4.5vw;">&nbsp;님</span>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col style="font-size:3.7vw;" text-center>
+        보험 내역/ 월 납입 보험료
+      </ion-col>
+    </ion-row>
+<ion-row>
+  <ion-col class="explain" text-center style="font-size:3.4vw;color:#FFF89B;">  
+  보험료 납입 순서를 설정 해 주세요
+  </ion-col>
+</ion-row>
 
+<!--
+<ion-row class="insurance" *ngFor="let insurance of insurances;let i = index;" >
+<ion-col align-self-center col-1 style="color:#ffffff;">
+{{i}}
+</ion-col>
+<ion-col align-self-center text-left style="background-color:#ffffff;color:#717171;">
+{{insurance.name}}
+</ion-col>
+<ion-col align-self-center text-right style="background-color:#ffffff;color:#41A6FF;">
+<b>{{insurance.month.toLocaleString()}}원</b>
+</ion-col>
+</ion-row>
+-->
 
-<ion-content padding>
+<ion-row>
+  <ion-col no-padding no-margin align-self-center col-1 style="background-color:#41A6FF;color:#ffffff;">
+    <ion-row class="index" *ngFor="let index of insurances;let j=index;">
+        <ion-col>
+          {{j+1}}
+        </ion-col>
+    </ion-row>
+  </ion-col>  
+  <ion-col>
+  <ion-list [dragula]='"insurances"'style="background-color:#41A6FF;" no-padding no-margin class="insurance-list">
+            <ion-item no-padding no-margin class="list-item" *ngFor="let insurance of insurances;let i=index;" id="{{i}}">
+                <ion-row class="insurance" >
+                    <ion-col class="insurance-name" no-padding no-margin align-self-center text-left style="background-color:#ffffff;color:#717171;">
+                    {{insurance.name}}
+                    </ion-col>
+                    <ion-col class="insurance-month" no-padding no-margin align-self-center text-right style="background-color:#ffffff;color:#41A6FF;">
+                    <b>{{insurance.month.toLocaleString()}}원</b>
+                    </ion-col>
+                </ion-row>              
+            </ion-item>
+  </ion-list>
+  </ion-col>
+</ion-row>
 
 </ion-content>
+<ion-footer>
+    <ion-row>
+      <ion-col text-left>
+      <button no-margin  clear style="font-size:5vw;color:#ffffff;" (click)="prev()" ion-button > <b><&nbsp;이전 </b></button>
+
+      </ion-col>
+      <ion-col text-right>
+      <button no-margin  clear style="font-size:5vw;color:#ffffff;" (click)="next()" ion-button><b> 다음&nbsp;> </b></button>
+
+      </ion-col>
+    </ion-row>
+</ion-footer>

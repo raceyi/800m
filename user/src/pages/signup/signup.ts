@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {StorageProvider} from '../../providers/storage/storage';
-import {SearchConsultantPage} from '../search-consultant/search-consultant';
+import {SocialNumberPage} from '../social-number/social-number';
 
 /**
  * Generated class for the SignupPage page.
@@ -93,6 +93,6 @@ export class SignupPage {
      this.storage.birthYear=this.birthYear;
      this.storage.birthMonth=this.birthMonth;
      this.storage.birthDay=this.birthDay;
-     this.navCtrl.push(SearchConsultantPage);
+     this.navCtrl.push(SocialNumberPage);
     }
 }

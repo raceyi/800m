@@ -12,6 +12,16 @@ import {SearchConsultantPageModule} from '../pages/search-consultant/search-cons
 import {CheckConsultantPageModule} from '../pages/check-consultant/check-consultant.module';
 import {GreetingPageModule} from '../pages/greeting/greeting.module';
 import { StorageProvider } from '../providers/storage/storage';
+import {ChatPageModule} from '../pages/chat/chat.module';
+import {SocialNumberPageModule} from '../pages/social-number/social-number.module';
+import { ServerProvider } from '../providers/server/server';
+import { HttpWrapperProvider } from '../providers/http-wrapper/http-wrapper';
+import { ConfigProvider } from '../providers/config/config';
+import { InAppBrowser } from '@ionic-native/in-app-browser'
+import {HTTP} from '@ionic-native/http'
+import {InsurancePageModule} from '../pages/insurance/insurance.module';
+import { DragulaModule } from 'ng2-dragula/ng2-dragula';
+import {BankAccountPageModule} from '../pages/bank-account/bank-account.module';
 
 @NgModule({
   declarations: [
@@ -19,12 +29,17 @@ import { StorageProvider } from '../providers/storage/storage';
     HomePage
   ],
   imports: [
+    DragulaModule,    
     BrowserModule,
+    InsurancePageModule,
+    SocialNumberPageModule,
     LoginPageModule,
     SignupPageModule,
     SearchConsultantPageModule,
     CheckConsultantPageModule,
     GreetingPageModule,
+    ChatPageModule,
+    BankAccountPageModule,
     IonicModule.forRoot(MyApp,{mode:'ios'})
   ],
   bootstrap: [IonicApp],
@@ -36,7 +51,12 @@ import { StorageProvider } from '../providers/storage/storage';
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    StorageProvider
+    HTTP,    
+    InAppBrowser,        
+    StorageProvider,
+    ServerProvider,
+    HttpWrapperProvider,
+    ConfigProvider
   ]
 })
 export class AppModule {}
