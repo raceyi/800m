@@ -1,4 +1,8 @@
 page-insurance {
+   .scroll-content{
+     overflow-y:hidden; 
+   } 
+
    .name{
        padding-top:calc((50/375)*100vw);
        padding-bottom:calc((16/375)*100vw);
@@ -6,8 +10,6 @@ page-insurance {
    .explain{
         padding-bottom:calc((42/375)*100vw);
    }
-
-   
 
    .email{
        padding-top:calc((84/375)*100vw);

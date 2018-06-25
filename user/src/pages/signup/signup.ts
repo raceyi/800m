@@ -21,7 +21,9 @@ export class SignupPage {
     birthYear;
     birthMonth;
     birthDay;
-
+    password;
+    passwordConfirm;
+    
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
               public storage: StorageProvider) {
