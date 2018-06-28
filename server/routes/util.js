@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 let crypto = require('crypto');
+let config = require('../config');
 
 router.encryption=function(data, pwd) {
     var cipher = crypto.createCipher('aes256', pwd);
@@ -20,38 +21,39 @@ router.decryption=function(secretData, pwd) {
 
 router.decryptObj=function(obj) {
     if (obj.hasOwnProperty('name') && obj.name !== null) {
-        obj.name = decryption(obj.name, config.namePwd);
+        obj.name = router.decryption(obj.name, config.namePwd);
     }
 
     if (obj.hasOwnProperty('email') && obj.email !== null) {
-        obj.email = decryption(obj.email, config.emailPwd);
+        obj.email = router.decryption(obj.email, config.emailPwd);
     }
 
     if (obj.hasOwnProperty('phone') && obj.phone !== null) {
-        obj.phone = decryption(obj.phone, config.phonePwd);
+        obj.phone = router.decryption(obj.phone, config.phonePwd);
     }
 
     if (obj.hasOwnProperty('birth') && obj.birth !== null) {
-        obj.birth = decryption(obj.birth, config.birthPwd);
+        obj.birth = router.decryption(obj.birth, config.birthPwd);
     }
 }
 
 router.encryptObj=function(obj){
     if (obj.hasOwnProperty('name') && obj.name !== null) {
-        obj.name = encryption(obj.name, config.namePwd);
+        obj.name = router.encryption(obj.name, config.namePwd);
     }
 
     if (obj.hasOwnProperty('email') && obj.email !== null) {
-        obj.email = encryption(obj.email, config.emailPwd);
+        obj.email = router.encryption(obj.email, config.emailPwd);
     }
 
     if (obj.hasOwnProperty('phone') && obj.phone !== null) {
-        obj.phone = encryption(obj.phone, config.phonePwd);
+        obj.phone = router.encryption(obj.phone, config.phonePwd);
     }
 
     if (obj.hasOwnProperty('birth') && obj.birth !== null) {
-        obj.birth = encryption(obj.birth, config.birthPwd);
+        obj.birth = router.encryption(obj.birth, config.birthPwd);
     }
+    return obj;
 }
 
 

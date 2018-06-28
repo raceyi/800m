@@ -22,6 +22,11 @@ import {HTTP} from '@ionic-native/http'
 import {InsurancePageModule} from '../pages/insurance/insurance.module';
 import { DragulaModule } from 'ng2-dragula/ng2-dragula';
 import {BankAccountPageModule} from '../pages/bank-account/bank-account.module';
+import {ChatEntrancePageModule} from '../pages/chat-entrance/chat-entrance.module';
+import {MyErrorHandler} from '../classes/my-error-handler';
+import { HttpClient } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
+import { NativeStorage } from '@ionic-native/native-storage';
 
 @NgModule({
   declarations: [
@@ -31,6 +36,7 @@ import {BankAccountPageModule} from '../pages/bank-account/bank-account.module';
   imports: [
     DragulaModule,    
     BrowserModule,
+    HttpClientModule,
     InsurancePageModule,
     SocialNumberPageModule,
     LoginPageModule,
@@ -40,6 +46,7 @@ import {BankAccountPageModule} from '../pages/bank-account/bank-account.module';
     GreetingPageModule,
     ChatPageModule,
     BankAccountPageModule,
+    ChatEntrancePageModule,
     IonicModule.forRoot(MyApp,{mode:'ios'})
   ],
   bootstrap: [IonicApp],
@@ -50,9 +57,10 @@ import {BankAccountPageModule} from '../pages/bank-account/bank-account.module';
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    {provide: ErrorHandler, useClass: MyErrorHandler},
     HTTP,    
-    InAppBrowser,        
+    NativeStorage,
+    InAppBrowser,  
     StorageProvider,
     ServerProvider,
     HttpWrapperProvider,

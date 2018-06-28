@@ -47,4 +47,8 @@ export class BankAccountPage {
     this.showDone=true;
     this.navCtrl.push( SearchConsultantPage);
   }
+
+  prev(){
+    this.navCtrl.pop();
+  }
 }

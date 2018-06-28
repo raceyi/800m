@@ -128,8 +128,8 @@ router.findUser=function(object){
             if (err){
                 reject(err);
             }else{ 
-                console.log(result);
                 db.close();
+                console.log("result:"+JSON.stringify(result));
                 resolve(result);
             }
         });

@@ -41,11 +41,19 @@
 <ion-footer>
   <ion-grid>
     <ion-row>
-      <ion-col col-10>
+      <ion-col col-2>
+        <ion-icon name="md-add"></ion-icon>
+      </ion-col>
+      <ion-col col-8>
         <ion-input type="text" placeholder="Type a message" [(ngModel)]="data.message" (keypress)="onChange($event.keyCode)" name="message"></ion-input>
       </ion-col>
       <ion-col col-2 (click)="sendMessage()">
         <ion-icon name="paper-plane"></ion-icon>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        
       </ion-col>
     </ion-row>
   </ion-grid>

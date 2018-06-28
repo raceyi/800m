@@ -21,3 +21,5 @@ router.SuccResponse=function(){
 router.FailResponse.prototype = new router.Response("failure");
 
 router.SuccResponse.prototype=new router.Response("Success");
+
+module.exports = router;

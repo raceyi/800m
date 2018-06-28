@@ -1,3 +1,54 @@
 page-home {
 
+    .scroll-content {
+       overflow-y: hidden;
+    }
+
+    .toolbar-background-ios {
+        background: #41a6ff;
+        color:white;
+    }
+
+    .toolbar-title-ios {
+        color:white;        
+    }
+
+    .header-ios .toolbar-ios:last-child .toolbar-background-ios {
+         border-width: 0px; 
+    }
+
+    .action-buttons{
+        background-color: #41a6ff;
+        color:  #fff89b;
+        .button-outline-ios {
+            border-color: #fff89b;
+        }  
+        padding-bottom:calc((20/375)*100vw); 
+    }
+
+    .message{
+        padding-top:calc((108/375)*100vw); 
+        padding-bottom:calc((66/375)*100vw); 
+        background: #41a6ff;
+        color:white;   
+        font-size:4.5vw;     
+    }
+
+    .pay-button{
+        height: calc((34/375)*100vw);
+        padding-left:calc((17/375)*100vw);
+        padding-right:calc((17/375)*100vw);
+        font-size:4.2vw;
+    }
+
+    .payment{
+        height:calc((54/375)*100vw);
+    }
+
+    .payment-region{
+        height: 50vh;
+    }
+    .dummy{
+        height:10vh;
+    }
 }

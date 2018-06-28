@@ -7,69 +7,44 @@
 </ion-header>
 
 <ion-content>
-<div>
-  <ion-row>
-  월 별 난부 현황
+  <ion-row class="message">
+    <ion-col text-center>
+       <b> 안정적인 재무관리가 필요하신가요?<br>
+        고객님을 위한 플랜이 준비되어 있습니다.</b>
+    </ion-col>
   </ion-row>
-  <ion-row>
-    <ion-col>
-      <ion-row>
-      4월
-      </ion-row>
-      <ion-row>
-      4월
-      </ion-row>
+
+<ion-row class="action-buttons">
+    <ion-col text-right col-7>
+        <button style="color:#fff89b;" ion-button outline round (click)="openChat()"> 상담시작하기</button>
     </ion-col>
-
-    <ion-col>
-      <ion-row>
-      3월
-      </ion-row>
-      <ion-row>
-      4월
-      </ion-row>
+    <ion-col col-2>
+        <button style="color:#fff89b;" ion-button outline round> <ion-icon ios="ios-call" md="md-call"></ion-icon></button>
     </ion-col>
-
-
-    <ion-col>
-      <ion-row>
-      2월
-      </ion-row>
-      <ion-row>
-      4월
-      </ion-row>
+    <ion-col col-3>
     </ion-col>
+</ion-row>
 
-    <ion-col>
-      <ion-row>
-      1월
-      </ion-row>
-      <ion-row>
-      4월
-      </ion-row>
-    </ion-col>
 
-  </ion-row>
+<ion-row>
+  <ion-col col-1>
+    &nbsp;
+  </ion-col>
+<ion-col style="color:#969696;">
+  최근 납부 /미납 내역
+</ion-col>
+</ion-row>
+
+<ion-scroll class="payment-region" scrollY="true">
+<ion-row *ngFor="let insurance of insurances" class="payment" style="font-size:4.2vw;">
+  <ion-col col-2 align-self-center text-center>{{insurance.month}} 월</ion-col>
+  <ion-col col-5 align-self-center >{{insurance.name}}</ion-col>
+  <ion-col col-2 align-self-center *ngIf="insurance.preminum"> 납부</ion-col>
+  <ion-col col-3 align-self-center *ngIf="insurance.preminum"> </ion-col>
+  <ion-col col-2 align-self-center *ngIf="!insurance.preminum" style="color:#f95b5b;"> 미납 </ion-col>
+  <ion-col col-3 align-self-center text-left *ngIf="!insurance.preminum"> <button class="pay-button"  (click)="withdrawal(insurance)" ion-button outline round>납부</button> </ion-col>
+</ion-row>
+<div class="dummy">
 </div>
-
-<ion-row>
-  <ion-col>
-담당 설계사<br>
-이송미 님
-  </ion-col>
-  <ion-col>
-
-  </ion-col>
-  <ion-col>
-
-  </ion-col>
-</ion-row>
-
-<ion-row>
-  최근 납부/미납 내역
-</ion-row>
-<ion-row >
-
-</ion-row>
-
+</ion-scroll>
 </ion-content>
