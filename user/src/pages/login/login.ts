@@ -4,7 +4,8 @@ import {SignupPage} from '../signup/signup';
 import {ServerProvider} from '../../providers/server/server';
 import { NativeStorage } from '@ionic-native/native-storage';
 import {StorageProvider} from '../../providers/storage/storage';
-
+import {HomePage} from '../home/home';
+import {SearchConsultantPage} from '../search-consultant/search-consultant';
 /**
  * Generated class for the LoginPage page.
  *
@@ -20,6 +21,7 @@ import {StorageProvider} from '../../providers/storage/storage';
 export class LoginPage {
   email;
   password;
+  inputProgress=false;
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
@@ -38,7 +40,7 @@ export class LoginPage {
   signup(){
     this.server.mobileAuth().then((res:any)=>{
       console.log("res:"+JSON.stringify(res));
-      let user={name:res.userName, phone:res.userPhone,birthDate:res.userAge,sex:res.useSex}
+      let user={name:res.userName, phone:res.userPhone,birthDate:res.userAge,sex:res.userSex}
       this.navCtrl.push(SignupPage,{user: user} );    
     },err=>{
             let alert = this.alertCtrl.create({
@@ -47,6 +49,16 @@ export class LoginPage {
                     });
             alert.present();
     })
+  }
+
+  focusInput(){
+    console.log("focusInput comes");
+    this.inputProgress=true;
+  }
+
+  blurInput(){
+    console.log("blurInput comes");
+    this.inputProgress=false;      
   }
 
   login(){
@@ -76,10 +88,17 @@ export class LoginPage {
       this.server.postWithoutAuth('/login',body).then((res:any)=>{
           loading.dismiss();
           if(res.result=='success'){
-                                    var encrypted:string=this.storage.encryptValue('id',this.email);
-                                    this.nativeStorage.setItem('email',encodeURI(encrypted));
-                                    encrypted=this.storage.encryptValue('password',this.password);
-                                    this.nativeStorage.setItem('password',encodeURI(encrypted));
+                console.log("res:"+JSON.stringify(res));
+                var encrypted:string=this.storage.encryptValue('id',this.email);
+                this.nativeStorage.setItem('email',encodeURI(encrypted));
+                encrypted=this.storage.encryptValue('password',this.password);
+                this.nativeStorage.setItem('password',encodeURI(encrypted));
+                this.storage.storeUserInfo(res);
+                
+                if(!this.storage.consultantId){
+                    this.navCtrl.push(SearchConsultantPage);
+                }else
+                    this.navCtrl.push(HomePage);
           }else if(res.result=='failure'){
               if(res.error='invalidUserInfo'){
                     let alert = this.alertCtrl.create({
@@ -93,4 +112,6 @@ export class LoginPage {
           loading.dismiss();  
       })
   }
+
+  
 }

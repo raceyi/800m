@@ -16,6 +16,19 @@ import {InformationPageModule} from '../pages/information/information.module';
 import {TabsPage} from '../pages/tabs/tabs';
 import { CalendarModule } from "ion2-calendar";
 import {CustomerPageModule} from '../pages/customer/customer.module';
+import {ChatPageModule} from '../pages/chat/chat.module';
+import { HttpClientModule } from '@angular/common/http';
+import { Push, PushObject, PushOptions } from '@ionic-native/push';
+
+import { NativeStorage } from '@ionic-native/native-storage';
+import { ServerProvider } from '../providers/server/server';
+import { HttpWrapperProvider } from '../providers/http-wrapper/http-wrapper';
+import { ConfigProvider } from '../providers/config/config';
+import { InAppBrowser } from '@ionic-native/in-app-browser'
+import {HTTP} from '@ionic-native/http'
+import { Media, MediaObject } from '@ionic-native/media';
+
+import {MyErrorHandler} from '../classes/my-error-handler';
 
 @NgModule({
   declarations: [
@@ -23,6 +36,7 @@ import {CustomerPageModule} from '../pages/customer/customer.module';
     TabsPage
   ],
   imports: [
+    ChatPageModule,
     CustomerPageModule,
     CalendarModule,
     InformationPageModule,
@@ -33,6 +47,7 @@ import {CustomerPageModule} from '../pages/customer/customer.module';
     SignupPageModule,
     GreetingPageModule,
     BrowserModule,
+    HttpClientModule,    
     IonicModule.forRoot(MyApp,{mode:'ios'})
   ],
   bootstrap: [IonicApp],
@@ -42,9 +57,17 @@ import {CustomerPageModule} from '../pages/customer/customer.module';
   ],
   providers: [
     StorageProvider,
+    HTTP,    
+    InAppBrowser,  
+    ServerProvider,
+    HttpWrapperProvider,
+    ConfigProvider,
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    NativeStorage,
+    Push,
+    Media,
+    {provide: ErrorHandler, useClass: MyErrorHandler}
   ]
 })
 export class AppModule {}

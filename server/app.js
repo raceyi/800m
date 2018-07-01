@@ -8,6 +8,7 @@ var cors = require('cors');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var consultant = require('./routes/consultant');
 
 var app = express();
 
@@ -65,6 +66,16 @@ app.use(function (req, res, next) {
 app.post('/getUserInfo',users.getUserInfo);
 app.post('/signup',users.signup);
 app.post('/login',users.login);
+app.post('/searchConsultant',users.searchConsultant);
+app.post('/registerConsultant',users.registerConsultant);
+app.post('/registrationId',users.registrationId);
+app.post("/createNewChat",users.createNewChat);
+app.post("/terminateChat",users.terminateChat);
+
+app.post('/consultant/signup',consultant.signup);
+app.post('/consultant/login',consultant.login);
+app.post('/consultant/registrationId',consultant.registrationId);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

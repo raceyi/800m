@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import {ConfigProvider} from "../config/config";
 import * as CryptoJS from 'crypto-js';
 import { NativeStorage } from '@ionic-native/native-storage';
+import { Push, PushObject, PushOptions } from '@ionic-native/push';
+import { AlertController ,App,Platform,NavController} from 'ionic-angular';
 
 /*
   Generated class for the StorageProvider provider.
@@ -18,16 +20,23 @@ export class StorageProvider {
     birthYear;
     birthMonth;
     birthDay;
-    
+    sex;
+
     public certUrl=this.configProvider.getCertUrl();
     public authReturnUrl=this.configProvider.getAuthReturnUrl();
     public authFailReturnUrl=this.configProvider.getAutFailReturnUrl();
     public version=this.configProvider.getVersion();
 
     consultantName;
+    consultantId;
+    consultantPhone;
+    consultantPhoneHref;
+    insurances;
 
-  constructor(private configProvider:ConfigProvider) {
-    console.log('Hello StorageProvider Provider');
+    chatId;
+  constructor(private configProvider:ConfigProvider,
+              private platform: Platform,private push: Push) {
+        console.log('Hello StorageProvider Provider');
   }
 
     decryptValue(identifier,value){
@@ -55,5 +64,32 @@ export class StorageProvider {
         return (buffer+encrypted);    
     }
 
-    
+    storeUserInfo(res){ // 로그인시 고객정보를 가져옴
+                this.name=res.userInfo.name;
+                this.phone=res.userInfo.phone;
+                this.birthYear=res.userInfo.birth.substr(0,4);
+                this.birthMonth=res.userInfo.birth.substr(4,2);
+                this.birthDay=res.userInfo.birth.substr(6,2);
+                this.sex=res.userInfo.sex;
+                this.consultantId=res.userInfo.consultantId;
+                this.consultantName=res.consultant.name;
+                this.consultantPhone=res.consultant.phone;
+                this.consultantPhoneHref="tel:"+res.consultant.phone;
+                this.insurances=[];
+                for(let i=0;i<res.payment.length;i++){
+                    let name=res.payment[i].name;
+                    let monthPremium=res.payment[i].month;
+                    let payments=res.payment[i].payments;
+                    for(let j=0;j<payments.length;j++){
+                        let monthInfo={month:payments[j].month,premium:payments[j].payment,name:name,monthPremium:monthPremium};
+                        this.insurances.push(monthInfo);
+                    }
+                }
+                this.insurances.sort(function(a, b){
+                    if(a.month>b.month) return -1;
+                    else if(a.month<b.month) return 1;
+                    else return 0;
+                });
+                console.log("insurances:"+JSON.stringify(this.insurances));
+    }
 }

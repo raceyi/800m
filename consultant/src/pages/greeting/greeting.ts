@@ -18,7 +18,6 @@ import {TabsPage} from '../tabs/tabs';
 export class GreetingPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams,public storage:StorageProvider) {
-    this.storage.name="홍길동";
   }
 
   ionViewDidLoad() {

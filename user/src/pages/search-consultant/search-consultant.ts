@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams,AlertController } from 'ionic-angular';
 import {StorageProvider} from '../../providers/storage/storage';
 import {CheckConsultantPage} from '../check-consultant/check-consultant';
+import {ServerProvider} from '../../providers/server/server';
 
 /**
  * Generated class for the SearchConsultantPage page.
@@ -16,9 +17,12 @@ import {CheckConsultantPage} from '../check-consultant/check-consultant';
   templateUrl: 'search-consultant.html',
 })
 export class SearchConsultantPage {
+  consultantId="";
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
+              public server:ServerProvider,
+              private alertCtrl: AlertController,              
               public storage: StorageProvider) {
   }
 
@@ -27,6 +31,18 @@ export class SearchConsultantPage {
   }
 
   search(){
-      this.navCtrl.push(CheckConsultantPage,{consultant:'이송미'});
+      if(this.consultantId.trim().length!=6){
+        let alert = this.alertCtrl.create({
+                title: '정상 설계사 아이디를 입력해주세요.',
+                buttons: ['OK']
+            });
+        alert.present();
+        return;
+      }
+      let body={consultantId:this.consultantId};
+      this.server.postWithAuth("/searchConsultant",body).then((res:any)=>{
+          console.log("res:"+JSON.stringify(res));
+          this.navCtrl.push(CheckConsultantPage,{consultant:res.consultant});
+      });
   }
 }

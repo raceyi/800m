@@ -50,8 +50,18 @@ export class MyApp {
               let body={email:email,password:password};
               console.log("email:"+email);
               console.log("password:"+password);
-              serverProvider.postWithoutAuth('/login',body).then(res=>{
-                  gMyApp.rootPage = HomePage;
+              serverProvider.postWithoutAuth('/login',body).then((res:any)=>{
+                  if(res.result=="success"){
+                        console.log("res.userInfo:"+JSON.stringify(res.userInfo));
+                        storage.storeUserInfo(res);
+                        if(!storage.consultantId){
+                            gMyApp.rootPage=SearchConsultantPage;
+                        }else{
+                            gMyApp.rootPage = HomePage;
+                        }
+                  }else{
+                        gMyApp.rootPage=LoginPage; 
+                  }
               },err=>{
                   gMyApp.rootPage=LoginPage;  
               })

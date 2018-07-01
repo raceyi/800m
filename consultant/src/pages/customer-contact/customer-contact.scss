@@ -6,5 +6,10 @@ page-customer-contact {
             color:white !important;
         }
     }
-
+  .request{
+        margin-left:calc((10/375)*100vw);
+        margin-right:calc((10/375)*100vw);
+        margin-top:0;
+        margin-bottom:calc((4/375)*100vw);
+  }
 }

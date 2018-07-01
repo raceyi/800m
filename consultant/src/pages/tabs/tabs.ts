@@ -14,6 +14,9 @@ export class TabsPage {
   tab2Root = CustomerListPage;
   tab3Root = CalendarPage;
   tab4Root = InformationPage;
+
+  countBadge=1;
+  
   constructor() {
 
   }

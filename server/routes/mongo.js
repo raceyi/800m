@@ -1,9 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var MongoClient = require('mongodb').MongoClient;
+var ObjectId = require('mongodb').ObjectId;
 var AsyncLock = require('async-lock');
 var lock = new AsyncLock();
-
+var util=require("./util.js");
 let config = require('../config');
 
 var url=config.mongoURL;
@@ -17,7 +18,6 @@ String.prototype.padZero= function(len, c){
 Number.prototype.padZero= function(len, c){
     return String(this).padZero(len,c);
 }
-
 
 router.addUser=function(object){
   return new Promise((resolve,reject)=>{ 
@@ -106,7 +106,8 @@ router.addConsultant=function(object){
                                             console.log("autoIndex:"+autoIndex.padZero(6));
                                             dbo.collection("consultant").updateOne({email: object.email},{$set:object},{upsert:false} ,function(err, res) {
                                                     db.close();
-                                                    resolve(result.upserted[0]._id);
+                                                    let consultant={id:result.upserted[0]._id,IDNumber:object.IDNumber};
+                                                    resolve(consultant);
                                             },err=>{
                                                     reject(err);
                                             })
@@ -137,6 +138,27 @@ router.findUser=function(object){
   })
 }
 
+router.findUserWithId=function(id){
+  return new Promise((resolve,reject)=>{     
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db(config.dbName);
+        dbo.collection("user").find({}, { _id: id }).toArray(function(err, result) {
+            if (err){
+                reject(err);
+            }else{ 
+                db.close();
+                console.log("result:"+JSON.stringify(result));
+                if(result.length>0)
+                    resolve(result[0]);
+                else
+                    reject("user not found");   
+            }
+        });
+    });
+  })
+}
+
 router.findConsultant=function(object){
   return new Promise((resolve,reject)=>{     
     MongoClient.connect(url, function(err, db) {
@@ -151,6 +173,141 @@ router.findConsultant=function(object){
                 resolve(result);
             }
         });
+    });
+  })
+}
+
+router.consultantLogin=function(object){
+    return new Promise((resolve,reject)=>{    
+    MongoClient.connect(url, function(err, db) {
+        if (err){ 
+            reject(err);
+        }else{
+                var dbo = db.db(config.dbName);
+                console.log("email:"+object.email);
+                dbo.collection("consultant").find({}, { email: object.email }).toArray(function(err, mine) {
+                    if (err){
+                        reject(err);
+                    }else{ 
+                        //console.log("result:"+mine);
+                        let consultant=mine[0];
+                        util.decryptObj(consultant);
+                        // 고객 정보를 검색한다.
+                        console.log("consultant:"+JSON.stringify(consultant));
+                            dbo.collection("user").find({},{_id: { $in: consultant.userIds }}).toArray(function(err, users) {
+                                // name, phone,... 고객 정보를 가져온다. 
+                                // 보험 목록에서 연체 여부를 확인한다.
+                                console.log("users.length:"+users.length);
+                                // cursor를 생각하자. 현재는 데이터가 적음으로 find에서 cursor를 고려하지는 않았다. 
+                                users.forEach(user=>{
+                                    util.decryptObj(user);
+                                    delete user.password;
+                                    delete user.salt;
+                                })
+                                //현재 상담중인 목록을 가져온다.
+                                //chat 테이블에서 consultantId로 검색한다.
+                                console.log("consultant._id:"+consultant._id);
+                                dbo.collection("chat").find({},{consultantId:consultant._id,progress:true}).toArray(function(err, chats) {
+                                    console.log("chats:"+JSON.stringify(chats));
+                                    let loginInfo={users:users,chats:chats,consultant:consultant}
+                                    console.log("consultant:"+JSON.stringify(loginInfo));
+                                    db.close();
+                                    resolve(loginInfo);
+                                });                         
+                            });
+                        }     
+                })
+            }
+        })
+    });
+}
+
+router.registerConsultant=function(consultantId,userId){
+  // user에 consultantId를 저장하고 consultant에 userId를 저장한다.
+  return new Promise((resolve,reject)=>{
+    MongoClient.connect(url, function(err, db) {
+        if (err) {
+            reject(err);
+        }else{
+            var dbo = db.db(config.dbName); 
+            console.log("userId:"+userId);
+            dbo.collection("user").updateOne({_id:ObjectId(userId)},{$set:{consultantId:consultantId}},{upsert:false} ,function(err, res1) {
+                if (err){ 
+                    reject(err);
+                }else{
+                        dbo.collection("consultant").findOneAndUpdate({IDNumber: consultantId},{$push: { userIds: userId }},{upsert:false} ,function(err, res2) {
+                                if(err){
+                                    reject(err);
+                                }else{
+                                    console.log("updated consultant "+JSON.stringify(res2));
+                                    resolve(res2.value);
+                                }
+                        });
+                }
+            });
+        }
+    });  
+  });
+}
+
+router.registrationId=function(tokenInfo,userId){
+return new Promise((resolve,reject)=>{
+    MongoClient.connect(url, function(err, db) {
+        if (err) {
+            reject(err);
+        }else{
+            var dbo = db.db(config.dbName); 
+            console.log("userId:"+userId);
+            dbo.collection("user").updateOne({_id:ObjectId(userId)},{$set:{token:tokenInfo.registrationId,platform:tokenInfo.platform}},{upsert:false} ,function(err, res1) {
+                if (err){ 
+                    reject(err);
+                }else{
+                    resolve();   
+                }
+            });
+        }
+    });  
+  });
+}
+
+router.registrationConsultId=function(tokenInfo,userId){
+return new Promise((resolve,reject)=>{
+    MongoClient.connect(url, function(err, db) {
+        if (err) {
+            reject(err);
+        }else{
+            var dbo = db.db(config.dbName); 
+            console.log("userId:"+userId);
+            dbo.collection("consultant").updateOne({_id:ObjectId(userId)},{$set:{token:tokenInfo.registrationId,platform:tokenInfo.platform}},{upsert:false} ,function(err, res1) {
+                if (err){ 
+                    reject(err);
+                }else{
+                    resolve();   
+                }
+            });
+        }
+    });  
+  });
+}
+
+router.findInsurancePayments=function(insurances){
+  return new Promise((resolve,reject)=>{     
+    MongoClient.connect(url, function(err, db) {
+        if (err){ 
+            reject(err);
+        }else{
+            var dbo = db.db(config.dbName);
+            console.log("insurances:"+JSON.stringify(insurances));
+            dbo.collection("insurance").find({}, {  _id:{$in: insurances } }).toArray(function(err, result) {
+                if (err){
+                    reject(err);
+                }else{ 
+                    console.log(result);
+                    db.close();
+                    resolve(result);
+                }
+            });            
+        }
     });
   })
 }
@@ -173,24 +330,110 @@ router.findConsultantWithIDNumber=function(idNumber){
   })
 }
 
-//lock을 사용한다. 각 사용자 id에 대해서 
-router.saveChatLine=function(line){
-  return new Promise((resolve,reject)=>{ 
-  MongoClient.connect(url, function(err, db) {
-    if (err) throw err;
-    var dbo = db.db(config.dbName); 
-    //URI encoding
-    dbo.collection("chat").insertOne(line ,function(err, res) {
-      if (err){ 
-          reject(err);
-      }else{
-          // 사용자와 마지막으로 채팅한 시간을 user에 저장한다.  
-          resolve();
-      }
+router.findConsultantWithId=function(id){
+  return new Promise((resolve,reject)=>{     
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db(config.dbName);
+        dbo.collection("consultant").find({}, { _id: id }).toArray(function(err, result) {
+            if (err){
+                reject(err);
+            }else{ 
+                console.log(result);
+                db.close();
+                if(result.length>0)
+                    resolve(result[0]);
+                else
+                    reject("consultant not found");    
+            }
+        });
     });
+  })
+}
+
+router.terminateChat=function(chatId){
+return new Promise((resolve,reject)=>{
+    MongoClient.connect(url, function(err, db) {
+        if (err) {
+            reject(err);
+        }else{
+            var dbo = db.db(config.dbName); 
+            console.log("chatId:"+chatId);
+            dbo.collection("chat").updateOne({_id:ObjectId(chatId)},{$set:{progress:false}},{upsert:false} ,function(err, res1) {
+                if (err){ 
+                    reject(err);
+                }else{
+                    resolve();   
+                }
+            });
+        }
+    });  
+  });
+}
+
+router.createNewChat=function(type,uid,consultantId){
+ return new Promise((resolve,reject)=>{ 
+  MongoClient.connect(url, function(err, db) {
+    if (err){
+        reject(err);  
+    }else{ 
+        var dbo = db.db(config.dbName); 
+        dbo.collection("chat").insertOne({type: type,userId:uid,consultantId:consultantId,date: new Date(),progress:true,confirm:false} ,function(err, res) {
+            if (err){ 
+                reject(err);
+            }else{
+                db.close();
+                //console.log("res:"+JSON.stringify(res.ops[0]._id));
+                resolve(res.ops[0]._id);
+            }
+        },err=>{
+            reject(err);
+        });
+    }
   });
   });
 }
 
+//lock을 사용한다. 각 사용자 id에 대해서 
+router.saveChatLine=function(line){
+  return new Promise((resolve,reject)=>{ 
+  MongoClient.connect(url, function(err, db) {
+    if (err){
+        reject(err);
+    }else{
+        var dbo = db.db(config.dbName); 
+        //URI encoding
+        dbo.collection("chat").insertOne(line ,function(err, res) {
+        if (err){ 
+            reject(err);
+        }else{
+            // 사용자와 마지막으로 채팅한 시간을 user에 저장한다.  
+            resolve();
+        }
+        });
+    } 
+  });
+  });
+}
+
+////////////////////////////////////////////
+/*
+let _id="5b371d19c787175735cd33d1";
+MongoClient.connect(url, function(err, db) {
+        if (err) {
+            reject(err);
+        }else{
+            var dbo = db.db(config.dbName); 
+            dbo.collection("insurance").updateOne({_id:ObjectId(_id)},{$push: { payments: {month:4,payment:true }}},{upsert:false} ,function(err, res1) {
+                if (err){ 
+                    console.log("error:"+JON.stringify(err));
+                }else{
+                    console.log("res:"+JSON.stringify(res1)); 
+                     db.close();  
+                }
+            });
+        }
+    });  
+*/
 module.exports = router;
 

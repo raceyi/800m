@@ -18,13 +18,15 @@
     <ion-col text-right col-7>
         <button style="color:#fff89b;" ion-button outline round (click)="openChat()"> 상담시작하기</button>
     </ion-col>
-    <ion-col col-2>
-        <button style="color:#fff89b;" ion-button outline round> <ion-icon ios="ios-call" md="md-call"></ion-icon></button>
+
+    <ion-col col-2 align-self-center style="color:#fff89b;">
+      <a [href]="storage.consultantPhoneHref"  style="color:#fff89b;" round ion-button outline>
+        <ion-icon style="color:#fff89b;" name="ios-call"></ion-icon>
+      </a>
     </ion-col>
     <ion-col col-3>
     </ion-col>
 </ion-row>
-
 
 <ion-row>
   <ion-col col-1>
@@ -36,13 +38,13 @@
 </ion-row>
 
 <ion-scroll class="payment-region" scrollY="true">
-<ion-row *ngFor="let insurance of insurances" class="payment" style="font-size:4.2vw;">
+<ion-row *ngFor="let insurance of storage.insurances" class="payment" style="font-size:4.2vw;">
   <ion-col col-2 align-self-center text-center>{{insurance.month}} 월</ion-col>
   <ion-col col-5 align-self-center >{{insurance.name}}</ion-col>
-  <ion-col col-2 align-self-center *ngIf="insurance.preminum"> 납부</ion-col>
-  <ion-col col-3 align-self-center *ngIf="insurance.preminum"> </ion-col>
-  <ion-col col-2 align-self-center *ngIf="!insurance.preminum" style="color:#f95b5b;"> 미납 </ion-col>
-  <ion-col col-3 align-self-center text-left *ngIf="!insurance.preminum"> <button class="pay-button"  (click)="withdrawal(insurance)" ion-button outline round>납부</button> </ion-col>
+  <ion-col col-2 align-self-center *ngIf="insurance.premium==true">납부</ion-col>
+  <ion-col col-3 align-self-center *ngIf="insurance.premium==true"> </ion-col>
+  <ion-col col-2 align-self-center *ngIf="insurance.premium==false" style="color:#f95b5b;"> 미납 </ion-col>
+  <ion-col col-3 align-self-center text-left *ngIf="insurance.premium==false"> <button class="pay-button"  (click)="withdrawal(insurance)" ion-button outline round>납부</button> </ion-col>
 </ion-row>
 <div class="dummy">
 </div>

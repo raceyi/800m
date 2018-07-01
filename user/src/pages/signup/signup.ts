@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams,AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams,AlertController,LoadingController } from 'ionic-angular';
 import {StorageProvider} from '../../providers/storage/storage';
 import {SocialNumberPage} from '../social-number/social-number';
 import {ServerProvider} from '../../providers/server/server';
@@ -29,14 +29,19 @@ export class SignupPage {
     passwordConfirm;
     sex;
 
+    user;
+
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
               public server:ServerProvider,
               private nativeStorage:NativeStorage,
+              public loadingCtrl: LoadingController,
               private alertCtrl: AlertController,
               public storage: StorageProvider) {
     let user=navParams.get('user'); 
+    console.log("user:"+JSON.stringify(user));
     //let user={name:'홍길동', phone:'01012341234',birthDate:'19800111'}
+    this.user=user;
     this.name=user.name;
     this.phoneDigits=user.phone;
     this.phone=this.autoHypenPhone(user.phone);
@@ -164,8 +169,14 @@ export class SignupPage {
         this.storage.birthMonth=this.birthMonth;
         this.storage.birthDay=this.birthDay;
         this.storage.email=this.email;
-        let body={email:this.email, password:this.password,phone:this.phoneDigits,name:this.name,birth:this.birthDay,sex:this.sex};
+        let body={email:this.email, password:this.password,phone:this.phoneDigits,name:this.name,birth:this.user.birthDate,sex:this.sex};
+
+       let loading = this.loadingCtrl.create({
+            content: '회원가입 중입니다.'
+        });
+
         this.server.postWithoutAuth('/signup',body).then((res:any)=>{
+            loading.dismiss();
             if(res.result=='success'){
                 //save email,password
                 var encrypted:string=this.storage.encryptValue('id',this.email);
@@ -183,6 +194,7 @@ export class SignupPage {
                 }
             }
         },err=>{
+            loading.dismiss();            
             let alert = this.alertCtrl.create({
                         title: '가입에 실패했습니다.',
                         buttons: ['OK']

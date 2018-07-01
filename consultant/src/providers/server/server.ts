@@ -7,7 +7,7 @@ import {HttpWrapperProvider} from '../http-wrapper/http-wrapper';
 import { NativeStorage } from '@ionic-native/native-storage';
 import {ConfigProvider} from "../config/config";
 import { Push, PushObject, PushOptions } from '@ionic-native/push';
-
+import { Media, MediaObject } from '@ionic-native/media';
 
 /*
   Generated class for the ServerProvider provider.
@@ -19,9 +19,10 @@ import { Push, PushObject, PushOptions } from '@ionic-native/push';
 export class ServerProvider {
 
   browserRef;
-  userSenderID="637913321456";
 
+  userSenderID="956277141611";
   pushNotification:PushObject;
+  file:MediaObject;
 
   constructor(public http: HttpClient
               ,private storage:StorageProvider
@@ -29,16 +30,48 @@ export class ServerProvider {
               ,public alertCtrl:AlertController              
               ,private httpWrapper:HttpWrapperProvider
               ,private nativeStorage:NativeStorage
-              ,public loadingCtrl: LoadingController
-              ,private app:App
               ,private platform:Platform
+              ,private app:App
+              ,private media: Media
               ,private push: Push)  {
     console.log('Hello ServerProvider');
     platform.ready().then(() => {
-                    this.registerPushService(); 
-
+        this.registerPushService(); 
+        if(this.platform.is('android'))
+            this.file = this.media.create('file:///android_asset/www/assets/ordersound.mp3');
+        else{
+            this.file = this.media.create('assets/ordersound.mp3');
+        }
+        this.file.onStatusUpdate.subscribe(status => console.log(status)); // fires when file status changes
+        this.file.onSuccess.subscribe(() => {
+            console.log('Action is successful');
+        });
+        this.file.onError.subscribe(error => console.log('Error! '+JSON.stringify(error)));
     });    
   }
+
+    loginAgain(){
+        return new Promise((resolve,reject)=>{
+
+          let passwordPromise=this.nativeStorage.getItem("password");
+          let emailPromise=this.nativeStorage.getItem("email");
+
+          Promise.all([passwordPromise, emailPromise]).then(function(values) {
+              console.log(values);
+              let password=this.storage.decryptValue("password",decodeURI(values[0]));
+              let email=this.storage.decryptValue("email",decodeURI(values[1]));
+              let body={email:email,password:password};
+
+              this.postWithoutAuth('/login',body).then(res=>{
+                  resolve(res);
+              },err=>{
+                  reject(err);  
+              })
+          },err=>{
+              reject(err);
+          });
+        }); 
+    }
 
     registerPushService(){ // Please move this code into tabs.ts
             this.pushNotification=this.push.init({
@@ -71,7 +104,7 @@ export class ServerProvider {
 
               let body = {registrationId:response.registrationId, platform: platform};
 
-              this.postWithAuth("/registrationId",body).then((res:any)=>{
+              this.postWithAuth("/consultant/registrationId",body).then((res:any)=>{
                   console.log("registrationId sent successfully");
                   var result:string=res.result;
                   if(result=="success"){
@@ -91,13 +124,20 @@ export class ServerProvider {
                 });
             });
 
-            this.pushNotification.on('notification').subscribe((data:any)=>{         
-                console.log("[tabs.ts]pushNotification.on-data:"+JSON.stringify(data));
-                console.log("[tabs.ts]pushNotification.on-data.title:"+JSON.stringify(data.title));
-                
-                var additionalData:any=data.additionalData;
-                
-                                                
+            this.pushNotification.on('notification').subscribe((data:any)=>{ 
+                //time:chatInfo.date, type:"action",action:"response",message:req.body.type+"상담문의"
+                //1.음성 playback
+                this.file.play();
+                //2.tabs page의 countBadge 재계산
+                //compute countBadge
+                //3.customer-contact에 반영하기
+                if(data.custom.type=='action'){
+                    //채팅 화면이 현재 열려있다면 update하도록 한다. event를 사용해보자. 안되면 EventEmitter를 직접사용하자.
+                    //customerContact page를 다시 만들도록한다.
+                }else if(data.custom.type=='text'){
+                    
+                }
+                console.log("pushNotification.on-data.title:"+JSON.stringify(data.title));
             });
 
             this.pushNotification.on('error').subscribe((e:any)=>{
@@ -105,36 +145,9 @@ export class ServerProvider {
             });
     }
 
-    loginAgain(){
-        return new Promise((resolve,reject)=>{
-
-          let passwordPromise=this.nativeStorage.getItem("password");
-          let emailPromise=this.nativeStorage.getItem("email");
-
-          Promise.all([passwordPromise, emailPromise]).then(function(values) {
-              console.log(values);
-              let password=this.storage.decryptValue("password",decodeURI(values[0]));
-              let email=this.storage.decryptValue("email",decodeURI(values[1]));
-              let body={email:email,password:password};
-
-              this.postWithoutAuth('/login',body).then(res=>{
-                  resolve(res);
-              },err=>{
-                  reject(err);  
-              })
-          },err=>{
-              reject(err);
-          });
-        }); 
-    }
-
     postWithAuth(url,bodyIn){ 
         return new Promise((resolve,reject)=>{
-            let loading = this.loadingCtrl.create({
-                content: '서버에 요청 중입니다.'
-            });
           this.httpWrapper.post(url,bodyIn).then((res)=>{
-            loading.dismiss();
             resolve(res);
           },err=>{
             console.log("post-err:"+JSON.stringify(err));
@@ -143,7 +156,6 @@ export class ServerProvider {
                     this.loginAgain().then(()=>{
                         //call http post again
                         this.httpWrapper.post(url,bodyIn).then((res:any)=>{
-                            loading.dismiss();
                             console.log("post version:"+res.version+" version:"+this.storage.version);
                             if(parseFloat(res.version)>parseFloat(this.storage.version)){
                                 console.log("post invalid version");
@@ -156,15 +168,12 @@ export class ServerProvider {
                             }
                             resolve(res.json());  
                          },(err)=>{
-                             loading.dismiss();
                              reject("NetworkFailure");
                          });
                     },(err)=>{
-                        loading.dismiss();
                         reject(err);
                     });
                  }else{
-                    loading.dismiss();
                     reject("NetworkFailure");
                 }   
           })
@@ -173,8 +182,6 @@ export class ServerProvider {
 
     postWithoutAuth(url,bodyIn){
         return new Promise((resolve,reject)=>{
-
-
           this.httpWrapper.post(url,bodyIn).then((res)=>{
             resolve(res);
           },err=>{
@@ -245,5 +252,4 @@ export class ServerProvider {
     });
   }
 
-  
 }

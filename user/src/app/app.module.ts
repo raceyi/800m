@@ -27,6 +27,8 @@ import {MyErrorHandler} from '../classes/my-error-handler';
 import { HttpClient } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
 import { NativeStorage } from '@ionic-native/native-storage';
+import { Push, PushObject, PushOptions } from '@ionic-native/push';
+import { Media, MediaObject } from '@ionic-native/media';
 
 @NgModule({
   declarations: [
@@ -58,7 +60,9 @@ import { NativeStorage } from '@ionic-native/native-storage';
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: MyErrorHandler},
-    HTTP,    
+    HTTP,  
+    Media,  
+    Push,
     NativeStorage,
     InAppBrowser,  
     StorageProvider,

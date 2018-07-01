@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {CustomerPage} from '../customer/customer';
+import {StorageProvider} from '../../providers/storage/storage';
+import {ServerProvider} from '../../providers/server/server';
 
 /**
  * Generated class for the CustomerListPage page.
@@ -15,8 +17,26 @@ import {CustomerPage} from '../customer/customer';
   templateUrl: 'customer-list.html',
 })
 export class CustomerListPage {
+  filter="twoMonth";
+  sortValue="character";
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  textClasses={
+    redcolor: true,
+    greencolor:false,
+   };
+
+  constructor(public navCtrl: NavController, public navParams: NavParams, 
+              public storage: StorageProvider,                
+              private server:ServerProvider) {
+  }
+
+  selectColor(){
+    if(this.filter=="twoMonth"){
+        return "#ff6e6e";
+    }else if(this.filter=="oneMonth"){
+        return "#00c161";
+    }
+    return "black";
   }
 
   ionViewDidLoad() {
@@ -25,5 +45,13 @@ export class CustomerListPage {
 
   moveToCustomerInfo(){
     this.navCtrl.push(CustomerPage);
+  }
+
+  sortByCharacter(){
+    this.storage.sortByCharacter();
+  }
+
+  sortByContact(){
+    this.storage.sortByContact();
   }
 }

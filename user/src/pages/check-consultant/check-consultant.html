@@ -13,7 +13,7 @@
 
 <ion-row>
   <ion-col class="statement" style="font-size:4.2vw;" text-center>
-  {{storage.consultantName}}설계사님이 맞나요?
+  {{consultant}}설계사님이 맞나요?
   </ion-col>
 </ion-row>
 
@@ -25,7 +25,7 @@
 
 <ion-row>
 <ion-col class="name" text-center>
-<b style="font-size:5.3vw;">{{storage.consultantName}}</b>설계사님
+<b style="font-size:5.3vw;">{{consultant}}</b>설계사님
 </ion-col>
 </ion-row>
 
@@ -37,7 +37,7 @@
 
 <ion-row>
   <ion-col text-center class="check-button">
-    <button round ion-button full> <b>아니오, 다시 찾겠습니다.</b></button>
+    <button round ion-button full (click)="back()"> <b>아니오, 다시 찾겠습니다.</b></button>
   </ion-col>
 </ion-row>
 

@@ -6,4 +6,29 @@ page-customer-list {
             color:white !important;
         }
     }
+
+    .toolbar-ios ion-title{
+        padding:0px;
+    }
+
+    .sort{
+        ion-select{
+            max-width: 100%;
+        }
+    }
+
+    .filter{
+        ion-select{
+            max-width: 100%;
+            font-size:4vw;
+            color:$default-color;
+        }             
+        height: calc((66/375)*100vw);
+    }
+
+    .customer{
+        ion-row{
+            border-top:solid 1px rgba(#000000, 0.3);
+        }
+    }
 }

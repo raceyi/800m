@@ -35,6 +35,7 @@ router.decryptObj=function(obj) {
     if (obj.hasOwnProperty('birth') && obj.birth !== null) {
         obj.birth = router.decryption(obj.birth, config.birthPwd);
     }
+    return obj;
 }
 
 router.encryptObj=function(obj){

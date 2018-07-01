@@ -16,7 +16,17 @@ $ionic cordova plugin add cordova-plugin-nativestorage
 
 $npm install --save @ionic-native/native-storage
 
-$npm install crypto-js
+$npm install crypto-js --save
 
 $npm install @types/crypto-js --save
+
+$ionic cordova plugin add phonegap-plugin-push 
+
+$npm install --save @ionic-native/push
+
+$ionic cordova plugin add cordova-plugin-media
+
+$npm install --save @ionic-native/media
+
+
 
