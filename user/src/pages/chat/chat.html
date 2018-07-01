@@ -1,13 +1,13 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>
-      Ionic Firebase Chat
-    </ion-title>
-    <ion-buttons end>
-      <button ion-button icon-only (click)="exitChat()">
-        <ion-icon name="exit"></ion-icon>
+    <ion-buttons start>
+      <button color="white" ion-button icon-only (click)="exitChat()">
+        <ion-icon name="ios-arrow-back"></ion-icon>
       </button>
     </ion-buttons>
+    <ion-title style="color:white;">
+      {{chatInfo.type}}상담
+    </ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -38,17 +38,21 @@
   </ion-list>
 </ion-content>
 
-<ion-footer>
+<ion-footer style="background-color:#AEB6BD;">
   <ion-grid>
     <ion-row>
-      <ion-col col-2>
-        <ion-icon name="md-add"></ion-icon>
+      <ion-col col-2 align-self-center>
+        <ion-icon style="color:white;" name="md-add"></ion-icon>
       </ion-col>
-      <ion-col col-8>
-        <ion-input type="text" placeholder="Type a message" [(ngModel)]="data.message" (keypress)="onChange($event.keyCode)" name="message"></ion-input>
-      </ion-col>
-      <ion-col col-2 (click)="sendMessage()">
-        <ion-icon name="paper-plane"></ion-icon>
+      <ion-col>
+        <ion-row style="background-color:white;border-radius:5vw;" >
+          <ion-col col-10>
+              <ion-input  type="text" [(ngModel)]="data.message" (keypress)="onChange($event.keyCode)" name="message"></ion-input>            
+          </ion-col>
+          <ion-col col-2 (click)="sendMessage()">
+              <ion-icon style="color:#41A6FF;" name="paper-plane"></ion-icon>
+          </ion-col>
+        </ion-row>
       </ion-col>
     </ion-row>
     <ion-row>

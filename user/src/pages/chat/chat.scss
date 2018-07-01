@@ -1,4 +1,14 @@
 page-chat {
+
+
+  .header-ios .toolbar-ios:last-child .toolbar-background-ios {
+    background-color:$default-color;
+  }
+
+  .toolbar-title-ios{
+    color:white;
+  }
+  
   ion-content {
     background: url(../assets/imgs/chat-back.png) no-repeat center center fixed;
     background-size: cover;

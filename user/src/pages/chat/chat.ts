@@ -23,6 +23,7 @@ export class ChatPage {
   nickname:string;
   offStatus:boolean = false;
 
+  chatInfo;
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
@@ -30,6 +31,8 @@ export class ChatPage {
               private storage:StorageProvider,
               public server:ServerProvider) {
 
+  //this.chatInfo=navParams.get("chat");
+  this.chatInfo={type:"보험해지"};
 //db.createCollection("mycol", { capped : true, autoIndexId : true, size : 
 //   6142800, max : 10000 } )
   }
