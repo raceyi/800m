@@ -3,6 +3,7 @@ import { Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import {LoginPage} from '../pages/login/login';
+import {ChatPage} from '../pages/chat/chat';
 import {SignupPage} from '../pages/signup/signup';
 import {TabsPage} from '../pages/tabs/tabs';
 import { NativeStorage } from '@ionic-native/native-storage';
@@ -15,8 +16,9 @@ var gMyApp;
   templateUrl: 'app.html'
 })
 export class MyApp {
+  rootPage:any;
   //rootPage:any = TabsPage;
-  rootPage:any =LoginPage;
+  //rootPage:any =ChatPage;
   
   constructor(platform: Platform, statusBar: StatusBar,
               private nativeStorage:NativeStorage,
@@ -24,6 +26,7 @@ export class MyApp {
               private serverProvider:ServerProvider, 
               splashScreen: SplashScreen) {
     gMyApp=this;
+    
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
@@ -52,6 +55,7 @@ export class MyApp {
       statusBar.styleDefault();
       splashScreen.hide();
     });
+    
   }
 }
 

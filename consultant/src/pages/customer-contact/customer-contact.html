@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>고객요청</ion-title>
+    <ion-title>고객요청({{storage.badgeCount}})</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -20,10 +20,10 @@
       <span style="font-size:4.2vw;color:#41A6FF;" *ngIf="day.today==true">오늘</span> <span style="font-size:4.2vw;color:#616a71;">{{day.date}}</span>
     </ion-col>
   </ion-row>
- <div padding *ngFor="let user of day.list;let j = index;" (click)="chat()"  class="request" style="border:solid 1px #C3E3FF;">
+ <div padding *ngFor="let user of day.list;let j = index;" (click)="chat(user)"  class="request" style="border:solid 1px #C3E3FF;">
  <ion-row>
    <ion-col style="font-size:4.2vw;">
-     {{user.name}}         
+     {{user.name}}     
    </ion-col>
    <ion-col style="font-size:4vw;" text-right>
      {{user.time}}
@@ -33,7 +33,7 @@
  <ion-col style="font-size:3.7vw;color:#56606c">
      {{user.type}}
  </ion-col>
- <ion-col *ngIf="!user.confirm" style="background-color:#ff6e6e;color:white;font-size:2.9vw;border-radius: 10px;" col-2 text-center>
+ <ion-col *ngIf="!user.confirm && user.lastOrigin=='user'" style="background-color:#ff6e6e;color:white;font-size:2.9vw;border-radius: 10px;" col-2 text-center>
     <b>NEW</b>
  </ion-col>
  </ion-row>

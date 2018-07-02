@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams,App } from 'ionic-angular';
 import {ChatPage} from '../chat/chat';
 import {StorageProvider} from '../../providers/storage/storage';
 import {ServerProvider} from '../../providers/server/server';
@@ -20,7 +20,8 @@ export class CustomerContactPage {
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
-              public storage: StorageProvider,                
+              public storage: StorageProvider, 
+              private app:App,               
               private server:ServerProvider) {
   }
 
@@ -28,8 +29,8 @@ export class CustomerContactPage {
     console.log('ionViewDidLoad CustomerContactPage');
   }
 
-  chat(){
-    console.log("chat comes");
-    this.navCtrl.push(ChatPage)
+  chat(userInfo){
+    console.log("chat comes "+JSON.stringify(userInfo));
+    this.app.getRootNavs()[0].push(ChatPage,{chatId:userInfo._id,name:userInfo.name});
   }
 }

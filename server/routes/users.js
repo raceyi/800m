@@ -112,11 +112,6 @@ router.searchConsultant=function(req,res){
   })
 }
 
-router.registerConsultant=function(req,res){
-
-
-}
-
 router.getUserInfo=function(req,res){
   console.log("getUserInfo "+JSON.stringify(req.body));
 
@@ -155,9 +150,11 @@ router.registrationId=function(req,res){
 
 router.createNewChat=function(req,res){
     mongo.createNewChat(req.body.type,req.session.uid,req.session.cid).then(chatInfo=>{
-        let msg={time:chatInfo.date, type:"action",action:"response",message:req.body.type+"상담문의"};
+        console.log("chatInfo:"+JSON.stringify(chatInfo));
+        let msg={time:chatInfo.date, type:"action",action:"response",text:req.body.type+"상담문의"};
         notification.sendToConsultant(msg,req.session.cid).then((notifyRes)=>{
             let response = new serverResponse.Response("success");
+            console.log("chatId:"+chatInfo._id);
             response.chatId=chatInfo._id;
             res.send(JSON.stringify(response));
         },err=>{
@@ -186,10 +183,37 @@ router.terminateChat=function(req,res){
     })
 }
 
-router.saveChatMsg=function(req,res){
-   // 1.DB에 저장하고 
-   // 2.consultant의 token검색하여 consultant에게 전달한다. 
-      
+router.getChat=function(req,res){
+    console.log("[getChat]chatId:"+req.body.chatId);
+    mongo.findChatWithId(req.body.chatId).then((result)=>{
+            let response = new serverResponse.Response("success");
+            console.log()
+            response.chatInfo=result;
+            console.log("[getChat]"+JSON.stringify(response.chatInfo));
+            res.send(JSON.stringify(response));
+    },err=>{
+        let response = new serverResponse.FailResponse(err);
+        res.send(JSON.stringify(response));        
+    })
+}
+
+router.addChat=function(req,res){
+    mongo.addChat(req.body.chatId,'user',req.body.msg).then((result)=>{
+          //consultant에게 push msg를 전달한다.
+          let msg=result.msg;
+          msg.chatId=req.body.chatId;
+          notification.sendToConsultant(msg,req.session.cid).then((notifyRes)=>{
+              let response = new serverResponse.Response("success");
+              response.msg=result.msg;
+              res.send(JSON.stringify(response));
+          },err=>{
+              let response = new serverResponse.FailResponse(err);
+              res.send(JSON.stringify(response));
+          })  
+    },err=>{
+          let response = new serverResponse.FailResponse(err);
+          res.send(JSON.stringify(response));      
+    })
 }
 
 /*

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import {ConfigProvider} from "../config/config";
 import * as CryptoJS from 'crypto-js';
 import { NativeStorage } from '@ionic-native/native-storage';
+import {Events} from 'ionic-angular';
 
 /*
   Generated class for the StorageProvider provider.
@@ -29,20 +30,16 @@ export class StorageProvider {
 
     contactList=[]; // date, chats
 
+    badgeCount=0;
+    
     sortBy="character"; //one of charactoer or contact
     public certUrl=this.configProvider.getCertUrl();
     public authReturnUrl=this.configProvider.getAuthReturnUrl();
     public authFailReturnUrl=this.configProvider.getAutFailReturnUrl();
     public version=this.configProvider.getVersion();
 
-  constructor(private configProvider:ConfigProvider) {
+  constructor(private configProvider:ConfigProvider,private events:Events) {
     console.log('Hello StorageProvider Provider');
-
-//    this.phone='01012341234'
-//    this.name='이송미';
-//    this.birthYear='1980';
-//    this.birthMonth='01';
-//    this.birthDay='11';
   }
 
  decryptValue(identifier,value){
@@ -87,7 +84,6 @@ export class StorageProvider {
                     }
                     user.phoneHref="tel:"+user.phone;
                 })
-                
                 this.sortByCharacter();
                 this.chats=res.userInfo.chats;
                 this.convertChatsToList();
@@ -133,17 +129,20 @@ export class StorageProvider {
         })
 
         let i=this.chats.length-1;
-        let latestday=this.chats[i].date;
+        let latestday=new Date(this.chats[i].date);
 
         let dayList=[];
         dayList.push(this.chats[i]);
         i=i-1;
         for(;i>=0;i--){
-            if(latestday==this.chats[i].date){
+            let date=new Date(this.chats[i].date);
+            if(latestday.getFullYear()==date.getFullYear() &&
+                latestday.getMonth()==date.getMonth() &&
+                latestday.getDate()==date.getDate()){
                 dayList.push(this.chats[i]);
             }else{
                 this.contactList.push({date:this.convertDayString(latestday),list:dayList});
-                latestday=this.chats[i].date;
+                latestday=new Date(this.chats[i].date);
                 dayList=[this.chats[i]];
             }
         }
@@ -158,6 +157,21 @@ export class StorageProvider {
             date.getDate() === today.getDate()){
             this.contactList[0].today=true;
         }
+
+        let badgeCount=0;
+        this.contactList.forEach(day=>{
+            console.log("list:"+JSON.stringify(day.list));
+            day.list.forEach(chat=>{
+                if(!chat.confirm && chat.lastOrigin=='user'){
+                    ++badgeCount;
+                }
+            })
+        })
+        //send badgeCount into tabs;
+        this.events.publish("badgeCount",badgeCount);
+        this.badgeCount=badgeCount;
+
+        console.log("badgeCount:"+badgeCount);
         console.log("contactList:"+JSON.stringify(this.contactList));
     }
 

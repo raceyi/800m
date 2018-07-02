@@ -19,9 +19,9 @@ router.sendToConsultant=function(msg,id){
                                 collapseKey: '800m',
                                 timeToLive: 3,
                                 data : {
-                                    title : msg.message,
-                                    message : msg.message,
-                                    custom  : msg,
+                                    title : msg.text,
+                                    message : msg.text,
+                                    custom  : JSON.stringify(msg),
                                     "content-available": 1
                                 }
                             });
@@ -44,7 +44,7 @@ router.sendToConsultant=function(msg,id){
 }
 
 /*
-router.sendToConsultant("1안녕하세요. 고객님...","5b36f2e96654502e8d5945c1");
+router.sendToConsultant({type:"text",text:"잠시후 연락드리겠습니다.",time:"2018-07-02 22:35:23.544",origin:"consultant"},"5b36f2e96654502e8d5945c1");
 router.sendToConsultant("To 고객님...","5b36e7486654502e8d5941ef");
 */
 
@@ -62,9 +62,9 @@ router.sendToUser=function(msg,id){
                                 collapseKey: '800m',
                                 timeToLive: 3,
                                 data : {
-                                    title : msg,
-                                    message : msg,
-                                    //custom  : msg.custom,
+                                    title : msg.text,
+                                    message : msg.text,
+                                    custom  : JSON.stringify(msg),
                                     "content-available": 1
                                 }
                             });

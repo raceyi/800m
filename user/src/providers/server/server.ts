@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { InAppBrowser,InAppBrowserEvent } from '@ionic-native/in-app-browser';
-import {AlertController,LoadingController,Platform,App} from 'ionic-angular';
+import {AlertController,LoadingController,Platform,App,Events} from 'ionic-angular';
 import {StorageProvider} from '../storage/storage';
 import {HttpWrapperProvider} from '../http-wrapper/http-wrapper';
 import { NativeStorage } from '@ionic-native/native-storage';
@@ -31,6 +31,7 @@ export class ServerProvider {
               ,private nativeStorage:NativeStorage
               ,public loadingCtrl: LoadingController
               ,private app:App
+              ,private events:Events              
               ,private platform:Platform
               ,private push: Push)  {
     console.log('Hello ServerProvider');
@@ -91,13 +92,16 @@ export class ServerProvider {
                 });
             });
 
-            this.pushNotification.on('notification').subscribe((data:any)=>{         
-                console.log("[tabs.ts]pushNotification.on-data:"+JSON.stringify(data));
-                console.log("[tabs.ts]pushNotification.on-data.title:"+JSON.stringify(data.title));
-                
-                var additionalData:any=data.additionalData;
-                
-                                                
+            this.pushNotification.on('notification').subscribe((data:any)=>{ 
+                console.log("pushNotification.on-data:"+JSON.stringify(data));
+                //time:chatInfo.date, type:"action",action:"response",message:req.body.type+"상담문의"
+                if(data.additionalData.custom.type=='action'){
+                    //채팅 화면이 현재 열려있다면 update하도록 한다. event를 사용해보자. 안되면 EventEmitter를 직접사용하자.
+                    //customerContact page를 다시 만들도록한다.
+                    this.events.publish("newChat",data.additionalData.custom);
+                }else if(data.additionalData.custom.type=='text'){
+                    this.events.publish("newChat",data.additionalData.custom);
+                }
             });
 
             this.pushNotification.on('error').subscribe((e:any)=>{
@@ -133,9 +137,12 @@ export class ServerProvider {
             let loading = this.loadingCtrl.create({
                 content: '서버에 요청 중입니다.'
             });
-          this.httpWrapper.post(url,bodyIn).then((res)=>{
+          this.httpWrapper.post(url,bodyIn).then((res:any)=>{
             loading.dismiss();
-            resolve(res);
+            if(res.result=="success")
+                resolve(res);
+            else
+                reject(res.error);    
           },err=>{
             console.log("post-err:"+JSON.stringify(err));
                 if(err.hasOwnProperty("status") && err.status==401){
@@ -154,7 +161,10 @@ export class ServerProvider {
                                         });
                                 alert.present();
                             }
-                            resolve(res.json());  
+                            if(res.result=="success")
+                                resolve(res);
+                            else
+                                reject(res.error);    
                          },(err)=>{
                              loading.dismiss();
                              reject("NetworkFailure");
@@ -173,8 +183,6 @@ export class ServerProvider {
 
     postWithoutAuth(url,bodyIn){
         return new Promise((resolve,reject)=>{
-
-
           this.httpWrapper.post(url,bodyIn).then((res)=>{
             resolve(res);
           },err=>{

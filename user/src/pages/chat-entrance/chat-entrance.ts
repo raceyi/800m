@@ -39,8 +39,9 @@ export class ChatEntrancePage {
 
     this.server.postWithAuth("/createNewChat",body).then((res:any)=>{
         if(res.result=="success"){
+            console.log("res:"+JSON.stringify(res));
             this.storage.chatId=res.chatId;
-            this.navCtrl.push(ChatPage);
+            this.navCtrl.push(ChatPage, {chatId:res.chatId});
         }else{
           let alert = this.alertCtrl.create({
                       title: '설계사분과 연락에 실패했습니다.',

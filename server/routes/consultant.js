@@ -5,6 +5,7 @@ var mongo = require("./mongo");
 var response = require("./response");
 var util=require("./util.js");
 var serverResponse = require("./response");
+var notification=require("./notification");
 
 function validityCheck(email,phone){
     console.log("come validityCheck function");
@@ -64,6 +65,77 @@ router.login=function(req,res){
       let response = new serverResponse.FailResponse(err);
       res.send(JSON.stringify(response));
   })
+}
+
+router.getChats=function(req,res){
+    mongo.getConsultantChats(req.session.uid).then((result)=>{  
+            let response = new serverResponse.SuccResponse();
+            response.chats=result;
+            res.send(JSON.stringify(response));     
+    },err=>{
+          let response = new serverResponse.FailResponse(err);
+          res.send(JSON.stringify(response));
+    });
+}
+
+router.getChat=function(req,res){
+    console.log("chatId:"+req.body.chatId);
+    mongo.findChatWithId(req.body.chatId).then((result)=>{
+            let response = new serverResponse.Response("success");
+            response.chatInfo=result;
+            res.send(JSON.stringify(response));
+    },err=>{
+        let response = new serverResponse.FailResponse(err);
+        res.send(JSON.stringify(response));        
+    })
+}
+
+router.confirmChat=function(req,res){
+    mongo.confirmConsultantChat(req.body.chatId).then((result)=>{
+          let response = new serverResponse.SuccResponse();
+          res.send(JSON.stringify(response));     
+    },err=>{
+          let response = new serverResponse.FailResponse(err);
+          res.send(JSON.stringify(response));      
+    }) 
+}
+
+router.addChat=function(req,res){
+    mongo.addChat(req.body.chatId,'consultant',req.body.msg).then((result)=>{
+          //고객에게 push msg를 전달한다.
+          let msg=result.msg;
+          msg.chatId=req.body.chatId;
+          notification.sendToUser(msg,result.userId).then((notifyRes)=>{
+              let response = new serverResponse.Response("success");
+              response.msg=result.msg;
+              res.send(JSON.stringify(response));
+          },err=>{
+              let response = new serverResponse.FailResponse(err);
+              res.send(JSON.stringify(response));
+          })  
+    },err=>{
+          let response = new serverResponse.FailResponse(err);
+          res.send(JSON.stringify(response));      
+    })
+}
+
+router.replaceChat=function(req,res){
+    mongo.replaceChat(req.body.chatId,req.body.index,'consultant',req.body.msg).then((result)=>{
+          //고객에게 push msg를 전달한다.
+          let msg=result.msg;
+          msg.chatId=req.body.chatId;          
+          notification.sendToUser(msg,result.userId).then((notifyRes)=>{
+              let response = new serverResponse.Response("success");
+              response.msg=result.msg;
+              res.send(JSON.stringify(response));
+          },err=>{
+              let response = new serverResponse.FailResponse(err);
+              res.send(JSON.stringify(response));
+          })  
+    },err=>{
+          let response = new serverResponse.FailResponse(err);
+          res.send(JSON.stringify(response));      
+    })
 }
 
 router.registrationId=function(req,res){

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { InAppBrowser,InAppBrowserEvent } from '@ionic-native/in-app-browser';
-import {AlertController,LoadingController,Platform,App} from 'ionic-angular';
+import {AlertController,LoadingController,Platform,App,Events} from 'ionic-angular';
 import {StorageProvider} from '../storage/storage';
 import {HttpWrapperProvider} from '../http-wrapper/http-wrapper';
 import { NativeStorage } from '@ionic-native/native-storage';
@@ -32,15 +32,16 @@ export class ServerProvider {
               ,private nativeStorage:NativeStorage
               ,private platform:Platform
               ,private app:App
+              ,private events:Events
               ,private media: Media
               ,private push: Push)  {
     console.log('Hello ServerProvider');
     platform.ready().then(() => {
         this.registerPushService(); 
         if(this.platform.is('android'))
-            this.file = this.media.create('file:///android_asset/www/assets/ordersound.mp3');
+            this.file = this.media.create('file:///android_asset/www/assets/appbeep.wav');
         else{
-            this.file = this.media.create('assets/ordersound.mp3');
+            this.file = this.media.create('assets/appbeep.wav');
         }
         this.file.onStatusUpdate.subscribe(status => console.log(status)); // fires when file status changes
         this.file.onSuccess.subscribe(() => {
@@ -49,6 +50,24 @@ export class ServerProvider {
         this.file.onError.subscribe(error => console.log('Error! '+JSON.stringify(error)));
     });    
   }
+
+   updateChats(){
+        return new Promise((resolve,reject)=>{
+            this.postWithAuth("/consultant/getChats",{}).then((res:any)=>{
+                this.storage.chats=res.chats;
+                this.storage.contactList=[];
+                console.log("updateChats-begin");
+                this.storage.convertChatsToList();
+                console.log("updateChats-end");
+            },error=>{
+                let alert = this.alertCtrl.create({
+                            title: '서버로부터 상담 정보를 가져오는데 실패했습니다.',
+                            buttons: ['OK']
+                        });
+                alert.present();
+            })
+        });        
+   }
 
     loginAgain(){
         return new Promise((resolve,reject)=>{
@@ -125,19 +144,15 @@ export class ServerProvider {
             });
 
             this.pushNotification.on('notification').subscribe((data:any)=>{ 
+                console.log("pushNotification.on-data:"+JSON.stringify(data));
                 //time:chatInfo.date, type:"action",action:"response",message:req.body.type+"상담문의"
                 //1.음성 playback
                 this.file.play();
-                //2.tabs page의 countBadge 재계산
-                //compute countBadge
-                //3.customer-contact에 반영하기
-                if(data.custom.type=='action'){
-                    //채팅 화면이 현재 열려있다면 update하도록 한다. event를 사용해보자. 안되면 EventEmitter를 직접사용하자.
-                    //customerContact page를 다시 만들도록한다.
-                }else if(data.custom.type=='text'){
-                    
-                }
-                console.log("pushNotification.on-data.title:"+JSON.stringify(data.title));
+                //2.customer-contact에 반영하기
+                this.updateChats(); 
+                //3.tabs page의 countBadge 재계산
+                //compute countBadge-NEW의 갯수를 세면 된다.
+                this.events.publish("newChat",data.additionalData.custom);
             });
 
             this.pushNotification.on('error').subscribe((e:any)=>{
@@ -252,4 +267,5 @@ export class ServerProvider {
     });
   }
 
+   
 }

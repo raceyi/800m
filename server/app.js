@@ -71,11 +71,17 @@ app.post('/registerConsultant',users.registerConsultant);
 app.post('/registrationId',users.registrationId);
 app.post("/createNewChat",users.createNewChat);
 app.post("/terminateChat",users.terminateChat);
+app.post('/getChat',users.getChat);
+app.post('/addChat',users.addChat);
 
 app.post('/consultant/signup',consultant.signup);
 app.post('/consultant/login',consultant.login);
 app.post('/consultant/registrationId',consultant.registrationId);
-
+app.post('/consultant/getChats',consultant.getChats);
+app.post('/consultant/getChat',consultant.getChat);
+app.post('/consultant/addChat',consultant.addChat);
+app.post('/consultant/confirmChat',consultant.confirmChat);
+app.post('/consultant/replaceChat',consultant.replaceChat)
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

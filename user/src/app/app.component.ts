@@ -30,7 +30,7 @@ export class MyApp {
   //rootPage:any =InsurancePage;
   //rootPage:any =BankAccountPage;
   //rootPage:any = HomePage;
-
+  //rootPage:any = ChatPage;
   constructor(platform: Platform, statusBar: StatusBar, 
               private storage:StorageProvider,
               splashScreen: SplashScreen,
@@ -38,7 +38,7 @@ export class MyApp {
               private nativeStorage:NativeStorage) {
 
     gMyApp=this;
-              
+
     platform.ready().then(() => {
           let passwordPromise=this.nativeStorage.getItem("password");
           let emailPromise=this.nativeStorage.getItem("email");

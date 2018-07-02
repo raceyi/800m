@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams ,AlertController} from 'ionic-angular';
+import { Component,NgZone ,ViewChild} from '@angular/core';
+import { IonicPage, NavController, Content, NavParams ,AlertController,Events} from 'ionic-angular';
 import {ServerProvider} from '../../providers/server/server';
 import {StorageProvider} from '../../providers/storage/storage';
 
@@ -16,6 +16,7 @@ import {StorageProvider} from '../../providers/storage/storage';
   templateUrl: 'chat.html',
 })
 export class ChatPage {
+  @ViewChild('content') contentRef: Content;  
   //type : join, exit, message(?)
   data = { type:'message', nickname:'kalen', message:'' };
   chats = [];
@@ -23,36 +24,78 @@ export class ChatPage {
   nickname:string;
   offStatus:boolean = false;
 
-  chatInfo;
+  chatInfo:any={};
+  chatId;
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
               private alertCtrl:AlertController,
               private storage:StorageProvider,
+              private events:Events,
+              private ngZone:NgZone,
               public server:ServerProvider) {
+    
+    this.chatId=navParams.get("chatId");
+    console.log("chatId:"+this.chatId);
+    let body={chatId:this.chatId};
+    this.server.postWithAuth("/getChat",body).then((res:any)=>{
+        //console.log("getChat-res:"+JSON.stringify(res));      
+        this.chatInfo=res.chatInfo;
+        this.chatInfo.contents.forEach(chat=>{
+          chat.date=new Date(chat.time);
+        })
+        if(this.contentRef){
+            this.contentRef.scrollToBottom();
+          }
+    },err=>{
+          let alert = this.alertCtrl.create({
+                  title: '상담내역을 불러오는데 실패했습니다.',
+                  buttons: ['OK']
+              });
+          alert.present();
+    })
 
-  //this.chatInfo=navParams.get("chat");
-  this.chatInfo={type:"보험해지"};
-//db.createCollection("mycol", { capped : true, autoIndexId : true, size : 
-//   6142800, max : 10000 } )
+    events.subscribe("newChat",(param)=>{
+        let msg=param;
+        msg.date=new Date(msg.time);
+        console.log("contents:"+JSON.stringify(this.chatInfo.contents));
+         this.ngZone.run(()=>{
+             this.chatInfo.contents.push(param);
+         });
+         this.contentRef.scrollToBottom();
+    });
+
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ChatPage');
+    //move scroll to bottom
+    this.contentRef.scrollToBottom();
   }
 
   sendMessage() {
     //send data
-    this.chats.push({type: 'message',user:this.data.nickname ,message:this.data.message,sendDate:Date()});
-    
+    let body={chatId:this.chatId,msg:{type:"text",text:this.data.message}};
+    this.server.postWithAuth("/addChat",body).then((res:any)=>{
+        //this.chatInfo.contents.unshift(res.msg);
+          this.ngZone.run(()=>{
+              console.log("res.msg:"+JSON.stringify(res.msg));
+              let msg=res.msg;
+              msg.date=new Date(msg.time);
+              this.chatInfo.contents.push(msg);
+          });
+          this.contentRef.scrollToBottom();
+    },err=>{
+                let alert = this.alertCtrl.create({
+                        title: '메시지 전달에 실패했습니다.',
+                        buttons: ['OK']
+                    });
+                alert.present();    
+    })     
     this.data.message = '';
   }
 
-  onChange(event){
-    console.log("event:"+JSON.stringify(event));
-  }
-
-  exitChat(){
+  ionViewWillLeave(){
     let body={chatId:this.storage.chatId};
     this.server.postWithAuth("/terminateChat",body).then((res)=>{
           let alert = this.alertCtrl.create({
@@ -67,6 +110,15 @@ export class ChatPage {
           });
           alert.present();       
     })
-    this.navCtrl.pop();
   }
+
+  exitChat(){
+    this.navCtrl.pop();  
+  }
+
+  focus(){
+     console.log("focus comes");
+     this.contentRef.scrollToBottom();
+  }
+  
 }

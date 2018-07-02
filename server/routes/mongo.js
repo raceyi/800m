@@ -149,9 +149,9 @@ router.findUserWithId=function(id){
             }else{ 
                 db.close();
                 console.log("result:"+JSON.stringify(result));
-                if(result.length>0)
+                if(result.length>0){
                     resolve(result[0]);
-                else
+                }else
                     reject("user not found");   
             }
         });
@@ -222,6 +222,50 @@ router.consultantLogin=function(object){
     });
 }
 
+router.getConsultantChats=function(consultantId){
+return new Promise((resolve,reject)=>{     
+    MongoClient.connect(url, function(err, db) {
+        if (err){ 
+            reject(err);
+        }else{
+            var dbo = db.db(config.dbName);
+                dbo.collection("chat").find({},{consultantId:consultantId,progress:true}).toArray(function(err, chats) {
+                if (err){
+                    reject(err);
+                }else{ 
+                    console.log(chats);
+                    db.close();
+                    resolve(chats);
+                }
+            });            
+        }
+    });
+  })
+}
+
+router.confirmConsultantChat=function(chatid){
+    //lastorigin이 consultant라면 confirm을 true로 설정함. mongodb에 update의 조건문 사용
+ return new Promise((resolve,reject)=>{
+    MongoClient.connect(url, function(err, db) {
+        if (err) {
+            reject(err);
+        }else{
+            var dbo = db.db(config.dbName); 
+            console.log("chatId:"+chatid);
+            dbo.collection("chat").updateOne({_id:ObjectId(chatid),lastOrigin:'user'},{$set:{confirm:true}},{upsert:false} ,function(err, res) {
+                if (err){ 
+                    reject(err);
+                }else{
+                    db.close();
+                    resolve(res);
+                }
+            });
+        }
+    });  
+  });
+}
+
+
 router.registerConsultant=function(consultantId,userId){
   // user에 consultantId를 저장하고 consultant에 userId를 저장한다.
   return new Promise((resolve,reject)=>{
@@ -240,6 +284,7 @@ router.registerConsultant=function(consultantId,userId){
                                     reject(err);
                                 }else{
                                     console.log("updated consultant "+JSON.stringify(res2));
+                                    db.close();
                                     resolve(res2.value);
                                 }
                         });
@@ -262,6 +307,7 @@ return new Promise((resolve,reject)=>{
                 if (err){ 
                     reject(err);
                 }else{
+                    db.close();
                     resolve();   
                 }
             });
@@ -282,6 +328,7 @@ return new Promise((resolve,reject)=>{
                 if (err){ 
                     reject(err);
                 }else{
+                    db.close();
                     resolve();   
                 }
             });
@@ -335,7 +382,7 @@ router.findConsultantWithId=function(id){
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
         var dbo = db.db(config.dbName);
-        dbo.collection("consultant").find({}, { _id: id }).toArray(function(err, result) {
+        dbo.collection("consultant").find({ _id: ObjectId(id) }).toArray(function(err, result) {
             if (err){
                 reject(err);
             }else{ 
@@ -345,6 +392,27 @@ router.findConsultantWithId=function(id){
                     resolve(result[0]);
                 else
                     reject("consultant not found");    
+            }
+        });
+    });
+  })
+}
+
+router.findChatWithId=function(id){
+  return new Promise((resolve,reject)=>{     
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db(config.dbName);
+        dbo.collection("chat").find({ _id: ObjectId(id)}).toArray(function(err, result) {
+            if (err){
+                reject(err);
+            }else{ 
+                console.log(result);
+                db.close();
+                if(result.length>0)
+                    resolve(result[0]);
+                else
+                    reject("chat not found");    
             }
         });
     });
@@ -363,6 +431,7 @@ return new Promise((resolve,reject)=>{
                 if (err){ 
                     reject(err);
                 }else{
+                    db.close();
                     resolve();   
                 }
             });
@@ -377,14 +446,16 @@ router.createNewChat=function(type,uid,consultantId){
     if (err){
         reject(err);  
     }else{ 
-        var dbo = db.db(config.dbName); 
-        dbo.collection("chat").insertOne({type: type,userId:uid,consultantId:consultantId,date: new Date(),progress:true,confirm:false} ,function(err, res) {
+        var dbo = db.db(config.dbName);
+        let now=new Date();
+        let content={ time:now, type:"action", action:"response", origin:"user", text:type+"상담문의"}; 
+        dbo.collection("chat").insertOne({type: type,userId:uid,consultantId:consultantId,date: now,progress:true,confirm:false,lastOrigin:"user",contents:[content]} ,function(err, res) {
             if (err){ 
                 reject(err);
             }else{
                 db.close();
-                //console.log("res:"+JSON.stringify(res.ops[0]._id));
-                resolve(res.ops[0]._id);
+                console.log("res:"+JSON.stringify(res.ops[0]));
+                resolve(res.ops[0]);
             }
         },err=>{
             reject(err);
@@ -394,6 +465,79 @@ router.createNewChat=function(type,uid,consultantId){
   });
 }
 
+router.replaceChat=function(chatId,index,origin,msg){
+  return new Promise((resolve,reject)=>{ 
+  MongoClient.connect(url, function(err, db) {
+    if (err){
+        reject(err);
+    }else{
+        var dbo = db.db(config.dbName); 
+        //URI encoding
+        msg.time=new Date();
+        msg.origin=origin;
+        console.log("chatId:"+chatId);
+        var setObject = {};
+        setObject["contents."+ index] = msg;
+        setObject["lastOrigin"]='consultant';
+        setObject["confirm"]=false;
+        setObject["date"]=msg.time;
+
+        dbo.collection("chat").findOneAndUpdate({_id:ObjectId(chatId)},{
+          $set:setObject},function(err, res) {
+                    if (err){ 
+                console.log("err:"+JSON.stringify(err));
+                reject(err);
+            }else{
+                    db.close();  
+                    console.log("res.value:"+res.value);
+                    resolve({msg:msg,userId:res.value.userId});
+            }
+        });
+    }
+    });
+  });        
+}
+
+//router.replaceChat("5b3a2479511ffa3f1f0a0f24",0,"consultant",{text:"test"});
+
+router.addChat=function(chatId,origin,msg){
+  return new Promise((resolve,reject)=>{ 
+  MongoClient.connect(url, function(err, db) {
+    if (err){
+        reject(err);
+    }else{
+        var dbo = db.db(config.dbName); 
+        //URI encoding
+        msg.time=new Date();
+        msg.origin=origin;
+        console.log("chatId:"+chatId);
+        dbo.collection("chat").findOneAndUpdate({_id:ObjectId(chatId)},
+        /*   Array 앞에 추가할 경우 사용함.
+            {$push: {
+                contents: {
+                $each: [ msg ],
+                $position: 0
+                }
+            }
+         */  {$push: {
+                contents:  msg 
+            },$set:{lastOrigin:origin,confirm:false,date: msg.time}},function(err, res) {
+                    if (err){ 
+                console.log("err:"+JSON.stringify(err));
+                reject(err);
+            }else{
+                    db.close();  
+                    console.log("res.value:"+res.value);
+                    resolve({msg:msg,userId:res.value.userId});
+            }
+        });
+    }
+    });
+  });        
+}
+//router.addChat("5b39c3f333b466123f05f412","consultant",{text:"test"});
+
+/*
 //lock을 사용한다. 각 사용자 id에 대해서 
 router.saveChatLine=function(line){
   return new Promise((resolve,reject)=>{ 
@@ -407,7 +551,8 @@ router.saveChatLine=function(line){
         if (err){ 
             reject(err);
         }else{
-            // 사용자와 마지막으로 채팅한 시간을 user에 저장한다.  
+            // 사용자와 마지막으로 채팅한 시간을 user에 저장한다.
+            db.close();  
             resolve();
         }
         });
@@ -415,7 +560,7 @@ router.saveChatLine=function(line){
   });
   });
 }
-
+*/
 ////////////////////////////////////////////
 /*
 let _id="5b371d19c787175735cd33d1";
