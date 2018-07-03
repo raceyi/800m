@@ -168,8 +168,9 @@ router.createNewChat=function(req,res){
 }
 
 router.terminateChat=function(req,res){
-    mongo.terminateChat(req.body.chatId).then((result)=>{
-        let msg={time:chatInfo.date, type:"action",action:"exit",message:"상담종료"};
+    console.log("terminateChat:"+req.body.chatId);
+    mongo.terminateChat(req.body.chatId,"user").then((result)=>{
+        let msg={time:result.date, type:"action",action:"exit",message:"상담종료",chatId:req.body.chatId};
         notification.sendToConsultant(msg,req.session.cid).then((notifyRes)=>{
             let response = new serverResponse.Response("success");
             res.send(JSON.stringify(response));

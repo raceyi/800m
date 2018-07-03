@@ -149,6 +149,24 @@ router.registrationId=function(req,res){
     })
 }
 
+router.terminateChat=function(req,res){
+    console.log("terminateChat:"+req.body.chatId);
+    mongo.terminateChat(req.body.chatId,"consultant").then((result)=>{
+        let msg={time:result.date, type:"action",action:"exit",message:"상담종료",chatId:req.body.chatId};
+        console.log("userId:"+result.userId);
+        notification.sendToUser(msg,result.userId).then((notifyRes)=>{
+            let response = new serverResponse.Response("success");
+            res.send(JSON.stringify(response));
+        },err=>{
+            let response = new serverResponse.FailResponse(err);
+            res.send(JSON.stringify(response));
+        }) 
+    },err=>{
+        let response = new serverResponse.FailResponse(err);
+        res.send(JSON.stringify(response));        
+    })
+}
+
 /*
 mongo.addConsultant( { email: "kalen02101@takib.biz", password: "111Highway 37",salt:"test", phone:"010",name:"이경주",birth:"19750111",sex:"F"}).then((res)=>{
   console.log("res:"+res);

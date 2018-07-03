@@ -25,7 +25,14 @@
           <div class="left-bubble">
             <span class="msg-name"></span>
             <span class="msg-date">{{chat.date | date:'short'}}</span>
-            <p text-wrap>{{chat.text}}</p>
+            <p *ngIf="chat.type=='text'" text-wrap>{{chat.text}}</p>
+            <p *ngIf="chat.type=='action' && chat.action=='연체이체'" text-wrap>지금 연체 금액을 바로 이체하겠습니까?</p>
+            <ion-row *ngIf="chat.type=='action' && chat.action=='연체이체'" >
+              <ion-col>
+                <button ion-button round>아니오</button>
+                <button ion-button round>네</button>
+              </ion-col>
+            </ion-row> 
           </div>
         </div>    
     </ion-item>

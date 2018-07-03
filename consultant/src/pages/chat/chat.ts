@@ -28,6 +28,8 @@ export class ChatPage {
   chatId;
   chatInfo:any={};
 
+  actionHide:boolean=true;
+
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
               private alertCtrl:AlertController,
@@ -75,28 +77,57 @@ export class ChatPage {
 
     events.subscribe("newChat",(param)=>{
         let msg=param;
-        console.log("newChat:"+JSON.stringify(param));
+        console.log("!!!newChat:"+JSON.stringify(msg));
+        console.log("msg.chatId:"+msg.chatId);
         if(msg.chatId==this.chatId){
-           this.ngZone.run(()=>{
-             msg.date=new Date(msg.time);
-             this.chatInfo.contents.push(param);
-           });
-             this.contentRef.scrollToBottom();
-             let body={chatId:this.chatId};
-             this.server.postWithAuth("/consultant/confirmChat",body).then((res:any)=>{
-                   //화면에서 나갈때 업데이트한다. 
-             },err=>{
+            console.log("type:"+msg.type+ "action:"+msg.action);
+            if(msg.type=="action"&& msg.action && msg.action=="exit"){
                 let alert = this.alertCtrl.create({
-                        title: '서버와 통신에 실패했습니다.',
-                        buttons: ['OK']
-                    });
-                alert.present();               
-             })
+                            title: '상담이 종료되었습니다.',
+                            buttons: ['OK']
+                });
+                alert.present(); 
+                this.navCtrl.pop();         
+            }else{
+                this.ngZone.run(()=>{
+                    msg.date=new Date(msg.time);
+                    this.chatInfo.contents.push(param);
+                });
+                console.log("this.contentRef:"+this.contentRef);
+                //if(this.contentRef && this.contentRef!=null)
+                //    this.contentRef.scrollToBottom();
+                let body={chatId:this.chatId};
+                this.server.postWithAuth("/consultant/confirmChat",body).then((res:any)=>{
+                    //화면에서 나갈때 업데이트한다. 
+                },err=>{
+                    let alert = this.alertCtrl.create({
+                            title: '서버와 통신에 실패했습니다.',
+                            buttons: ['OK']
+                        });
+                    alert.present();               
+                })
+            }
         }
     });
   }
 
   ionViewWillLeave(){
+    /* button을 추가하자.  
+    let body={chatId:this.chatId};
+    this.server.postWithAuth("/consultant/terminateChat",body).then((res)=>{
+          let alert = this.alertCtrl.create({
+                      title: '상담을 종료합니다.',
+                      buttons: ['OK']
+          });
+          alert.present();
+    },err=>{
+          let alert = this.alertCtrl.create({
+                      title: '상담을 종료에 실패했습니다.',
+                      buttons: ['OK']
+          });
+          alert.present();       
+    })
+    */
       //chat정보를 서버로 부터 가져온다.
       this.server.updateChats().then(()=>{
 
@@ -168,5 +199,36 @@ export class ChatPage {
   focus(){
      console.log("focus comes");
      this.contentRef.scrollToBottom();
+  }
+
+  showActionButtons(flag){
+    this.actionHide=!flag;
+  }
+
+  doAction(action){
+      let body
+      if(action=='납입방법'){
+          body={chatId:this.chatId,msg:{type:"text",text:" 우리은행 xx으로 이체해주시기 바랍니다."}};
+      }else if(action=='청구서류'){
+          body={chatId:this.chatId,msg:{type:"text",text:'청구서류는 다음과 같습니다.... '}};  
+      }else{
+          body={chatId:this.chatId,msg:{type:"action",text:action,action:action}};
+      }
+    this.server.postWithAuth("/consultant/addChat",body).then((res:any)=>{
+        //this.chatInfo.contents.unshift(res.msg);
+        this.ngZone.run(()=>{
+            console.log("res.msg:"+JSON.stringify(res.msg));
+            let msg=res.msg;
+            msg.date=new Date(msg.time);
+            this.chatInfo.contents.push(msg);
+             this.contentRef.scrollToBottom();
+        });
+    },err=>{
+                let alert = this.alertCtrl.create({
+                        title: '메시지 전달에 실패했습니다.',
+                        buttons: ['OK']
+                    });
+                alert.present();    
+    })           
   }
 }

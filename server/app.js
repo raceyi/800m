@@ -81,7 +81,9 @@ app.post('/consultant/getChats',consultant.getChats);
 app.post('/consultant/getChat',consultant.getChat);
 app.post('/consultant/addChat',consultant.addChat);
 app.post('/consultant/confirmChat',consultant.confirmChat);
-app.post('/consultant/replaceChat',consultant.replaceChat)
+app.post('/consultant/replaceChat',consultant.replaceChat);
+app.post('/consultant/terminateChat',consultant.terminateChat);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

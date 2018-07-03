@@ -43,8 +43,11 @@
 <ion-footer style="background-color:#AEB6BD;">
   <ion-grid>
     <ion-row>
-      <ion-col col-2 align-self-center>
+      <ion-col col-2 align-self-center *ngIf="actionHide" (click)="showActionButtons(true)">
         <ion-icon style="color:white;" name="md-add"></ion-icon>
+      </ion-col>
+      <ion-col col-2 align-self-center *ngIf="!actionHide" (click)="showActionButtons(false)">
+        <ion-icon style="color:white;" name="md-close"></ion-icon>
       </ion-col>
       <ion-col>
         <ion-row style="background-color:white;border-radius:5vw;" >
@@ -57,11 +60,22 @@
         </ion-row>
       </ion-col>
     </ion-row>
-    <ion-row>
+    <ion-row [hidden]="actionHide">
       <ion-col>
-        
+        <button  ion-button round (click)="doAction('납입방법')">납입방법</button>
       </ion-col>
+      <ion-col>
+        <button  ion-button round (click)="doAction('청구서류')">청구서류</button>
+      </ion-col>      
     </ion-row>
+    <ion-row [hidden]="actionHide">
+      <ion-col>
+        <button  ion-button round (click)="doAction('연체이체')">연체이체</button>
+      </ion-col>
+      <ion-col>
+        <button  ion-button round (click)="doAction('납입확인')">납입확인</button>
+      </ion-col>
+    </ion-row>          
   </ion-grid>
 </ion-footer>
 

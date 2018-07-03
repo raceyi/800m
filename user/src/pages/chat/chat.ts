@@ -59,10 +59,25 @@ export class ChatPage {
         let msg=param;
         msg.date=new Date(msg.time);
         console.log("contents:"+JSON.stringify(this.chatInfo.contents));
-         this.ngZone.run(()=>{
-             this.chatInfo.contents.push(param);
-         });
-         this.contentRef.scrollToBottom();
+        if(msg.type=="action"&& msg.action=="exit"){
+          let alert = this.alertCtrl.create({
+                      title: '상담이 종료되었습니다.',
+                      buttons: ['OK']
+          });
+          alert.present(); 
+          this.navCtrl.pop();         
+        }else{
+          if(msg.type=="action" && msg.action==''){
+                      
+          }else{
+            this.ngZone.run(()=>{
+                this.chatInfo.contents.push(param);
+            });
+            //if(this.contentRef && this.contentRef!=null){
+            //    this.contentRef.scrollToBottom();
+            //}
+          }
+        }
     });
 
   }

@@ -125,7 +125,7 @@ router.findUser=function(object){
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
         var dbo = db.db(config.dbName);
-        dbo.collection("user").find({}, { email: object.email }).toArray(function(err, result) {
+        dbo.collection("user").find({ email: object.email }).toArray(function(err, result) {
             if (err){
                 reject(err);
             }else{ 
@@ -143,7 +143,7 @@ router.findUserWithId=function(id){
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
         var dbo = db.db(config.dbName);
-        dbo.collection("user").find({}, { _id: id }).toArray(function(err, result) {
+        dbo.collection("user").find({ "_id": ObjectId(id) }).toArray(function(err, result) {
             if (err){
                 reject(err);
             }else{ 
@@ -164,7 +164,7 @@ router.findConsultant=function(object){
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
         var dbo = db.db(config.dbName);
-        dbo.collection("consultant").find({}, { email: object.email }).toArray(function(err, result) {
+        dbo.collection("consultant").find({ email: object.email }).toArray(function(err, result) {
             if (err){
                 reject(err);
             }else{ 
@@ -185,7 +185,7 @@ router.consultantLogin=function(object){
         }else{
                 var dbo = db.db(config.dbName);
                 console.log("email:"+object.email);
-                dbo.collection("consultant").find({}, { email: object.email }).toArray(function(err, mine) {
+                dbo.collection("consultant").find({ email: object.email }).toArray(function(err, mine) {
                     if (err){
                         reject(err);
                     }else{ 
@@ -194,7 +194,11 @@ router.consultantLogin=function(object){
                         util.decryptObj(consultant);
                         // 고객 정보를 검색한다.
                         console.log("consultant:"+JSON.stringify(consultant));
-                            dbo.collection("user").find({},{_id: { $in: consultant.userIds }}).toArray(function(err, users) {
+                        let userIds=[];
+                        consultant.userIds.forEach(userId=>{
+                            userIds.push(ObjectId(userId));
+                        })
+                            dbo.collection("user").find({"_id": { $in: userIds }}).toArray(function(err, users) {
                                 // name, phone,... 고객 정보를 가져온다. 
                                 // 보험 목록에서 연체 여부를 확인한다.
                                 console.log("users.length:"+users.length);
@@ -206,8 +210,9 @@ router.consultantLogin=function(object){
                                 })
                                 //현재 상담중인 목록을 가져온다.
                                 //chat 테이블에서 consultantId로 검색한다.
-                                console.log("consultant._id:"+consultant._id);
-                                dbo.collection("chat").find({},{consultantId:consultant._id,progress:true}).toArray(function(err, chats) {
+                                console.log("consultant._id:"+consultant._id.toString());
+                                let consultantId=consultant._id.toString();
+                                dbo.collection("chat").find({consultantId:consultantId,progress:true}).toArray(function(err, chats) {
                                     console.log("chats:"+JSON.stringify(chats));
                                     let loginInfo={users:users,chats:chats,consultant:consultant}
                                     console.log("consultant:"+JSON.stringify(loginInfo));
@@ -229,7 +234,7 @@ return new Promise((resolve,reject)=>{
             reject(err);
         }else{
             var dbo = db.db(config.dbName);
-                dbo.collection("chat").find({},{consultantId:consultantId,progress:true}).toArray(function(err, chats) {
+                dbo.collection("chat").find({consultantId:consultantId,progress:true}).toArray(function(err, chats) {
                 if (err){
                     reject(err);
                 }else{ 
@@ -242,6 +247,10 @@ return new Promise((resolve,reject)=>{
     });
   })
 }
+
+//router.getConsultantChats("5b36f2e96654502e8d5945c1").then((chats)=>{
+//    console.log("chats:"+JSON.stringify(chats));
+//});
 
 router.confirmConsultantChat=function(chatid){
     //lastorigin이 consultant라면 confirm을 true로 설정함. mongodb에 update의 조건문 사용
@@ -345,7 +354,11 @@ router.findInsurancePayments=function(insurances){
         }else{
             var dbo = db.db(config.dbName);
             console.log("insurances:"+JSON.stringify(insurances));
-            dbo.collection("insurance").find({}, {  _id:{$in: insurances } }).toArray(function(err, result) {
+            let insuranceObjs=[];
+            insurances.forEach((insurance)=>{
+                insuranceObjs.push(ObjectId(insurance));
+            })
+            dbo.collection("insurance").find({  _id:{$in: insuranceObjs } }).toArray(function(err, result) {
                 if (err){
                     reject(err);
                 }else{ 
@@ -364,7 +377,7 @@ router.findConsultantWithIDNumber=function(idNumber){
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
         var dbo = db.db(config.dbName);
-        dbo.collection("consultant").find({}, { IDNumber: idNumber }).toArray(function(err, result) {
+        dbo.collection("consultant").find({ IDNumber: idNumber }).toArray(function(err, result) {
             if (err){
                 reject(err);
             }else{ 
@@ -419,7 +432,7 @@ router.findChatWithId=function(id){
   })
 }
 
-router.terminateChat=function(chatId){
+router.terminateChat=function(chatId,origin){
 return new Promise((resolve,reject)=>{
     MongoClient.connect(url, function(err, db) {
         if (err) {
@@ -427,12 +440,13 @@ return new Promise((resolve,reject)=>{
         }else{
             var dbo = db.db(config.dbName); 
             console.log("chatId:"+chatId);
-            dbo.collection("chat").updateOne({_id:ObjectId(chatId)},{$set:{progress:false}},{upsert:false} ,function(err, res1) {
+            let now=new Date();
+            dbo.collection("chat").findOneAndUpdate({_id:ObjectId(chatId)},{$set:{progress:false,lastOrigin:origin,confirm:true, date:now}},{upsert:false} ,function(err, res) {
                 if (err){ 
                     reject(err);
                 }else{
                     db.close();
-                    resolve();   
+                    resolve(res.value);   
                 }
             });
         }

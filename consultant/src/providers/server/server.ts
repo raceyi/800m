@@ -34,6 +34,7 @@ export class ServerProvider {
               ,private app:App
               ,private events:Events
               ,private media: Media
+              ,public loadingCtrl: LoadingController
               ,private push: Push)  {
     console.log('Hello ServerProvider');
     platform.ready().then(() => {
@@ -162,8 +163,15 @@ export class ServerProvider {
 
     postWithAuth(url,bodyIn){ 
         return new Promise((resolve,reject)=>{
-          this.httpWrapper.post(url,bodyIn).then((res)=>{
-            resolve(res);
+            let loading = this.loadingCtrl.create({
+                content: '서버에 요청 중입니다.'
+            });
+          this.httpWrapper.post(url,bodyIn).then((res:any)=>{
+            loading.dismiss();
+            if(res.result=="success")
+                resolve(res);
+            else
+                reject(res.error);    
           },err=>{
             console.log("post-err:"+JSON.stringify(err));
                 if(err.hasOwnProperty("status") && err.status==401){
@@ -171,6 +179,7 @@ export class ServerProvider {
                     this.loginAgain().then(()=>{
                         //call http post again
                         this.httpWrapper.post(url,bodyIn).then((res:any)=>{
+                            loading.dismiss();
                             console.log("post version:"+res.version+" version:"+this.storage.version);
                             if(parseFloat(res.version)>parseFloat(this.storage.version)){
                                 console.log("post invalid version");
@@ -181,14 +190,20 @@ export class ServerProvider {
                                         });
                                 alert.present();
                             }
-                            resolve(res.json());  
+                            if(res.result=="success")
+                                resolve(res);
+                            else
+                                reject(res.error);    
                          },(err)=>{
+                             loading.dismiss();
                              reject("NetworkFailure");
                          });
                     },(err)=>{
+                        loading.dismiss();
                         reject(err);
                     });
                  }else{
+                    loading.dismiss();
                     reject("NetworkFailure");
                 }   
           })
