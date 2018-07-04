@@ -99,12 +99,15 @@ router.login=function(req,res){
 }
 
 router.searchConsultant=function(req,res){
-  mongo.findConsultantWithIDNumber(req.body.IDNumber).then((result)=>{
+            console.log("searchConsultant:"+req.body.consultantId);
+  mongo.findConsultantWithIDNumber(req.body.consultantId).then((result)=>{
             let response = new serverResponse.SuccResponse();
-            let consultantInfo=result[0];
-             util.decryptObj(consultantInfo);
-            response.consultant=consultantInfo;
-            console.log("response.consultant:"+JSON.stringify(response.consultant));
+            if(result.length>0){
+                let consultantInfo=result[0];
+                util.decryptObj(consultantInfo);
+                response.consultant=consultantInfo;
+                console.log("response.consultant:"+JSON.stringify(response.consultant));
+            }
             res.send(JSON.stringify(response));            
   },err=>{
       let response = new serverResponse.FailResponse("NotFound");
