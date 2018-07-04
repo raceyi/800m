@@ -6,7 +6,7 @@
       </button>
     </ion-buttons>
     <ion-title style="color:white;">
-      {{chatInfo.type}}상담
+      {{chatInfo.type}}상담 {{storage.name}}
     </ion-title>
   </ion-navbar>
 </ion-header>
@@ -26,11 +26,44 @@
             <span class="msg-name"></span>
             <span class="msg-date">{{chat.date | date:'short'}}</span>
             <p *ngIf="chat.type=='text'" text-wrap>{{chat.text}}</p>
-            <p *ngIf="chat.type=='action' && chat.action=='연체이체'" text-wrap>지금 연체 금액을 바로 이체하겠습니까?</p>
-            <ion-row *ngIf="chat.type=='action' && chat.action=='연체이체'" >
+            <p *ngIf="chat.type=='action' && chat.action=='청구서류'" text-wrap> 진단서, 의사소견서, 진료비영수증, 입원확인증 등
+                                                                               치료하신 내역과 보장에 따라 필요서류가 달라집니다.
+                                                                               진료받으신 질병코드 확인하시고 청구부서 080-3787-9303 로
+                                                                               바로 전화하시면 정확한 서류안내가 가능합니다. 
+                                                                               감사합니다. (대부분 상기 4가지 서류면 지급됩니다.)</p>
+            <p *ngIf="chat.type=='action' && chat.action=='연체예방법'" text-wrap> 납입정지: 중도 납입이 정지되면서 기존에 납입하신
+                                                                                해약환급금에서 책임준비금이 차감됩니다. 미리 납입하신
+                                                                                보험료에서 차감되기 때문에 보험혜택은 유지되지만
+                                                                                최종 해약 환급금에서는 차감될수 있습니다.
+                                                                                (빠른시일안내 납입 재기 가능하시면 추천드립니다.)</p>
+
+            <p *ngIf="chat.type=='action' && chat.action=='납입방법'" text-wrap>
+                고객님 납입계좌를 선택해주세요.
+            </p>
+            <div *ngIf="chat.type=='action' && chat.action=='납입방법'" radio-group>
+              <ion-row>
+                <ion-col col-2><ion-icon name="md-square-outline"></ion-icon></ion-col>
+                <ion-col align-self-center>신한: 3928-330983-3938</ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col col-2><ion-icon name="md-square-outline"></ion-icon></ion-col>
+                <ion-col align-self-center>국민: 39039-483-49893</ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col col-2><ion-icon name="md-square-outline"></ion-icon></ion-col>                
+                <ion-col align-self-center>농협: 234-32993-12043</ion-col>
+              </ion-row>
+            </div>
+            <ion-row *ngIf="chat.type=='action' && chat.action=='납입방법'" >
+              <ion-col align-self-center>이중인출동의</ion-col>
+              <ion-col align-self-center>
+              <button ion-button round clear color="primary" >동의함&nbsp;<ion-icon name="md-square-outline"></ion-icon></button>
+              </ion-col>
+            </ion-row>
+            
+            <ion-row *ngIf="chat.type=='action' && chat.action=='납입방법'" >
               <ion-col>
-                <button ion-button round>아니오</button>
-                <button ion-button round>네</button>
+                <button ion-button round>납입하기</button>
               </ion-col>
             </ion-row> 
           </div>

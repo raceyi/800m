@@ -347,8 +347,11 @@ return new Promise((resolve,reject)=>{
 }
 
 router.findInsurancePayments=function(insurances){
-  return new Promise((resolve,reject)=>{     
-    MongoClient.connect(url, function(err, db) {
+  return new Promise((resolve,reject)=>{ 
+      if(!insurances){
+          resolve([]);
+      }else{    
+        MongoClient.connect(url, function(err, db) {
         if (err){ 
             reject(err);
         }else{
@@ -368,7 +371,8 @@ router.findInsurancePayments=function(insurances){
                 }
             });            
         }
-    });
+        });
+      }
   })
 }
 
@@ -577,13 +581,13 @@ router.saveChatLine=function(line){
 */
 ////////////////////////////////////////////
 /*
-let _id="5b371d19c787175735cd33d1";
+let _id="5b3b1de15c423295103c2d8e";
 MongoClient.connect(url, function(err, db) {
         if (err) {
             reject(err);
         }else{
             var dbo = db.db(config.dbName); 
-            dbo.collection("insurance").updateOne({_id:ObjectId(_id)},{$push: { payments: {month:4,payment:true }}},{upsert:false} ,function(err, res1) {
+            dbo.collection("insurance").updateOne({_id:ObjectId(_id)},{$push: { payments: {month:6,payment:false }}},{upsert:false} ,function(err, res1) {
                 if (err){ 
                     console.log("error:"+JON.stringify(err));
                 }else{

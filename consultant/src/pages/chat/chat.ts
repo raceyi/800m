@@ -207,12 +207,14 @@ export class ChatPage {
 
   doAction(action){
       let body
-      if(action=='납입방법'){
-          body={chatId:this.chatId,msg:{type:"text",text:" 우리은행 xx으로 이체해주시기 바랍니다."}};
+      if(action=='납입확인'){
+          body={chatId:this.chatId,msg:{type:"text",text:" 고객님 15일 일자로 납입이 확인되었습니다."}};
       }else if(action=='청구서류'){
-          body={chatId:this.chatId,msg:{type:"text",text:'청구서류는 다음과 같습니다.... '}};  
-      }else{
-          body={chatId:this.chatId,msg:{type:"action",text:action,action:action}};
+          body={chatId:this.chatId,msg:{type:"action",text:'청구서류 안내',action:"청구서류"}};  
+      }else if(action=='연체예방법'){
+          body={chatId:this.chatId,msg:{type:"action",text:'연체예방법 안내"  ',action:"연체예방법"}};
+      }else if(action=='납입방법'){
+          body={chatId:this.chatId,msg:{type:"action",text:"납입방법 안내",action:"납입방법"}};
       }
     this.server.postWithAuth("/consultant/addChat",body).then((res:any)=>{
         //this.chatInfo.contents.unshift(res.msg);

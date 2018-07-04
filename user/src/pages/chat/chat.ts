@@ -27,6 +27,9 @@ export class ChatPage {
   chatInfo:any={};
   chatId;
 
+  bankAccount;
+  duplicateWithrawl;
+
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
               private alertCtrl:AlertController,
@@ -41,9 +44,17 @@ export class ChatPage {
     this.server.postWithAuth("/getChat",body).then((res:any)=>{
         //console.log("getChat-res:"+JSON.stringify(res));      
         this.chatInfo=res.chatInfo;
+        /*
+        //just for testing-begin
+        this.chatInfo.contents.push({type:"action",text:"청구서류 안내",action:"청구서류",time:"2018-07-03 10:03:24.482",origin:"consultant"});
+        this.chatInfo.contents.push({type:"action",text:"연체예방법 안내",action:"연체예방법",time:"2018-07-03 10:03:24.482",origin:"consultant"});
+        this.chatInfo.contents.push({type:"action",text:"납입방법 안내",action:"납입방법",time:"2018-07-03 10:03:24.482",origin:"consultant"});
+        //just for testing-end
+        */
         this.chatInfo.contents.forEach(chat=>{
           chat.date=new Date(chat.time);
         })
+         
         if(this.contentRef){
             this.contentRef.scrollToBottom();
           }
@@ -68,7 +79,7 @@ export class ChatPage {
           this.navCtrl.pop();         
         }else{
           if(msg.type=="action" && msg.action==''){
-                      
+
           }else{
             this.ngZone.run(()=>{
                 this.chatInfo.contents.push(param);
