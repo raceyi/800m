@@ -18,7 +18,7 @@ import {HomePage} from '../home/home';
 export class GreetingPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams,public storage:StorageProvider) {
-    this.storage.name="홍길동";
+   // this.storage.name="홍길동";
   }
 
   ionViewDidLoad() {

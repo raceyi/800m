@@ -71,18 +71,23 @@ export class StorageProvider {
                 this.birthMonth=res.userInfo.birth.substr(4,2);
                 this.birthDay=res.userInfo.birth.substr(6,2);
                 this.sex=res.userInfo.sex;
+
                 this.consultantId=res.userInfo.consultantId;
-                this.consultantName=res.consultant.name;
-                this.consultantPhone=res.consultant.phone;
-                this.consultantPhoneHref="tel:"+res.consultant.phone;
+                if(res.userInfo.consultantId){
+                    this.consultantName=res.consultant.name;
+                    this.consultantPhone=res.consultant.phone;
+                    this.consultantPhoneHref="tel:"+res.consultant.phone;
+                }
                 this.insurances=[];
-                for(let i=0;i<res.payment.length;i++){
-                    let name=res.payment[i].name;
-                    let monthPremium=res.payment[i].month;
-                    let payments=res.payment[i].payments;
-                    for(let j=0;j<payments.length;j++){
-                        let monthInfo={month:payments[j].month,premium:payments[j].payment,name:name,monthPremium:monthPremium};
-                        this.insurances.push(monthInfo);
+                if(res.payment){
+                    for(let i=0;i<res.payment.length;i++){
+                        let name=res.payment[i].name;
+                        let monthPremium=res.payment[i].month;
+                        let payments=res.payment[i].payments;
+                        for(let j=0;j<payments.length;j++){
+                            let monthInfo={month:payments[j].month,premium:payments[j].payment,name:name,monthPremium:monthPremium};
+                            this.insurances.push(monthInfo);
+                        }
                     }
                 }
                 this.insurances.sort(function(a, b){

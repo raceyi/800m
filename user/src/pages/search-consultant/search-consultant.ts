@@ -39,7 +39,9 @@ export class SearchConsultantPage {
         alert.present();
         return;
       }
+      console.log("search- consultantId"+this.consultantId);
       let body={consultantId:this.consultantId};
+      console.log("search- "+JSON.stringify(body));
       this.server.postWithAuth("/searchConsultant",body).then((res:any)=>{
           console.log("res:"+JSON.stringify(res));
           this.navCtrl.push(CheckConsultantPage,{consultant:res.consultant});

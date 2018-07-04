@@ -4,6 +4,7 @@ import {ChatPage} from '../chat/chat';
 import {ChatEntrancePage} from '../chat-entrance/chat-entrance';
 import {StorageProvider} from '../../providers/storage/storage';
 import {ServerProvider} from '../../providers/server/server';
+import {BankAccountPage} from '../bank-account/bank-account';
 
 @Component({
   selector: 'page-home',
@@ -50,4 +51,7 @@ export class HomePage {
         this.navCtrl.push(ChatEntrancePage);
   }
 
+  configureBounds(){
+      this.navCtrl.push(BankAccountPage);
+  }
 }

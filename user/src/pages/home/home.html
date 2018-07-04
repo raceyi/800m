@@ -3,6 +3,11 @@
     <ion-title>
      800M
     </ion-title>
+     <ion-buttons end>
+      <button color="white" ion-button icon-only (click)="configureBounds()">
+        <ion-icon name="md-settings"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
@@ -43,8 +48,8 @@
   <ion-col col-5 align-self-center >{{insurance.name}}</ion-col>
   <ion-col col-2 align-self-center *ngIf="insurance.premium==true">납부</ion-col>
   <ion-col col-3 align-self-center *ngIf="insurance.premium==true"> </ion-col>
-  <ion-col col-2 align-self-center *ngIf="insurance.premium==false" style="color:#f95b5b;"> 미납 </ion-col>
-  <ion-col col-3 align-self-center text-left *ngIf="insurance.premium==false"> <button class="pay-button"  (click)="withdrawal(insurance)" ion-button outline round>납부</button> </ion-col>
+  <ion-col col-2 align-self-center text-center *ngIf="insurance.premium==false" style="color:#f95b5b;"> 미납 <br><span style="font-size:3.4vw;">{{insurance.monthPremium}}</span> </ion-col>
+  <ion-col col-3 align-self-center text-left *ngIf="insurance.premium==false"> <button class="pay-button"  (click)="withdrawal(insurance)" ion-button outline round>납부</button></ion-col>
 </ion-row>
 <div class="dummy">
 </div>

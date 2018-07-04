@@ -12,7 +12,7 @@ import {ConfigProvider} from "../config/config";
 */
 @Injectable()
 export class HttpWrapperProvider {
-timeout:number=30; //in seconds;
+timeout:number=60; //in seconds;
   constructor(public http: HTTP,
               public client:HttpClient,
               public configProvider:ConfigProvider,              
