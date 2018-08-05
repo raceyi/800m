@@ -22,6 +22,18 @@ function validityCheck(email,phone){
     }
 }
 
+router.oauthSuccess=function(req,res){
+	console.log("oauth success");
+	let response = new serverResponse.Response("oauth success");
+	res.send(JSON.stringify(response));
+};
+
+router.oauthFailure=function(req,res){
+   let response = new serverResponse.Response("oauth failure");
+   res.send(JSON.stringify(response));
+};
+
+
 router.signup=function(req,res){
   console.log("signup-req.body:"+JSON.stringify(req.body));
    

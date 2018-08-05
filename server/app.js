@@ -63,6 +63,10 @@ app.use(function (req, res, next) {
 })
 
 //app.use('/', routes);
+
+app.get('/oauthSuccess',users.oauthSuccess);
+app.get('/oauthFailure',users.oauthFailure);
+
 app.post('/getUserInfo',users.getUserInfo);
 app.post('/signup',users.signup);
 app.post('/login',users.login);
