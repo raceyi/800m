@@ -44,13 +44,6 @@ export class ChatPage {
     this.server.postWithAuth("/getChat",body).then((res:any)=>{
         //console.log("getChat-res:"+JSON.stringify(res));      
         this.chatInfo=res.chatInfo;
-        /*
-        //just for testing-begin
-        this.chatInfo.contents.push({type:"action",text:"청구서류 안내",action:"청구서류",time:"2018-07-03 10:03:24.482",origin:"consultant"});
-        this.chatInfo.contents.push({type:"action",text:"연체예방법 안내",action:"연체예방법",time:"2018-07-03 10:03:24.482",origin:"consultant"});
-        this.chatInfo.contents.push({type:"action",text:"납입방법 안내",action:"납입방법",time:"2018-07-03 10:03:24.482",origin:"consultant"});
-        //just for testing-end
-        */
         this.chatInfo.contents.forEach(chat=>{
           chat.date=new Date(chat.time);
         })
@@ -82,7 +75,13 @@ export class ChatPage {
 
           }else{
             this.ngZone.run(()=>{
-                this.chatInfo.contents.push(param);
+                    msg.date=new Date(msg.time);
+                    let lastIndex=this.chatInfo.contents.length-1;
+                    console.log("lastIndex time:"+this.chatInfo.contents[lastIndex].time);
+                    console.log("param time:"+param.time);
+                    if(this.chatInfo.contents[lastIndex].time!=param.time){  
+                        this.chatInfo.contents.push(param);
+                    }
             });
             //if(this.contentRef && this.contentRef!=null){
             //    this.contentRef.scrollToBottom();
@@ -122,6 +121,17 @@ export class ChatPage {
   }
 
   ionViewWillLeave(){
+    let views=this.navCtrl.getViews();
+      views.forEach(view=>{
+          console.log("view:"+view.getNavParams().get("class"));        
+          if(view.getNavParams().get("class")!=undefined){
+              console.log("class:"+view.getNavParams().get("class"));
+              if(view.getNavParams().get("class")=="ChatEntrancePage")  {
+                      console.log("remove "+view.getNavParams().get("class"));
+                      this.navCtrl.removeView(view);
+              }
+          }
+      })
     let body={chatId:this.storage.chatId};
     this.server.postWithAuth("/terminateChat",body).then((res)=>{
           let alert = this.alertCtrl.create({

@@ -17,6 +17,8 @@ import {ServerProvider} from '../../providers/server/server';
   templateUrl: 'chat-entrance.html',
 })
 export class ChatEntrancePage {
+  userId;
+  name;
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
@@ -24,7 +26,9 @@ export class ChatEntrancePage {
               private alertCtrl:AlertController,
               public app:App,
               public storage:StorageProvider) {
-    //this.storage.name="홍길동";
+
+      this.userId=this.navParams.get("userId");
+      this.name=this.navParams.get("name");
   }
 
   ionViewDidLoad() {
@@ -36,16 +40,15 @@ export class ChatEntrancePage {
   }
 
   chat(type){
-     let body={type:type,consutlantId:this.storage.consultantId};
+     let body={type:type ,userId:this.userId};
 
-    this.server.postWithAuth("/createNewChat",body).then((res:any)=>{
+    this.server.postWithAuth("/consultant/createNewChat",body).then((res:any)=>{
         if(res.result=="success"){
             console.log("res:"+JSON.stringify(res));
-            this.storage.chatId=res.chatId;
-            this.navCtrl.push(ChatPage, {chatId:res.chatId, class:"ChatPage"});
+            this.navCtrl.push(ChatPage, {chatId:res.chatId, class:"ChatPage",name:this.name});
         }else{
           let alert = this.alertCtrl.create({
-                      title: '설계사분과 연락에 실패했습니다.',
+                      title: '고객분과 연락에 실패했습니다.',
                       subTitle:'전화를 사용해 주시기 바랍니다',
                       buttons: ['OK']
           });
@@ -53,7 +56,7 @@ export class ChatEntrancePage {
         }
     },err=>{
         let alert = this.alertCtrl.create({
-                    title: '설계사분과 연락에 실패했습니다.',
+                    title: '고객분과 연락에 실패했습니다.',
                     subTitle:'전화를 사용해 주시기 바랍니다',
                     buttons: ['OK']
         });

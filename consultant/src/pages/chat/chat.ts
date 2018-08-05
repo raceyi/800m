@@ -91,7 +91,12 @@ export class ChatPage {
             }else{
                 this.ngZone.run(()=>{
                     msg.date=new Date(msg.time);
-                    this.chatInfo.contents.push(param);
+                    let lastIndex=this.chatInfo.contents.length-1;
+                    console.log("lastIndex time:"+this.chatInfo.contents[lastIndex].time);
+                    console.log("param time:"+param.time);
+                    if(this.chatInfo.contents[lastIndex].time!=param.time){  
+                        this.chatInfo.contents.push(param);
+                    }
                 });
                 console.log("this.contentRef:"+this.contentRef);
                 //if(this.contentRef && this.contentRef!=null)
@@ -128,6 +133,17 @@ export class ChatPage {
           alert.present();       
     })
     */
+    let views=this.navCtrl.getViews();
+        views.forEach(view=>{
+            console.log("view:"+view.getNavParams().get("class"));
+            if(view.getNavParams().get("class")!=undefined){
+                console.log("class:"+view.getNavParams().get("class"));
+                if(view.getNavParams().get("class")=="ChatEntrancePage")  {
+                        console.log("remove "+view.getNavParams().get("class"));
+                        this.navCtrl.removeView(view);
+                }
+            }
+        })
       //chat정보를 서버로 부터 가져온다.
       this.server.updateChats().then(()=>{
 
@@ -174,6 +190,7 @@ export class ChatPage {
   }
 
   exitChat(){
+   
     this.navCtrl.pop();
   }
 

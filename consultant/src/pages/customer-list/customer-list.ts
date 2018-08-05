@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams ,App} from 'ionic-angular';
 import {CustomerPage} from '../customer/customer';
 import {StorageProvider} from '../../providers/storage/storage';
 import {ServerProvider} from '../../providers/server/server';
-
+import {ChatEntrancePage} from '../chat-entrance/chat-entrance';
 /**
  * Generated class for the CustomerListPage page.
  *
@@ -26,7 +26,8 @@ export class CustomerListPage {
    };
 
   constructor(public navCtrl: NavController, public navParams: NavParams, 
-              public storage: StorageProvider,                
+              public storage: StorageProvider,  
+              public app:App,              
               private server:ServerProvider) {
   }
 
@@ -53,5 +54,10 @@ export class CustomerListPage {
 
   sortByContact(){
     this.storage.sortByContact();
+  }
+
+  openChat(user){
+    console.log("openChat "+JSON.stringify(user));
+    this.app.getRootNavs()[0].push(ChatEntrancePage,{userId:user._id,name:user.name,class:'ChatEntrancePage'});
   }
 }
