@@ -1,13 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { InAppBrowser,InAppBrowserEvent } from '@ionic-native/in-app-browser';
-import {AlertController,LoadingController,Platform,App,Events} from 'ionic-angular';
+import {AlertController,LoadingController,Platform,App,Events,ViewController} from 'ionic-angular';
 import {StorageProvider} from '../storage/storage';
 import {HttpWrapperProvider} from '../http-wrapper/http-wrapper';
 import { NativeStorage } from '@ionic-native/native-storage';
 import {ConfigProvider} from "../config/config";
 import { Push, PushObject, PushOptions } from '@ionic-native/push';
-
+import {ChatPage} from '../../pages/chat/chat';
+var gServerProvider;
 
 /*
   Generated class for the ServerProvider provider.
@@ -22,6 +23,7 @@ export class ServerProvider {
   userSenderID="637913321456";
 
   pushNotification:PushObject;
+  msgAlert=false;
 
   constructor(public http: HttpClient
               ,private storage:StorageProvider
@@ -35,6 +37,7 @@ export class ServerProvider {
               ,private platform:Platform
               ,private push: Push)  {
     console.log('Hello ServerProvider');
+    gServerProvider=this;
     platform.ready().then(() => {
                     this.registerPushService(); 
 
@@ -93,20 +96,91 @@ export class ServerProvider {
             });
 
             this.pushNotification.on('notification').subscribe((data:any)=>{ 
-                console.log("pushNotification.on-data:"+JSON.stringify(data));
-                //time:chatInfo.date, type:"action",action:"response",message:req.body.type+"상담문의"
-                if(data.additionalData.custom.type=='action'){
-                    //채팅 화면이 현재 열려있다면 update하도록 한다. event를 사용해보자. 안되면 EventEmitter를 직접사용하자.
-                    //customerContact page를 다시 만들도록한다.
-                    this.events.publish("newChat",data.additionalData.custom);
-                }else if(data.additionalData.custom.type=='text'){
-                    this.events.publish("newChat",data.additionalData.custom);
+                console.log("pushNotification.on-data:"+JSON.stringify(data.additionalData.custom));
+                console.log("pushNotification.on-data:"+data.additionalData.custom.chatId);
+                console.log("checkChatPageExist:"+this.checkChatPageExist());
+                if(this.app.getRootNavs()[0]==undefined ||this.app.getRootNavs()[0].getViews().length<1){ 
+                    // root navigator가 아직 생성되지 않거나 아직 home page생성이 안되었음.
+                    //Just show alert and then promote. 상담사로 부터 도착한 메시지를 확인하시겠습니까?
+                    //humm... It is not enougth for duplicate alert msg.
+/*
+                    let loading = this.loadingCtrl.create({
+                        content: '앱을 구동중입니다.',
+                        duration: 30000,// 30 seconds
+                    });
+                    console.log("create loadingCtrl");
+                    var timer=setInterval(function(){ 
+                        if(gServerProvider.app.getRootNavs()!=undefined ||gServerProvider.app.getRootNavs()[0].getViews().length>=1){
+                            loading.dismiss();
+                            clearInterval(timer); 
+                            console.log("open new chat Page");
+                            gServerProvider.storage.chatId=data.additionalData.custom.chatId; // 일시적인 해결책임. 여러개의 상담내역이 있을수 있다. 
+                            gServerProvider.app.getRootNavs()[0].push(ChatPage, {chatId:data.additionalData.custom.chatId, class:"ChatPage"});                               
+                        } 
+                    }, 100); // 100 milliseconds
+*/
+                    if(!this.msgAlert){
+                            this.msgAlert=true;
+                            let confirm = this.alertCtrl.create({
+                                title: '상담사로 부터 도착한 메시지를 확인하시겠습니까?',
+                                buttons: [
+                                    {
+                                    text: '아니오',
+                                    handler: () => {
+                                        console.log('Disagree clicked');
+                                        this.msgAlert=false;
+                                    }
+                                    },
+                                    {
+                                    text: '네',
+                                    handler: () => {
+                                            this.msgAlert=false;
+                                            console.log('Agree clicked');
+                                            console.log("open new chat Page");
+                                            this.storage.chatId=data.additionalData.custom.chatId; // 일시적인 해결책임. 여러개의 상담내역이 있을수 있다. 
+                                            this.app.getRootNavs()[0].push(ChatPage, {chatId:data.additionalData.custom.chatId, class:"ChatPage"});   
+                                        }
+                                    }
+                                ]
+                                });
+                            confirm.present();
+                        }
+                }else if(!this.checkChatPageExist()){//채팅창이 열려있지 않을 경우
+                    console.log("open new chat Page");
+                    this.storage.chatId=data.additionalData.custom.chatId; // 일시적인 해결책임. 여러개의 상담내역이 있을수 있다. 
+                    this.app.getRootNavs()[0].push(ChatPage, {chatId:data.additionalData.custom.chatId, class:"ChatPage"});   
+                }else{
+                    console.log("show existing chat Page");
+                    //time:chatInfo.date, type:"action",action:"response",message:req.body.type+"상담문의"
+                    if(data.additionalData.custom.type=='action'){
+                        //채팅 화면이 현재 열려있다면 update하도록 한다. event를 사용해보자. 안되면 EventEmitter를 직접사용하자.
+                        //customerContact page를 다시 만들도록한다.
+                        this.events.publish("newChat",data.additionalData.custom);
+                    }else if(data.additionalData.custom.type=='text'){
+                        this.events.publish("newChat",data.additionalData.custom);
+                    }
                 }
             });
 
             this.pushNotification.on('error').subscribe((e:any)=>{
                 console.log(e.message);
             });
+    }
+
+    checkChatPageExist(){
+        let  views:ViewController[];
+        views=this.app.getRootNavs()[0].getViews();
+        for(let i=0;i<views.length;i++){
+            let view=views[i];
+            console.log("pages:"+view.getNavParams().get("class"));            
+            if(view.getNavParams().get("class")!=undefined){
+                console.log("class:"+view.getNavParams().get("class"));
+                if(view.getNavParams().get("class")=="ChatPage")  {
+                        return true;
+                }
+            }
+        }
+        return false;
     }
 
     loginAgain(){

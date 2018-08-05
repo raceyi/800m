@@ -48,7 +48,7 @@ export class HomePage {
   }
 
   openChat(){
-        this.navCtrl.push(ChatEntrancePage);
+        this.navCtrl.push(ChatEntrancePage,{class:'ChatEntrancePage'});
   }
 
   configureBounds(){

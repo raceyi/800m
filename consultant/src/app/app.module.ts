@@ -19,6 +19,7 @@ import {CustomerPageModule} from '../pages/customer/customer.module';
 import {ChatPageModule} from '../pages/chat/chat.module';
 import { HttpClientModule } from '@angular/common/http';
 import { Push, PushObject, PushOptions } from '@ionic-native/push';
+import {ChatEntrancePageModule} from '../pages/chat-entrance/chat-entrance.module';
 
 import { NativeStorage } from '@ionic-native/native-storage';
 import { ServerProvider } from '../providers/server/server';
@@ -36,6 +37,7 @@ import {MyErrorHandler} from '../classes/my-error-handler';
     TabsPage
   ],
   imports: [
+    ChatEntrancePageModule,
     ChatPageModule,
     CustomerPageModule,
     CalendarModule,

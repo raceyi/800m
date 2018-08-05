@@ -483,6 +483,31 @@ router.createNewChat=function(type,uid,consultantId){
   });
 }
 
+router.createNewChatByConsultant=function(type,uid,consultantId){
+ return new Promise((resolve,reject)=>{ 
+  MongoClient.connect(url, function(err, db) {
+    if (err){
+        reject(err);  
+    }else{ 
+        var dbo = db.db(config.dbName);
+        let now=new Date();
+        let content={ time:now, type:"text", origin:"consultant", text:type+"으로 연락드립니다."}; 
+        dbo.collection("chat").insertOne({type: type,userId:uid,consultantId:consultantId,date: now,progress:true,confirm:false,lastOrigin:"consultant",contents:[content]} ,function(err, res) {
+            if (err){ 
+                reject(err);
+            }else{
+                db.close();
+                console.log("res:"+JSON.stringify(res.ops[0]));
+                resolve(res.ops[0]);
+            }
+        },err=>{
+            reject(err);
+        });
+    }
+  });
+  });
+}
+
 router.replaceChat=function(chatId,index,origin,msg){
   return new Promise((resolve,reject)=>{ 
   MongoClient.connect(url, function(err, db) {
