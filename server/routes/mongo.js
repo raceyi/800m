@@ -541,7 +541,48 @@ router.replaceChat=function(chatId,index,origin,msg){
   });        
 }
 
-//router.replaceChat("5b3a2479511ffa3f1f0a0f24",0,"consultant",{text:"test"});
+router.getUserList=function(consultantId){
+  return new Promise((resolve,reject)=>{
+
+  MongoClient.connect(url, function(err, db) {
+    if (err){
+        reject(err);
+    }else{
+         var dbo = db.db(config.dbName);
+         dbo.collection("consultant").find({ _id: ObjectId(consultantId)}).toArray(function(err, mine) {
+                    if (err){
+                        reject(err);
+                    }else{
+                       console.log("mine:"+JSON.stringify(mine));
+                       let userIds=[];
+                       if(!mine[0].userIds){
+                           resolve([]); 
+                       }else{
+                        mine[0].userIds.forEach(userId=>{
+                           userIds.push(ObjectId(userId));
+                        })
+                        dbo.collection("user").find({"_id": { $in: userIds }}).toArray(function(err, users) {
+                            if(err){
+                                reject(err);
+                            }else{ 
+                               //console.log("users:"+JSON.stringify(users));
+                               users.forEach(user=>{
+                                   util.decryptObj(user);
+                                   delete user.password;
+                                   delete user.salt;
+                               });
+                               resolve(users);
+                            }
+                        });
+                       }
+                    }
+         });
+    }
+   });
+  });
+}
+
+//router.getUserList("5b6c29c028db34e3eef92c70").then((users)=>{console.log(JSON.stringify(users))});
 
 router.addChat=function(chatId,origin,msg){
   return new Promise((resolve,reject)=>{ 

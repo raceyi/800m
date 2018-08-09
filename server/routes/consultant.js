@@ -188,6 +188,16 @@ router.createNewChat=function(req,res){
     })
 }
 
+router.getUsers=function(req,res){
+    mongo.getUserList(req.session.uid).then(users=>{
+            let response = new serverResponse.Response("success");
+            response.users=users;
+            res.send(JSON.stringify(response));
+    },err=>{
+        let response = new serverResponse.FailResponse(err);
+        res.send(JSON.stringify(response));
+    });    
+}
 
 /*
 mongo.addConsultant( { email: "kalen02101@takib.biz", password: "111Highway 37",salt:"test", phone:"010",name:"이경주",birth:"19750111",sex:"F"}).then((res)=>{

@@ -47,7 +47,7 @@ router.signup=function(req,res){
         encryptedUser.salt=salt;
       mongo.addUser(encryptedUser).then((result)=>{
           //console.log("session.uid:"+req.session.uid);
-          req.session.uid=result._id;
+          req.session.uid=result;
 		  let response = new serverResponse.SuccResponse();
           res.send(JSON.stringify(response));
       },err=>{
@@ -141,6 +141,7 @@ router.getUserInfo=function(req,res){
 
 router.registerConsultant=function(req,res){
     console.log("registerConsultant:"+JSON.stringify(req.body));
+    console.log("req.session.uid:"+req.session.uid);
     mongo.registerConsultant(req.body.consultantId,req.session.uid).then(result=>{
         console.log("registerConsultant:"+JSON.stringify(result));
         req.session.cid=result._id;
