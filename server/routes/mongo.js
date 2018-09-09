@@ -706,11 +706,13 @@ router.getMonthChats=function(consultantId,year,month){
         startTime.setMilliseconds(0);
         
         console.log("startTime:"+startTime+" endTime:"+endTime);
-        //startTime 필드가 있어야만 한다 ㅜㅜ.
-
-//        dbo.collection("chat").find({consultantId:consultantId, date:{$lte:endTime}, startTime:{$gte:startTime}}).toArray(function(err, result) {
-        dbo.collection("chat").find({date:{$lte:endTime}, startTime:{$gte:startTime}}).toArray(function(err, result) {
-
+        //startTime 필드가 있어야만 한다 ㅜㅜ. {$and:[{startTime:{$lte:startTime}},{date:{$gte,endTime}}]}
+        dbo.collection("chat").find({consultantId:consultantId},
+                                    {$or:[
+                                          { date:{$lte:endTime,$gte:startTime}},
+                                          {startTime:{$lte:endTime,$gte:startTime}},
+                                          {$and:[{startTime:{$lte:startTime}},{date:{$gte:endTime}}]}     
+                                          ]}).toArray(function(err, result) {
             console.log("err:"+err+" result:"+result);
             if (err){
                 reject(err);

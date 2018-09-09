@@ -243,12 +243,13 @@ router.getMonthChats=function(req,res){
                         let date=timeDate.getDate()-1;
                         //console.log("eachEvent:"+JSON.stringify(month[date].eachEvent));
                         let index=month[date].eachEvent.findIndex(function (element) {
-                            console.log("userId:"+element.userId+ " userId:"+chat.userId);
-                            return element.userId==chat.userId;
+                            //console.log("userId:"+element.userId+ " userId:"+chat.userId);
+                            console.log("chat._id:"+JSON.stringify(chat)+" "+JSON.stringify(element));
+                            return (element.userId==chat.userId && element.chatId==chat._id);
                         });
                         console.log("index:"+index);
                         if(index<0){
-                            month[date].eachEvent.push({userId:chat.userId,type:chat.type,starttime:timeDate,endtime:timeDate});
+                            month[date].eachEvent.push({userId:chat.userId,chatId:chat._id, type:chat.type,starttime:timeDate,endtime:timeDate});
                         }else{
                             month[date].eachEvent[index].endtime=timeDate;
                         }

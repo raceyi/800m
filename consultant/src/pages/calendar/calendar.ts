@@ -61,13 +61,10 @@ export class CalendarPage {
       let substrs=title.split(" ");
       this.viewTitle = substrs[1]+"년 "+substrs[0];
 
-    let currentDate=this.calendar.currentDate;
-    console.log("currentDate:"+currentDate);
-    console.log("month:"+currentDate.getMonth());
-    let month:number=currentDate.getMonth();
-    month=month+1;
+    let months=substrs[0].split('월');
+    let month:number=parseInt(months[0]);
     console.log("month:"+month);
-    let body={month:month,year:currentDate.getFullYear()};
+    let body={month:month,year:parseInt(substrs[1])};
     console.log("body:"+JSON.stringify(body));
     this.eventSource=[];
     this.server.postWithAuth("/consultant/getMonthChats",body).then((res:any)=>{
@@ -185,42 +182,4 @@ export class CalendarPage {
      let date=new Date(m.format("YYYY-MM-DDTHH:mm:ssZ"));
      this.calendar.currentDate=date;
   }
-
-      createRandomEvents() {
-        var events = [];
-        for (var i = 0; i < 50; i += 1) {
-            var date = new Date();
-            var eventType = Math.floor(Math.random() * 2);
-            var startDay = Math.floor(Math.random() * 90) - 45;
-            var endDay = Math.floor(Math.random() * 2) + startDay;
-            var startTime;
-            var endTime;
-            if (eventType === 0) {
-                startTime = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() + startDay));
-                if (endDay === startDay) {
-                    endDay += 1;
-                }
-                endTime = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() + endDay));
-                events.push({
-                    title: 'All Day - ' + i,
-                    startTime: startTime,
-                    endTime: endTime,
-                    allDay: true
-                });
-            } else {
-                var startMinute = Math.floor(Math.random() * 24 * 60);
-                var endMinute = Math.floor(Math.random() * 180) + startMinute;
-                startTime = new Date(date.getFullYear(), date.getMonth(), date.getDate() + startDay, 0, date.getMinutes() + startMinute);
-                endTime = new Date(date.getFullYear(), date.getMonth(), date.getDate() + endDay, 0, date.getMinutes() + endMinute);
-                events.push({
-                    title: 'Event - ' + i,
-                    startTime: startTime,
-                    endTime: endTime,
-                    allDay: false
-                });
-            }
-        }
-        return events;
-    }
-
 }
