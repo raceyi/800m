@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController,AlertController } from 'ionic-angular';
+import { NavController,AlertController ,Platform} from 'ionic-angular';
 import {ChatPage} from '../chat/chat';
 import {ChatEntrancePage} from '../chat-entrance/chat-entrance';
 import {StorageProvider} from '../../providers/storage/storage';
@@ -23,7 +23,13 @@ export class HomePage {
   constructor(public navCtrl: NavController,
               public storage:StorageProvider,
               public server:ServerProvider,
+              private platform:Platform,
               private alertCtrl:AlertController) {
+
+    platform.ready().then(() => {
+                    this.server.registerPushService(); 
+
+   });    
 
   }
 

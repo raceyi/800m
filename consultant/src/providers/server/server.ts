@@ -38,7 +38,7 @@ export class ServerProvider {
               ,private push: Push)  {
     console.log('Hello ServerProvider');
     platform.ready().then(() => {
-        this.registerPushService(); 
+        //this.registerPushService(); 
         if(this.platform.is('android'))
             this.file = this.media.create('file:///android_asset/www/assets/appbeep.wav');
         else{

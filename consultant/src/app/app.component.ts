@@ -9,6 +9,7 @@ import {TabsPage} from '../pages/tabs/tabs';
 import { NativeStorage } from '@ionic-native/native-storage';
 import { StorageProvider } from '../providers/storage/storage';
 import { ServerProvider } from '../providers/server/server';
+import {CustomerInfoPage} from '../pages/customer-info/customer-info';
 
 var gMyApp;
 
@@ -30,8 +31,8 @@ export class MyApp {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
-
-      let passwordPromise=this.nativeStorage.getItem("password");
+      if(this.storage.device){
+          let passwordPromise=this.nativeStorage.getItem("password");
           let emailPromise=this.nativeStorage.getItem("email");
 
           Promise.all([passwordPromise, emailPromise]).then(function(values) {
@@ -51,7 +52,19 @@ export class MyApp {
               //move into error page
               this.rootPage=LoginPage;
           });
-
+      }else{
+              let password="waitee";
+              let email="kalen.lee@takit.biz";
+              let body={email:email,password:password};
+              console.log("email:"+email);
+              console.log("password:"+password);
+              serverProvider.postWithoutAuth('/consultant/login',body).then((res:any)=>{
+                    storage.saveLoginInfo(res);
+                    gMyApp.rootPage=TabsPage;  
+              },err=>{
+                  gMyApp.rootPage=LoginPage;  
+              })
+      }
       statusBar.styleDefault();
       splashScreen.hide();
     });

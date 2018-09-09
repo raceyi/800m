@@ -15,12 +15,11 @@ import {CustomerListPageModule} from '../pages/customer-list/customer-list.modul
 import {InformationPageModule} from '../pages/information/information.module';
 import {TabsPage} from '../pages/tabs/tabs';
 import { CalendarModule } from "ion2-calendar";
-import {CustomerPageModule} from '../pages/customer/customer.module';
 import {ChatPageModule} from '../pages/chat/chat.module';
 import { HttpClientModule } from '@angular/common/http';
 import { Push, PushObject, PushOptions } from '@ionic-native/push';
 import {ChatEntrancePageModule} from '../pages/chat-entrance/chat-entrance.module';
-
+import {CustomerInfoPageModule} from '../pages/customer-info/customer-info.module';
 import { NativeStorage } from '@ionic-native/native-storage';
 import { ServerProvider } from '../providers/server/server';
 import { HttpWrapperProvider } from '../providers/http-wrapper/http-wrapper';
@@ -37,9 +36,9 @@ import {MyErrorHandler} from '../classes/my-error-handler';
     TabsPage
   ],
   imports: [
+    CustomerInfoPageModule,
     ChatEntrancePageModule,
     ChatPageModule,
-    CustomerPageModule,
     CalendarModule,
     InformationPageModule,
     CustomerListPageModule,
@@ -50,7 +49,7 @@ import {MyErrorHandler} from '../classes/my-error-handler';
     GreetingPageModule,
     BrowserModule,
     HttpClientModule,    
-    IonicModule.forRoot(MyApp,{mode:'ios'})
+    IonicModule.forRoot(MyApp,{mode:'ios',animate:false})
   ],
   bootstrap: [IonicApp],
   entryComponents: [

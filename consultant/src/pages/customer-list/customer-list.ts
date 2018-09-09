@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams ,App} from 'ionic-angular';
-import {CustomerPage} from '../customer/customer';
+import {CustomerInfoPage} from '../customer-info/customer-info';
 import {StorageProvider} from '../../providers/storage/storage';
 import {ServerProvider} from '../../providers/server/server';
 import {ChatEntrancePage} from '../chat-entrance/chat-entrance';
@@ -44,8 +44,18 @@ export class CustomerListPage {
     console.log('ionViewDidLoad CustomerListPage');
   }
 
-  moveToCustomerInfo(){
-    this.navCtrl.push(CustomerPage);
+  ionViewWillEnter() {
+    let body={};
+    this.server.postWithAuth("/consultant/getUsers",body).then((res:any)=>{
+      this.storage.updateUserInfo(res.users);
+    },err=>{
+
+    })
+  }
+
+  moveToCustomerInfo(user){
+    console.log("moveToCustomerInfo:"+JSON.stringify(user));
+    this.app.getRootNavs()[0].push(CustomerInfoPage,{user:user,class:"CustomerInfoPage"});
   }
 
   sortByCharacter(){

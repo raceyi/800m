@@ -38,10 +38,10 @@ export class ServerProvider {
               ,private push: Push)  {
     console.log('Hello ServerProvider');
     gServerProvider=this;
-    platform.ready().then(() => {
-                    this.registerPushService(); 
-
-    });    
+//    platform.ready().then(() => {
+//                    this.registerPushService(); 
+//
+//   });    
   }
 
     registerPushService(){ // Please move this code into tabs.ts

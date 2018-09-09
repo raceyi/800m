@@ -89,6 +89,7 @@ app.post('/consultant/replaceChat',consultant.replaceChat);
 app.post('/consultant/terminateChat',consultant.terminateChat);
 app.post("/consultant/createNewChat",consultant.createNewChat);
 app.post("/consultant/getUsers",consultant.getUsers);
+app.post("/consultant/getUserChats",consultant.getUserChats);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

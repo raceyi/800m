@@ -37,12 +37,9 @@
 <div class="customer" *ngIf="filter=='twoMonth'">
 <ion-row *ngFor="let user of storage.userTwoMonthList;let i = index;" > 
   <ion-col col-3 style="font-size:4.2vw;" align-self-center>
-    <!--
-    <button ion-button clear style="color:black;" (click)="moveToCustomerInfo()">
+    <button ion-button clear style="color:black;" (click)="moveToCustomerInfo(user)">
       {{user.name}} 님
     </button>
-    -->
-      {{user.name}} 님    
   </ion-col>
   <ion-col col-4 style="font-size:4.2vw;color:#707981;" align-self-center>
     {{user.birth}} 
@@ -59,12 +56,9 @@
 <div class="customer" *ngIf="filter=='oneMonth'">
 <ion-row *ngFor="let user of storage.userOneMonthList;let i = index;" >
   <ion-col col-3 padding style="font-size:4.2vw;" align-self-center>
-    <!--
-    <button ion-button clear style="color:black;" (click)="moveToCustomerInfo()">
+    <button ion-button clear style="color:black;" (click)="moveToCustomerInfo(user)">
       {{user.name}} 님
     </button>
-    -->
-       {{user.name}} 님
   </ion-col>
   <ion-col col-4 style="font-size:4.2vw;color:#707981;" align-self-center>
      {{user.birth}} 
@@ -81,12 +75,9 @@
 <div class="customer" *ngIf="filter=='all'">
 <ion-row *ngFor="let user of storage.userList;let i = index;">
   <ion-col col-3 padding style="font-size:4.2vw;" align-self-center>
-    <!--
-     <button ion-button clear style="color:black;" (click)="moveToCustomerInfo()">
+     <button ion-button clear style="color:black;" (click)="moveToCustomerInfo(user)">
       {{user.name}} 님
     </button>
-    -->
-      {{user.name}} 님
   </ion-col>
   <ion-col col-4 style="font-size:4.2vw;color:#707981;" align-self-center>
      {{user.birth}} 

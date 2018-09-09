@@ -188,8 +188,10 @@ router.consultantLogin=function(object){
                 dbo.collection("consultant").find({ email: object.email }).toArray(function(err, mine) {
                     if (err){
                         reject(err);
+                    }else if(!mine){
+                        reject("consultant doesn't exist");
                     }else{ 
-                        //console.log("result:"+mine);
+                        console.log("result:"+JSON.stringify(mine));
                         let consultant=mine[0];
                         util.decryptObj(consultant);
                         // 고객 정보를 검색한다.
@@ -619,6 +621,49 @@ router.addChat=function(chatId,origin,msg){
     });
   });        
 }
+
+router.getUserChatList=function(consultantId,userId,time,limit){
+ return new Promise((resolve,reject)=>{ 
+     console.log("!!! time !!!:"+time);
+  MongoClient.connect(url, function(err, db) {
+    if (err){
+        reject(err);
+    }else{
+        var dbo = db.db(config.dbName); 
+        dbo.collection("chat").find({consultantId:consultantId,userId:userId, date:{$lt:new Date(time)}}).limit(limit).toArray(function(err, result) {
+            if (err){
+                reject(err);
+            }else{ 
+                db.close();
+                console.log("result:"+JSON.stringify(result));
+                resolve(result);
+            }
+        }); 
+    }
+  });
+ });
+}
+
+/*
+let time=new Date();
+router.getUserChatList("5b36f2e96654502e8d5945c1","5b36e7486654502e8d5941ef",5,time.toISOString()).then((result)=>{
+    console.log("result.length:"+result.length);
+    if(result.length==0){
+        console.log("no more chat");
+    }else{
+        let nextTime=new Date(result[0].date);
+        console.log("result[0]: "+JSON.stringify(result[0]));
+        router.getUserChatList("5b36f2e96654502e8d5945c1","5b36e7486654502e8d5941ef",1,nextTime.toISOString()).then((result)=>{
+            console.log("result.length:"+result.length);
+            console.log("result-nextTime: "+JSON.stringify(result[0]));
+
+        });
+    }
+},err=>{
+    console.log("error:"+JSON.stringify(err));
+})
+*/
+
 //router.addChat("5b39c3f333b466123f05f412","consultant",{text:"test"});
 
 /*

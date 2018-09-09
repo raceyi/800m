@@ -1,0 +1,104 @@
+page-customer-info {
+
+    .toolbar-background-ios {
+        background:white;//$default-color;
+        border:0px;
+    }
+    
+    .header-ios .toolbar-ios:last-child .toolbar-background-ios {
+        border-width: 0px !important;
+    }
+    .toolbar-content-ios {
+         color:white;
+         border:none;
+         //ion-col{
+         //    background-color:$default-color;
+         //}
+    }
+    .default-background{
+             background-color:$default-color;
+    }
+
+    .toolbar-ios{
+        padding:0px;
+        border:none;
+    }
+    .title{
+        font-size:4.5vw;
+        font-style:NotoSansKR-Medium;
+        padding-bottom:calc((12/375)*100vw);
+        padding-bottom:calc((7/375)*100vw);
+    }
+
+    .border-bottom{
+        border-bottom:solid 1px; 
+    }
+    .icon-areas{
+        background-image:
+            linear-gradient(to top, $default-color, $default-color),
+            linear-gradient(to bottom, #ffffff, #ffffff);
+        background-repeat : no-repeat;
+        background-position: 0 0, 0px calc((48/375)*100vw);
+        background-size: 100% 50%, 100% 50%;
+
+    }
+    .name-row{
+            height:calc((96/375)*100vw);
+            background-color:$default-color;
+    }
+
+    .info{
+      .name{    
+          font-style:NotoSansKR-Medium;
+          font-size:5vw;
+      }
+      .customer{
+          font-style:NotoSansKR-Medium;
+          font-size:4vw;
+      }
+
+      .info-label{
+          font-style:NotoSansKR-Light;
+          font-size:3.7vw;
+      }
+
+      .info-value{
+            font-size:4vw;
+            font-style:NotoSansKR-Regular;
+      }
+    }
+
+    .action-button{
+        width:calc((48/375)*100vw);
+        height:calc((48/375)*100vw);
+        background-color: rgb(213,235,255);
+        color:$default-color;
+        border-radius:50%;
+    }
+
+    .date-row{
+        padding-top:calc((18/375)*100vw);
+    }
+
+    .date{
+        font-style:NotoSansKR-Regular;
+        font-size:3.7vw;
+        color:rgb(162, 162, 162);
+    }
+
+    .chat-title{
+        font-style:NotoSansKR-Regular;
+        font-size:3.7vw;
+        color:rgb(42, 42, 42);
+        border-bottom:solid 1px rgb(222,222,222);
+        padding-bottom:calc((14/375)*100vw);
+    }
+
+    .dot {
+        height: 4px;
+        width: 4px;
+        background-color:rgb(0 ,193, 97);
+        border-radius: 50%;
+        display: inline-block;
+    }
+}

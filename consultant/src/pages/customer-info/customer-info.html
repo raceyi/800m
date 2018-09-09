@@ -1,0 +1,113 @@
+<!--
+  Generated template for the CustomerInfoPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+<!--
+    <ion-title>customerInfo</ion-title>
+  </ion-navbar>
+-->
+<!--
+  <ion-icon name="md-create"></ion-icon>
+-->
+  <ion-navbar hideBackButton>
+    <ion-row class="border-bottom default-background"> 
+      <ion-col col-1>
+        <button ion-button (click)="back()">
+        <ion-icon name="ios-arrow-back"></ion-icon>
+        </button>
+      </ion-col>
+      <ion-col col-4>
+      </ion-col>
+      <ion-col text-left class="title">
+        고객정보
+      </ion-col>
+    </ion-row>
+    <ion-row class="info name-row default-background">
+      <ion-col col-1>
+      </ion-col>
+      <ion-col text-left align-self-center>
+       <span class="name">{{name}}</span> <span class="customer">고객님</span>
+      </ion-col>
+    </ion-row>
+    <ion-row class="info default-background">
+      <ion-col col-1>
+      </ion-col>
+      <ion-col  col-3 text-left>
+        <span class="info-label"> 생년월일</span>
+      </ion-col>
+      <ion-col text-left>
+        <span class="info-value">{{birth}}</span>
+      </ion-col>
+    </ion-row>
+    <ion-row class="info default-background">
+      <ion-col col-1>
+      </ion-col>
+      <ion-col  col-3 text-left>
+        <span class="info-label"> 전화번호</span>
+      </ion-col>
+      <ion-col text-left>
+        <span class="info-value">{{phone}}</span>
+      </ion-col>
+    </ion-row>
+    <ion-row class="info default-background">
+      <ion-col col-1>
+      </ion-col>
+      <ion-col  col-3 text-left>
+        <span class="info-label"> 이메일</span>
+      </ion-col>
+      <ion-col text-left>
+        <span class="info-value">{{email}}</span>
+      </ion-col>
+    </ion-row>
+    <ion-row class="icon-areas">
+      <ion-col text-center align-self-center>
+        <a [href]="tel" ion-button class="action-button">
+        <ion-icon name="ios-call"></ion-icon>
+        </a>
+      </ion-col>
+      <ion-col text-center align-self-center>
+        <button ion-button class="action-button" (click)="openChat(user)">
+        <ion-icon name="ios-headset"></ion-icon>
+        </button>
+      </ion-col>
+      <ion-col text-center align-self-center>
+        <a [href]="mailto" ion-button class="action-button">        
+        <ion-icon name="md-mail"></ion-icon>
+        </a>
+      </ion-col>      
+    </ion-row>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+<div *ngIf="chatList.length==0">
+  상담내역이 존재하지 않습니다.
+</div>
+<div *ngFor="let chat of chatList">
+<ion-row class="date-row">
+  <ion-col col-1 text-right align-self-center>
+    <span class="dot"></span>
+  </ion-col>
+  <ion-col class="date" text-left>
+    {{chat.date}}
+  </ion-col>
+</ion-row>
+<ion-row>
+  <ion-col col-1 text-right>
+  </ion-col>
+  <ion-col class="chat-title">
+    {{chat.type}}
+  </ion-col>
+  <ion-col col-1>
+  </ion-col>
+</ion-row>
+</div>
+
+ <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+   <ion-infinite-scroll-content></ion-infinite-scroll-content>
+ </ion-infinite-scroll>
+ 
+</ion-content>

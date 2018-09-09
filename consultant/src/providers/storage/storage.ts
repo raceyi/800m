@@ -37,7 +37,8 @@ export class StorageProvider {
     public authReturnUrl=this.configProvider.getAuthReturnUrl();
     public authFailReturnUrl=this.configProvider.getAutFailReturnUrl();
     public version=this.configProvider.getVersion();
-
+    public device=this.configProvider.device;
+    
   constructor(private configProvider:ConfigProvider,private events:Events) {
     console.log('Hello StorageProvider Provider');
   }
@@ -89,6 +90,18 @@ export class StorageProvider {
                 this.convertChatsToList();
     }
 
+    updateUserInfo(users){
+                this.userList=users;
+                this.userList.forEach(user=>{
+                    if(user.overdue==1){
+                        this.userOneMonthList.push(user);
+                    }else if(user.overdue==2){
+                        this.userTwoMonthList.push(user);  
+                    }
+                    user.phoneHref="tel:"+user.phone;
+                })
+    }
+    
     convertDayInWeek(day){
         switch(day){
             case 0: return'일요일';
