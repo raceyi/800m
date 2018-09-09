@@ -1,5 +1,6 @@
 <ion-header>
   <ion-navbar>
+    <!--
     <ion-title>
      800M
     </ion-title>
@@ -8,31 +9,69 @@
         <ion-icon name="md-settings"></ion-icon>
       </button>
     </ion-buttons>
+    -->
+    <ion-row>
+      <ion-col col-2>
+      </ion-col>
+      <ion-col class="app-name" text-center style="color:white;font-size:4.5vw;">
+        800M
+      </ion-col>
+      <ion-col text-center col-2>
+      <button color="white" clear ion-button icon-only (click)="configureBounds()">
+        <ion-icon name="md-settings"></ion-icon>
+      </button>        
+      </ion-col>
+
+    </ion-row>
+    <ion-row class="message">
+      <ion-col text-center>
+        <b> 안정적인 재무관리가 필요하신가요?<br>
+          고객님을 위한 플랜이 준비되어 있습니다.</b>
+      </ion-col>
+    </ion-row>
+    <ion-row class="action-buttons">
+      <ion-col text-right col-7>
+          <button style="color:#fff89b;" ion-button outline round (click)="openChat()"> 상담시작하기</button>
+      </ion-col>
+
+      <ion-col col-2 align-self-center style="color:#fff89b;">
+        <a [href]="storage.consultantPhoneHref"  style="color:#fff89b;" round ion-button outline>
+          <ion-icon style="color:#fff89b;" name="ios-call"></ion-icon>
+        </a>
+      </ion-col>
+      <ion-col col-3>
+      </ion-col>
+    </ion-row>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
-  <ion-row class="message">
-    <ion-col text-center>
-       <b> 안정적인 재무관리가 필요하신가요?<br>
-        고객님을 위한 플랜이 준비되어 있습니다.</b>
-    </ion-col>
-  </ion-row>
 
-<ion-row class="action-buttons">
-    <ion-col text-right col-7>
-        <button style="color:#fff89b;" ion-button outline round (click)="openChat()"> 상담시작하기</button>
-    </ion-col>
-
-    <ion-col col-2 align-self-center style="color:#fff89b;">
-      <a [href]="storage.consultantPhoneHref"  style="color:#fff89b;" round ion-button outline>
-        <ion-icon style="color:#fff89b;" name="ios-call"></ion-icon>
-      </a>
-    </ion-col>
-    <ion-col col-3>
-    </ion-col>
+<div *ngFor="let chat of chatList">
+<ion-row class="date-row">
+  <ion-col col-1 text-right align-self-center>
+    <span class="dot"></span>
+  </ion-col>
+  <ion-col class="date" text-left>
+    {{chat.timeString}}
+  </ion-col>
 </ion-row>
+<ion-row>
+  <ion-col col-1 text-right>
+  </ion-col>
+  <ion-col class="chat-title">
+    <button ion-button clear (click)="enterChat(chat)"> {{chat.type}} </button>
+  </ion-col>
+  <ion-col col-1>
+  </ion-col>
+</ion-row>
+</div>
 
+ <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+   <ion-infinite-scroll-content></ion-infinite-scroll-content>
+ </ion-infinite-scroll>
+ 
+<!--
 <ion-row>
   <ion-col col-1>
     &nbsp;
@@ -54,4 +93,5 @@
 <div class="dummy">
 </div>
 </ion-scroll>
+-->
 </ion-content>

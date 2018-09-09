@@ -26,6 +26,7 @@ export class StorageProvider {
     public authReturnUrl=this.configProvider.getAuthReturnUrl();
     public authFailReturnUrl=this.configProvider.getAutFailReturnUrl();
     public version=this.configProvider.getVersion();
+    device=this.configProvider.device;
 
     consultantName;
     consultantId;
@@ -34,6 +35,7 @@ export class StorageProvider {
     insurances;
 
     chatId;
+    
   constructor(private configProvider:ConfigProvider,
               private platform: Platform,private push: Push) {
         console.log('Hello StorageProvider Provider');

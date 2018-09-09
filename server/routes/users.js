@@ -233,6 +233,17 @@ router.addChat=function(req,res){
     })
 }
 
+router.getUserChats=function(req,res){
+        mongo.getUserMyChatList(req.session.uid,req.body.queryTime,req.body.limit).then(chats=>{
+            let response = new serverResponse.Response("success");
+            response.chats=chats;
+            res.send(JSON.stringify(response));
+    },err=>{
+        let response = new serverResponse.FailResponse(err);
+        res.send(JSON.stringify(response));
+    });    
+}
+
 /*
 mongo.addUser( { email: "kalen985@takib.biz", password: "111Highway 37",salt:"test", phone:"010",name:"이경주",birth:"19750111",sex:"F"}).then((res)=>{
   console.log("res:"+res);

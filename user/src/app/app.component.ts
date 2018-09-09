@@ -40,6 +40,7 @@ export class MyApp {
     gMyApp=this;
 
     platform.ready().then(() => {
+        if(this.storage.device){
           let passwordPromise=this.nativeStorage.getItem("password");
           let emailPromise=this.nativeStorage.getItem("email");
 
@@ -69,6 +70,22 @@ export class MyApp {
               //move into error page
               this.rootPage=LoginPage;
           });
+        }else{
+              let body={email:"kalen75@naver.com",password:"waitee"};
+              serverProvider.postWithoutAuth('/login',body).then((res:any)=>{
+                  if(res.result=="success"){
+                        console.log("res.userInfo:"+JSON.stringify(res.userInfo));
+                        storage.storeUserInfo(res);
+                        if(!storage.consultantId){
+                            gMyApp.rootPage=SearchConsultantPage;
+                        }else{
+                            gMyApp.rootPage = HomePage;
+                        }
+                  }else{
+                        gMyApp.rootPage=LoginPage; 
+                  }
+              });
+        }
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();

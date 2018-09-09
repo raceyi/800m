@@ -49,7 +49,7 @@ import { Media, MediaObject } from '@ionic-native/media';
     ChatPageModule,
     BankAccountPageModule,
     ChatEntrancePageModule,
-    IonicModule.forRoot(MyApp,{mode:'ios'})
+    IonicModule.forRoot(MyApp,{mode:'ios',animate:false})
   ],
   bootstrap: [IonicApp],
   entryComponents: [

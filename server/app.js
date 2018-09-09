@@ -77,6 +77,7 @@ app.post("/createNewChat",users.createNewChat);
 app.post("/terminateChat",users.terminateChat);
 app.post('/getChat',users.getChat);
 app.post('/addChat',users.addChat);
+app.post('/getUserChats',users.getUserChats);
 
 app.post('/consultant/signup',consultant.signup);
 app.post('/consultant/login',consultant.login);

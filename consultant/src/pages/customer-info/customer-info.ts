@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams,App ,AlertController} from 'ionic-a
 import {StorageProvider} from '../../providers/storage/storage';
 import {ServerProvider} from '../../providers/server/server';
 import {ChatEntrancePage} from '../chat-entrance/chat-entrance';
+import {ChatPage} from '../chat/chat';
 
 /**
  * Generated class for the CustomerInfoPage page.
@@ -171,4 +172,7 @@ export class CustomerInfoPage {
     this.app.getRootNavs()[0].push(ChatEntrancePage,{userId:user._id,name:user.name,class:'ChatEntrancePage'});
   }
 
+  enterChat(chat){
+          this.app.getRootNavs()[0].push(ChatPage,{chatId:chat._id,name:this.name});
+  }
 }

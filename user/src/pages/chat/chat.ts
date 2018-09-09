@@ -132,20 +132,22 @@ export class ChatPage {
               }
           }
       })
-    let body={chatId:this.storage.chatId};
-    this.server.postWithAuth("/terminateChat",body).then((res)=>{
-          let alert = this.alertCtrl.create({
-                      title: '상담을 종료합니다.',
-                      buttons: ['OK']
-          });
-          alert.present();
-    },err=>{
-          let alert = this.alertCtrl.create({
-                      title: '상담을 종료에 실패했습니다.',
-                      buttons: ['OK']
-          });
-          alert.present();       
-    })
+    if(this.chatInfo.progress){  
+        let body={chatId:this.storage.chatId};
+        this.server.postWithAuth("/terminateChat",body).then((res)=>{
+              let alert = this.alertCtrl.create({
+                          title: '상담을 종료합니다.',
+                          buttons: ['OK']
+              });
+              alert.present();
+        },err=>{
+              let alert = this.alertCtrl.create({
+                          title: '상담을 종료에 실패했습니다.',
+                          buttons: ['OK']
+              });
+              alert.present();       
+        })
+    }
   }
 
   exitChat(){

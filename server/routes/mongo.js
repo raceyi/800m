@@ -646,6 +646,28 @@ router.getUserChatList=function(consultantId,userId,time,limit){
  });
 }
 
+router.getUserMyChatList=function(userId,time,limit){
+ return new Promise((resolve,reject)=>{ 
+//     console.log("!!! time !!!:"+time);
+  MongoClient.connect(url, function(err, db) {
+    if (err){
+        reject(err);
+    }else{
+        var dbo = db.db(config.dbName); 
+        dbo.collection("chat").find({userId:userId, date:{$lt:new Date(time)}}).limit(limit).toArray(function(err, result) {
+            if (err){
+                reject(err);
+            }else{ 
+                db.close();
+                //console.log("result:"+JSON.stringify(result));
+                resolve(result);
+            }
+        }); 
+    }
+  });
+ });
+}
+
 var getDaysInMonth = function(year,month) {
     let date=new Date();
     date.setMonth(month-1);

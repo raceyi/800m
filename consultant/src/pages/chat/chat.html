@@ -40,7 +40,7 @@
   </ion-list>
 </ion-content>
 
-<ion-footer style="background-color:#AEB6BD;">
+<ion-footer style="background-color:#AEB6BD;" *ngIf="this.chatInfo.progress">
   <ion-grid>
     <ion-row>
       <ion-col col-2 align-self-center *ngIf="actionHide" (click)="showActionButtons(true)">

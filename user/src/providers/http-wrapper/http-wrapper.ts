@@ -22,7 +22,7 @@ timeout:number=30; //in seconds;
 
   post(url,bodyIn){
       return new Promise((resolve,reject)=>{        
-        if(this.plt.is("cordova")){ //use native-plugin
+        if(this.configProvider.device){ //use native-plugin
               this.http.setDataSerializer("json"); 
               this.http.setRequestTimeout(this.timeout);
               let body = Object.assign({}, bodyIn); 

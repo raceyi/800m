@@ -99,7 +99,7 @@
   <ion-col col-1 text-right>
   </ion-col>
   <ion-col class="chat-title">
-    {{chat.type}}
+    <button ion-button clear (click)="enterChat(chat)"> {{chat.type}}</button>
   </ion-col>
   <ion-col col-1>
   </ion-col>

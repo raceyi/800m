@@ -1,9 +1,5 @@
 page-home {
 
-    .scroll-content {
-       overflow-y: hidden;
-    }
-
     .toolbar-background-ios {
         background: #41a6ff;
         color:white;
@@ -11,6 +7,11 @@ page-home {
 
     .toolbar-title-ios {
         color:white;        
+    }
+
+    .app-name{
+        padding-top:calc((20/375)*100vw);
+        font-style: NotoSansKR-Black;
     }
 
     .header-ios .toolbar-ios:last-child .toolbar-background-ios {
@@ -27,7 +28,7 @@ page-home {
     }
 
     .message{
-        padding-top:calc((108/375)*100vw); 
+        padding-top:calc((70/375)*100vw); 
         padding-bottom:calc((66/375)*100vw); 
         background: #41a6ff;
         color:white;   
@@ -51,4 +52,31 @@ page-home {
     .dummy{
         height:10vh;
     }
+
+    .date-row{
+        padding-top:calc((18/375)*100vw);
+    }
+
+    .date{
+        font-style:NotoSansKR-Regular;
+        font-size:3.7vw;
+        color:rgb(162, 162, 162);
+    }
+
+    .chat-title{
+        font-style:NotoSansKR-Regular;
+        font-size:3.7vw;
+        color:rgb(42, 42, 42);
+        border-bottom:solid 1px rgb(222,222,222);
+        padding-bottom:calc((14/375)*100vw);
+    }
+
+    .dot {
+        height: 4px;
+        width: 4px;
+        background-color:rgb(0 ,193, 97);
+        border-radius: 50%;
+        display: inline-block;
+    }
+    
 }
