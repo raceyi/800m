@@ -6,6 +6,7 @@ var response = require("./response");
 var util=require("./util.js");
 var serverResponse = require("./response");
 var notification=require("./notification");
+var moment=require('moment');
 
 function validityCheck(email,phone){
     console.log("come validityCheck function");
@@ -209,6 +210,110 @@ router.getUserChats=function(req,res){
         res.send(JSON.stringify(response));
     });    
 
+}
+
+var getDaysInMonth = function(year,month) {
+    let date=new Date();
+    date.setMonth(month-1);
+    date.setFullYear(year);
+    console.log("date:"+date);
+    var m = moment(date); 
+    return m.daysInMonth();
+};
+
+router.getMonthChats=function(req,res){
+    // 한달간의 설계사의 모든 상담 목록을 가져온다.
+    // 가져올때는 모든 채팅 목록이 나와야 한다.
+    console.log("getMonthChats-body:"+JSON.stringify(req.body));
+    mongo.getMonthChats(req.session.uid,req.body.year,req.body.month).then(chats=>{ // 채팅 start의 time과 chat의 date시간이 범위를 포함하는경우만 가져온다.
+        console.log("chats:"+chats);
+        if(chats.length>0){
+            let monthDays=getDaysInMonth(req.body.year,req.body.month);
+            let month=[];
+            for(i=0;i<monthDays;i++)
+                month.push({eachEvent:[]});
+            chats.forEach(chat=>{       // 채팅 목록에 따라 발짜별로 분류한다. (local time과 global time의 문제)
+                for(i=0;i<chat.contents.length;i++){
+                    let eachLine=chat.contents[i];
+                    let timeDate=new Date(eachLine.time);
+                    
+                    if(timeDate.getMonth()==(req.body.month-1) && timeDate.getFullYear()==req.body.year){ //동일 년/월일 경우만
+                        // 동일날짜에 동일 userId를 검색한다. 없으면 추가하고 있으면 endTime을 조정한다
+                        console.log("timeDate:"+timeDate);
+                        let date=timeDate.getDate()-1;
+                        //console.log("eachEvent:"+JSON.stringify(month[date].eachEvent));
+                        let index=month[date].eachEvent.findIndex(function (element) {
+                            console.log("userId:"+element.userId+ " userId:"+chat.userId);
+                            return element.userId==chat.userId;
+                        });
+                        console.log("index:"+index);
+                        if(index<0){
+                            month[date].eachEvent.push({userId:chat.userId,type:chat.type,starttime:timeDate,endtime:timeDate});
+                        }else{
+                            month[date].eachEvent[index].endtime=timeDate;
+                        }
+                    }
+                    console.log("month:"+JSON.stringify(month));
+                }
+            });
+            //console.log("month:"+JSON.stringify(month));
+            for(let i=0;i<month.length;i++)
+                console.log("i:"+i+" "+JSON.stringify( month[i].eachEvent));
+            // 고객 이름을 검색한다. 이름정도는 따로 저장하는것도 괜찬다... 동일 고객이 있을수 있음으로 고객 id만 저장한 array를 만드록 가져오자.
+            let customer=[];
+            month.forEach(day=>{
+                day.eachEvent.forEach(chat=>{
+                        let index=customer.findIndex(function (element) {
+                            return element.userId==chat.userId;
+                        });
+                        if(index<0){
+                            customer.push(chat.userId);
+                        }
+                })
+            });
+            console.log("month--:"+JSON.stringify(month));            
+            mongo.getCustomerName(customer).then((names)=>{
+                console.log("!!!!names:"+JSON.stringify(names));
+                month.forEach(day=>{
+                    day.eachEvent.forEach(chat=>{
+                            console.log("chat.userId:"+chat.userId);
+                            let index=names.findIndex(function (element) {
+                                console.log("element:"+JSON.stringify(element));
+                                return element._id==chat.userId;
+                            });
+                            if(index<0){
+                                console.log("hum... customer name not found\n");
+                            }else{
+                                chat.name=names[index].name;
+                            }
+                    })
+                });
+                let events=[];
+                month.forEach(day=>{
+                    day.eachEvent.forEach(chat=>{
+                        delete chat.userId;
+                        events.push(chat);
+                    })
+                })
+                console.log("events:"+JSON.stringify(events));
+                let response = new serverResponse.Response("success");
+                response.events=events;
+                res.send(JSON.stringify(response));
+            },err=>{
+                console.log("err:"+JSON.stringify(err));
+                let response = new serverResponse.FailResponse(err);
+                res.send(JSON.stringify(response));
+            })
+    }else{
+            console.log("chats is undefined");
+            let response = new serverResponse.Response("success");
+            response.events=[];
+            res.send(JSON.stringify(response));            
+        }
+    },err=>{
+        let response = new serverResponse.FailResponse(err);
+        res.send(JSON.stringify(response));
+    });
 }
 
 /*

@@ -147,6 +147,9 @@ export class CustomerInfoPage {
                             let lastIndex=chats.length-1;
                             if(lastIndex>=0)
                                 this.lastQueryChatTime=chats[lastIndex].date;
+                            chats.forEach(chat=>{
+                                chat.timeString=chat.date.substr(0,4)+"."+chat.date.substr(5,2)+"."+chat.date.substr(8,2);
+                            })    
                             resolve(chats);
                     }else{ //no more chats
                         resolve([]);

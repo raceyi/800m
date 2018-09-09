@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { ErrorHandler, NgModule } from '@angular/core';
+import { ErrorHandler, NgModule ,LOCALE_ID} from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -14,7 +14,6 @@ import {CustomerContactPageModule} from '../pages/customer-contact/customer-cont
 import {CustomerListPageModule} from '../pages/customer-list/customer-list.module';
 import {InformationPageModule} from '../pages/information/information.module';
 import {TabsPage} from '../pages/tabs/tabs';
-import { CalendarModule } from "ion2-calendar";
 import {ChatPageModule} from '../pages/chat/chat.module';
 import { HttpClientModule } from '@angular/common/http';
 import { Push, PushObject, PushOptions } from '@ionic-native/push';
@@ -30,6 +29,11 @@ import { Media, MediaObject } from '@ionic-native/media';
 
 import {MyErrorHandler} from '../classes/my-error-handler';
 
+import { NgCalendarModule  } from 'ionic2-calendar';
+import { registerLocaleData } from '@angular/common';
+import localeKo from '@angular/common/locales/ko';
+registerLocaleData(localeKo);
+
 @NgModule({
   declarations: [
     MyApp,
@@ -39,7 +43,7 @@ import {MyErrorHandler} from '../classes/my-error-handler';
     CustomerInfoPageModule,
     ChatEntrancePageModule,
     ChatPageModule,
-    CalendarModule,
+    NgCalendarModule,
     InformationPageModule,
     CustomerListPageModule,
     CustomerContactPageModule,
@@ -68,6 +72,7 @@ import {MyErrorHandler} from '../classes/my-error-handler';
     NativeStorage,
     Push,
     Media,
+    {provide: LOCALE_ID, useValue: 'ko-KR' },    
     {provide: ErrorHandler, useClass: MyErrorHandler}
   ]
 })

@@ -6,10 +6,19 @@ page-calendar {
             color:white !important;
         }
     }
+
+    ion-calendar{
+        padding: 0px;
+    }
+
     .event{
         margin-left:calc((10/375)*100vw);
         margin-right:calc((10/375)*100vw);
         margin-top:0;
         margin-bottom:calc((4/375)*100vw);
+    }
+
+    .month-button{
+        background-color:$default-color;
     }
 }

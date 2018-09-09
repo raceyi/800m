@@ -5,6 +5,8 @@ var ObjectId = require('mongodb').ObjectId;
 var AsyncLock = require('async-lock');
 var lock = new AsyncLock();
 var util=require("./util.js");
+var moment=require('moment');
+
 let config = require('../config');
 
 var url=config.mongoURL;
@@ -469,7 +471,7 @@ router.createNewChat=function(type,uid,consultantId){
         var dbo = db.db(config.dbName);
         let now=new Date();
         let content={ time:now, type:"action", action:"response", origin:"user", text:type+"상담문의"}; 
-        dbo.collection("chat").insertOne({type: type,userId:uid,consultantId:consultantId,date: now,progress:true,confirm:false,lastOrigin:"user",contents:[content]} ,function(err, res) {
+        dbo.collection("chat").insertOne({type: type,userId:uid,consultantId:consultantId,startTime:now,date: now,progress:true,confirm:false,lastOrigin:"user",contents:[content]} ,function(err, res) {
             if (err){ 
                 reject(err);
             }else{
@@ -624,7 +626,7 @@ router.addChat=function(chatId,origin,msg){
 
 router.getUserChatList=function(consultantId,userId,time,limit){
  return new Promise((resolve,reject)=>{ 
-     console.log("!!! time !!!:"+time);
+//     console.log("!!! time !!!:"+time);
   MongoClient.connect(url, function(err, db) {
     if (err){
         reject(err);
@@ -635,7 +637,96 @@ router.getUserChatList=function(consultantId,userId,time,limit){
                 reject(err);
             }else{ 
                 db.close();
-                console.log("result:"+JSON.stringify(result));
+                //console.log("result:"+JSON.stringify(result));
+                resolve(result);
+            }
+        }); 
+    }
+  });
+ });
+}
+
+var getDaysInMonth = function(year,month) {
+    let date=new Date();
+    date.setMonth(month-1);
+    date.setFullYear(year);
+    console.log("date:"+date);    
+    var m = moment(date); 
+    return m.daysInMonth();
+};
+
+router.getMonthChats=function(consultantId,year,month){
+       //chats: 채팅 start의 time과 chat의 date시간이 범위를 포함하는경우만 가져온다
+ return new Promise((resolve,reject)=>{ 
+  MongoClient.connect(url, function(err, db) {
+    if (err){
+        reject(err);
+    }else{
+        var dbo = db.db(config.dbName);
+        console.log("year:"+year+" month:"+month);
+        console.log("daysInMonth:"+getDaysInMonth(year,month));
+        let endTime=new Date();
+        endTime.setFullYear(year);
+        endTime.setMonth(month-1);
+        endTime.setDate(getDaysInMonth(year,month));
+        endTime.setHours(23);
+        endTime.setMinutes(59);
+        endTime.setSeconds(59);
+        endTime.setMilliseconds(999);
+
+        let startTime = new Date();
+        startTime.setFullYear(year);
+        startTime.setMonth(month-1);
+        startTime.setDate(1);
+        startTime.setHours(0);
+        startTime.setMinutes(0);
+        startTime.setSeconds(0);
+        startTime.setMilliseconds(0);
+        
+        console.log("startTime:"+startTime+" endTime:"+endTime);
+        //startTime 필드가 있어야만 한다 ㅜㅜ.
+
+//        dbo.collection("chat").find({consultantId:consultantId, date:{$lte:endTime}, startTime:{$gte:startTime}}).toArray(function(err, result) {
+        dbo.collection("chat").find({date:{$lte:endTime}, startTime:{$gte:startTime}}).toArray(function(err, result) {
+
+            console.log("err:"+err+" result:"+result);
+            if (err){
+                reject(err);
+            }else{ 
+                db.close();
+                console.log("getMonthChats-result:"+JSON.stringify(result));
+                resolve(result);
+            }
+        }); 
+    }
+  });
+ });
+}
+
+router.getCustomerName=function(customers){
+ return new Promise((resolve,reject)=>{ 
+  MongoClient.connect(url, function(err, db) {
+    if (err){
+        reject(err);
+    }else{
+        var dbo = db.db(config.dbName);       
+         let customerObjects=[];
+         customers.forEach(customer=>{
+             customerObjects.push(ObjectId(customer));
+         })
+        dbo.collection("user").find({_id: {$in:customerObjects}}).toArray(function(err, result) {
+            if (err){
+                reject(err);
+            }else{ 
+                db.close();
+                if(result){
+                    result.forEach(user=>{
+                        util.decryptObj(user);
+                        delete user.password;
+                        delete user.salt;
+                    });
+                }
+                console.log("getCustomerName-result:"+JSON.stringify(result));                
                 resolve(result);
             }
         }); 
