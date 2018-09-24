@@ -28,5 +28,5 @@ $ionic cordova plugin add cordova-plugin-media
 
 $npm install --save @ionic-native/media
 
-
+$npm install ionic2-custom-icons --save 
 

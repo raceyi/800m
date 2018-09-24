@@ -1,7 +1,7 @@
 page-home {
 
     .toolbar-background-ios {
-        background: #41a6ff;
+        background: #ffef00;
         color:white;
     }
 
@@ -9,7 +9,8 @@ page-home {
         color:white;        
     }
     .title{
-        background: #41a6ff;        
+        background: #ffef00; 
+        height: calc((60/375)*100vw);       
     }
     .app-name{
         padding-top:calc((20/375)*100vw);
@@ -20,19 +21,77 @@ page-home {
          border-width: 0px; 
     }
 
+    ion-header{
+         background: #ffef00; 
+         height: calc((375/375)*100vw);
+    }
+
+    ////////////////////////////////////////////////////////
+    .container {
+        text-align: center;
+        div.button{
+            background: linear-gradient(to bottom right, #009fe8,#ffef00);
+            border-radius: 50%;
+            color: #122dff;
+            display: inline-block;
+            padding: 5px;
+            text-decoration: none;
+            div {
+                    background: #ffef00;
+                    display: block;
+                    border-radius: 50%;
+                    width:calc((210/375)*100vw);
+                    height:calc((210/375)*100vw);
+                    .explain{
+                        padding-top:calc((60/375)*100vw);
+                        padding-bottom:calc((10/375)*100vw);
+                        font-size:3.4vw;
+                    }
+                    .open-chat{
+                        font-size:4.2vw;
+                    }
+                }            
+        }    
+        background:#ffef00;        
+    }
+    ////////////////////////////////////////////////////////
+
     .action-buttons{
-        background-color: #41a6ff;
+        background-color: #ffef00;
         color:  #fff89b;
         .button-outline-ios {
-            border-color: #fff89b;
+            border-color: white;
+            border-radius: 50%;
         }  
-        padding-bottom:calc((20/375)*100vw); 
+        padding-top:calc((20/375)*100vw); 
+    }
+
+    .chat-info{
+        width: calc((355/375)*100vw);
+        height: calc((78/375)*100vw);
+        border-radius: 5px;
+        background-color: #ffffff;
+        border: solid 1px #c3e3ff;
+        margin:10px;
+        .date{
+            font-size:3.4vw;
+            width:  calc((96/375)*100vw);
+            height: calc((18/375)*100vw);
+            font-family: AppleSDGothicNeo;
+            font-weight: normal;
+            font-style: normal;
+            font-stretch: normal;
+            line-height: 1.38;
+            letter-spacing: -0.3px;
+            text-align: left;
+            color: #666666;
+        }
     }
 
     .message{
         padding-top:calc((70/375)*100vw); 
         padding-bottom:calc((66/375)*100vw); 
-        background: #41a6ff;
+        background: #ffef00;
         color:white;   
         font-size:4.5vw;     
     }
@@ -54,7 +113,7 @@ page-home {
     .dummy{
         height:10vh;
     }
-
+/*
     .date-row{
         padding-top:calc((18/375)*100vw);
     }
@@ -72,7 +131,7 @@ page-home {
         border-bottom:solid 1px rgb(222,222,222);
         padding-bottom:calc((14/375)*100vw);
     }
-
+*/
     .dot {
         height: 4px;
         width: 4px;

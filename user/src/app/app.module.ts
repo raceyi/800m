@@ -14,6 +14,7 @@ import {GreetingPageModule} from '../pages/greeting/greeting.module';
 import { StorageProvider } from '../providers/storage/storage';
 import {ChatPageModule} from '../pages/chat/chat.module';
 import {SocialNumberPageModule} from '../pages/social-number/social-number.module';
+import {MyPageModule} from '../pages/my/my.module';
 import { ServerProvider } from '../providers/server/server';
 import { HttpWrapperProvider } from '../providers/http-wrapper/http-wrapper';
 import { ConfigProvider } from '../providers/config/config';
@@ -29,6 +30,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { NativeStorage } from '@ionic-native/native-storage';
 import { Push, PushObject, PushOptions } from '@ionic-native/push';
 import { Media, MediaObject } from '@ionic-native/media';
+import {CustomIconsModule} from 'ionic2-custom-icons';
+import {PasswordResetPageModule} from '../pages/password-reset/password-reset.module';
+import{ConfigurePasswordPageModule} from '../pages/configure-password/configure-password.module';
 
 @NgModule({
   declarations: [
@@ -49,6 +53,10 @@ import { Media, MediaObject } from '@ionic-native/media';
     ChatPageModule,
     BankAccountPageModule,
     ChatEntrancePageModule,
+    MyPageModule,
+    PasswordResetPageModule,
+    ConfigurePasswordPageModule,
+    CustomIconsModule,
     IonicModule.forRoot(MyApp,{mode:'ios',animate:false})
   ],
   bootstrap: [IonicApp],

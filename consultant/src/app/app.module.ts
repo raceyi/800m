@@ -28,7 +28,7 @@ import {HTTP} from '@ionic-native/http'
 import { Media, MediaObject } from '@ionic-native/media';
 
 import {MyErrorHandler} from '../classes/my-error-handler';
-
+import {CustomIconsModule} from 'ionic2-custom-icons';
 import { NgCalendarModule  } from 'ionic2-calendar';
 import { registerLocaleData } from '@angular/common';
 import localeKo from '@angular/common/locales/ko';
@@ -40,6 +40,7 @@ registerLocaleData(localeKo);
     TabsPage
   ],
   imports: [
+    CustomIconsModule,
     CustomerInfoPageModule,
     ChatEntrancePageModule,
     ChatPageModule,

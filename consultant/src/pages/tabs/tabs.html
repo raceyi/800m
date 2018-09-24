@@ -1,8 +1,12 @@
 <ion-tabs>
+<!--
+  <ion-tab [root]="tab3Root" tabTitle="메인"  customIconSet="tabs" customIconName="icon-home" ></ion-tab>
+  <ion-tab [root]="tab1Root"  tabTitle="상담문의"  customIconSet="tabs" customIconName="icon-chat" [tabBadge]="countBadge"></ion-tab>
+  <ion-tab [root]="tab2Root" tabTitle="고객관리" customIconSet="tabs" customIconName="icon-list"></ion-tab>
+  <ion-tab [root]="tab2Root" tabTitle="프로필" customIconSet="tabs" customIconName="profile"></ion-tab>
+-->
   <ion-tab [root]="tab3Root" tabTitle="일정" tabIcon="ios-calendar-outline"></ion-tab>
   <ion-tab [root]="tab1Root"  [tabBadge]="countBadge" tabTitle="고객요청" tabIcon="ios-chatbubbles-outline"></ion-tab>
   <ion-tab [root]="tab2Root" tabTitle="고객관리" tabIcon="ios-list-outline"></ion-tab>
- <!--
   <ion-tab [root]="tab4Root" tabTitle="나의정보" tabIcon="ios-information-circle-outline"></ion-tab>
-  -->
 </ion-tabs>

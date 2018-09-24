@@ -5,6 +5,7 @@ import {ChatEntrancePage} from '../chat-entrance/chat-entrance';
 import {StorageProvider} from '../../providers/storage/storage';
 import {ServerProvider} from '../../providers/server/server';
 import {BankAccountPage} from '../bank-account/bank-account';
+import {MyPage} from '../my/my';
 
 @Component({
   selector: 'page-home',
@@ -92,7 +93,7 @@ export class HomePage {
                             if(lastIndex>=0)
                                 this.lastQueryChatTime=chats[lastIndex].date;
                             chats.forEach(chat=>{
-                                chat.timeString=chat.date.substr(0,4)+"."+chat.date.substr(5,2)+"."+chat.date.substr(8,2);
+                                chat.timeString=chat.date.substr(0,4)+"년 "+chat.date.substr(5,2)+"월 "+chat.date.substr(8,2)+"일";
                             })    
                             resolve(chats);
                     }else{ //no more chats
@@ -135,7 +136,7 @@ export class HomePage {
   }
 
   configureBounds(){
-      this.navCtrl.push(BankAccountPage);
+        this.navCtrl.push(MyPage);
   }
 
   enterChat(chat){

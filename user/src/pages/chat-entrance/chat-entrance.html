@@ -6,55 +6,48 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>채팅문의</ion-title>
-    <ion-buttons end>
-      <button style="color:#ffffff;" (click)="close()" ion-button icon-only>
-        <ion-icon name="md-close"></ion-icon>
+  <ion-navbar hideBackButton>
+  <ion-buttons start>
+      <button style="color:#009fe8;" (click)="close()" ion-button icon-only>
+        <ion-icon name="arrow-back"></ion-icon>
       </button>
     </ion-buttons>
+    <ion-title>상담하기</ion-title>
   </ion-navbar>
 
 </ion-header>
 <ion-content padding>
   <ion-row>
     <ion-col text-center>
-        <img class="photo" src="assets/imgs/songmee.png">
+        <img class="photo" src="assets/imgs/headset.png">
     </ion-col>
   </ion-row>
   <ion-row class="greetings">
     <ion-col text-center>
-      {{storage.name}}님 안녕하세요.<br>
       상담내용을 선택해 주세요.
     </ion-col>
   </ion-row>
 <ion-row>
 <ion-col text-center>
-  <button ion-button round outline (click)="chat('보상')" style="width:60vw;">보상</button>
+  <button class="action-button" ion-button round outline (click)="chat('보상')" style="width:60vw;">보상</button>
 </ion-col>
 </ion-row>
 
 <ion-row>
 <ion-col text-center>
-  <button ion-button round outline (click)="chat('신규가입')" style="width:60vw;">신규가입</button>
+  <button class="action-button" ion-button round outline (click)="chat('신규가입')" style="width:60vw;">신규가입</button>
 </ion-col>
 </ion-row>
 
 <ion-row>
 <ion-col text-center>
-  <button ion-button round outline (click)="chat('연체관리')" style="width:60vw;">연체관리</button>
+  <button class="action-button" ion-button round outline (click)="chat('연체관리/해지')" style="width:60vw;">연체관리</button>
 </ion-col>
 </ion-row>
 
 <ion-row>
 <ion-col text-center>
-  <button ion-button round outline (click)="chat('해지')" style="width:60vw;">해지</button>
-</ion-col>
-</ion-row>
-
-<ion-row>
-<ion-col text-center>
-  <button ion-button round outline (click)="chat('기타')" style="width:60vw;">기타</button>
+  <button class="action-button" ion-button round outline (click)="chat('기타')" style="width:60vw;">기타</button>
 </ion-col>
 </ion-row>
 

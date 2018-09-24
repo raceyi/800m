@@ -3,6 +3,7 @@ let router = express.Router();
 let gcm = require('node-gcm');
 let config = require('../config');
 var mongo = require("./mongo");
+let nodemailer = require("nodemailer");
 
 router.sendToConsultant=function(msg,id){
      return new Promise((resolve,reject)=>{ 
@@ -83,6 +84,36 @@ router.sendToUser=function(msg,id){
          },err=>{
              reject(err);
         })
+	});
+}
+
+router.sendEmail=function(email,subject,content, next){
+	const smtpTransport = nodemailer.createTransport({
+		host: config.smtpServer, //'smtp.daum.net'
+		port: 465,
+		secure: true, // use SSL
+		//tls : ssl_options
+		auth : {
+			user:config.smtpId,
+			pass:config.smtpPwd
+		}
+	});
+
+	const mailOptions = {
+		from: config.smtpId,
+		to: email,
+		subject: subject,
+		text: content
+	};
+
+	smtpTransport.sendMail(mailOptions, function(err, response){
+		if(err){
+			console.log(err);
+			next(err);
+		}else{
+			console.log("Message sent: " + JSON.stringify(response));
+			next();
+		}
 	});
 }
 

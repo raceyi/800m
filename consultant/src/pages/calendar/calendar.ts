@@ -80,7 +80,7 @@ export class CalendarPage {
                        let eventSource=[];
                       res.events.forEach(event=>{
                         eventSource.push({
-                          title:  event.name+ "님 "+event.type,
+                          title:  event.name+ "님 "+event.type +"상담",
                           startTime: new Date(event.starttime),
                           endTime: new Date(event.endtime),
                           allDay: false

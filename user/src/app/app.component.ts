@@ -17,6 +17,8 @@ import {ChatEntrancePage} from '../pages/chat-entrance/chat-entrance';
 import { NativeStorage } from '@ionic-native/native-storage';
 import { StorageProvider } from '../providers/storage/storage';
 import { ServerProvider } from '../providers/server/server';
+import { ConfigProvider} from '../providers/config/config';
+
 var gMyApp;
 
 @Component({
@@ -33,6 +35,7 @@ export class MyApp {
   //rootPage:any = ChatPage;
   constructor(platform: Platform, statusBar: StatusBar, 
               private storage:StorageProvider,
+              private config:ConfigProvider,
               splashScreen: SplashScreen,
               private serverProvider:ServerProvider,
               private nativeStorage:NativeStorage) {
@@ -70,12 +73,13 @@ export class MyApp {
               //move into error page
               this.rootPage=LoginPage;
           });
-        }else{
-              let body={email:"kalen75@naver.com",password:"waitee"};
+        }else{ //Just for testing
+              let body={email:this.config.testId,password:this.config.testPassword};
               serverProvider.postWithoutAuth('/login',body).then((res:any)=>{
                   if(res.result=="success"){
                         console.log("res.userInfo:"+JSON.stringify(res.userInfo));
                         storage.storeUserInfo(res);
+                        storage.email=this.config.testId; 
                         if(!storage.consultantId){
                             gMyApp.rootPage=SearchConsultantPage;
                         }else{

@@ -1,9 +1,9 @@
 page-calendar {
     ion-title{
         height:calc((44/667)*100vh);
-        background-color:$default-color;
+        background-color:white;
         .toolbar-title-ios{
-            color:white !important;
+            color:#191919 !important;
         }
     }
 
@@ -19,6 +19,43 @@ page-calendar {
     }
 
     .month-button{
-        background-color:$default-color;
+        background-color:white;
+    }
+/////////////////////////////////////////////
+    td{
+        border-color:white !important;
+        border-radius: 50% !important;
+        text-align:center;
+        font-size:3.4vw;
+    }
+    tr{
+        border-color:white !important;
+    }
+    th{
+        border-color:white !important;
+        border-bottom-color:#f2f2f2 !important;
+    }
+    table{
+        font-size:3.4vw !important;
+    }
+
+    .monthview-selected{
+        background-color: #41a6ff !important;
+        color: white;
+    }
+
+   .monthview-primary-with-event.monthview-selected{
+        background-color: #41a6ff !important;
+        color: white;
+   }
+
+    .monthview-primary-with-event{
+        background-color: orange !important;
+        color: white;        
+    }
+
+    td.monthview-current {
+        background-color: gray !important;
+        color: white;
     }
 }

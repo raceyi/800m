@@ -8,12 +8,10 @@ page-customer-info {
     .header-ios .toolbar-ios:last-child .toolbar-background-ios {
         border-width: 0px !important;
     }
-    .toolbar-content-ios {
+
+    ion-header{
          color:white;
          border:none;
-         //ion-col{
-         //    background-color:$default-color;
-         //}
     }
     .default-background{
              background-color:$default-color;

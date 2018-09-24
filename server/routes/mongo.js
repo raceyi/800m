@@ -6,6 +6,8 @@ var AsyncLock = require('async-lock');
 var lock = new AsyncLock();
 var util=require("./util.js");
 var moment=require('moment');
+let crypto = require('crypto');
+const CryptoJS = require('crypto-js');
 
 let config = require('../config');
 
@@ -190,7 +192,7 @@ router.consultantLogin=function(object){
                 dbo.collection("consultant").find({ email: object.email }).toArray(function(err, mine) {
                     if (err){
                         reject(err);
-                    }else if(!mine){
+                    }else if(!mine || mine.length==0){
                         reject("consultant doesn't exist");
                     }else{ 
                         console.log("result:"+JSON.stringify(mine));
@@ -270,6 +272,8 @@ router.confirmConsultantChat=function(chatid){
                     reject(err);
                 }else{
                     db.close();
+
+
                     resolve(res);
                 }
             });
@@ -278,6 +282,56 @@ router.confirmConsultantChat=function(chatid){
   });
 }
 
+//사용자의 비밀번호를 새로운 값으로 설정한다. 
+router.updateUserPassword=function(email, newPassword){
+  return new Promise((resolve,reject)=>{
+    MongoClient.connect(url, function(err, db) {
+        if (err) {
+            reject(err);
+        }else{
+            var dbo = db.db(config.dbName);
+            let salt = crypto.randomBytes(16).toString('hex');
+            let password = crypto.createHash('sha256').update(newPassword + salt).digest('hex');
+ 
+            dbo.collection("user").updateOne({email:email},{$set:{salt:salt,password:password}},{upsert:false} ,function(err, res) {
+                // work here
+                if (err) {
+                    console.log("mongo-updateOne err:"+JSON.stringify(err));
+                    reject(err);
+                } else {
+                    console.log("mongo-updateOne success:"+newPassword);
+                    resolve(null);
+                }
+            });
+        }
+    });  
+  });
+}
+
+router.updateUserPhone=function(encryptedEmail,encryptedPhone){
+  return new Promise((resolve,reject)=>{
+    MongoClient.connect(url, function(err, db) {
+        if (err) {
+            reject(err);
+        }else{
+            var dbo = db.db(config.dbName);
+            let salt = crypto.randomBytes(16).toString('hex');
+            let password = crypto.createHash('sha256').update(newPassword + salt).digest('hex');
+ 
+            dbo.collection("user").updateOne({email:email},{$set:{phone:encryptedPhone}},{upsert:false} ,function(err, res) {
+                // work here
+                if (err) {
+                    console.log("mongo-updateUserPhone err:"+JSON.stringify(err));
+                    reject(err);
+                } else {
+                    console.log("mongo-updateUserPhone success:"+newPassword);
+                    resolve(null);
+                }
+            });
+        }
+    });  
+  });
+}
 
 router.registerConsultant=function(consultantId,userId){
   // user에 consultantId를 저장하고 consultant에 userId를 저장한다.
@@ -464,51 +518,84 @@ return new Promise((resolve,reject)=>{
 
 router.createNewChat=function(type,uid,consultantId){
  return new Promise((resolve,reject)=>{ 
-  MongoClient.connect(url, function(err, db) {
-    if (err){
-        reject(err);  
-    }else{ 
-        var dbo = db.db(config.dbName);
-        let now=new Date();
-        let content={ time:now, type:"action", action:"response", origin:"user", text:type+"상담문의"}; 
-        dbo.collection("chat").insertOne({type: type,userId:uid,consultantId:consultantId,startTime:now,date: now,progress:true,confirm:false,lastOrigin:"user",contents:[content]} ,function(err, res) {
-            if (err){ 
+    router.checkRecentChatExistance(type,uid,consultantId).then( value=>{
+        if(value){
+            reject("duplicate chat");
+        }else{
+                MongoClient.connect(url, function(err, db) {
+                    if (err){
+                        reject(err);  
+                    }else{ 
+                        var dbo = db.db(config.dbName);
+                        let now=new Date();
+                        let content={ time:now, type:"action", action:"response", origin:"user", text:type+"상담문의"}; 
+                        dbo.collection("chat").insertOne({type: type,userId:uid,consultantId:consultantId,startTime:now,date: now,progress:true,confirm:false,lastOrigin:"user",contents:[content]} ,function(err, res) {
+                            if (err){ 
+                                reject(err);
+                            }else{
+                                db.close();
+                                console.log("res:"+JSON.stringify(res.ops[0]));
+                                resolve(res.ops[0]);
+                            }
+                        },err=>{
+                            reject(err);
+                        });
+                    }
+                });
+        }
+    });
+ });
+}
+
+router.checkRecentChatExistance=function(type,userId,consultantid){
+// 5 초전에 시작한 채팅이 있는지 확인한다. 만약 있다면 true를 return한다.
+ let now=new Date(); // 5초전 
+ let secondsAgo=new Date(now.getTime()-5*1000);
+ console.log("5초전:"+secondsAgo.toLocaleDateString());
+ dbo.collection("chat").find({ type: type,userId:userId,consultantId:consultantId,startTime: {$gte,secondsAgo}}).toArray(function(err, result) {
+            if (err){
                 reject(err);
-            }else{
+            }else{ 
+                console.log(result);
                 db.close();
-                console.log("res:"+JSON.stringify(res.ops[0]));
-                resolve(res.ops[0]);
+                if(result.length>0)
+                    resolve(true);
+                else
+                    reject(false);    
             }
-        },err=>{
-            reject(err);
         });
-    }
-  });
-  });
 }
 
 router.createNewChatByConsultant=function(type,uid,consultantId){
  return new Promise((resolve,reject)=>{ 
-  MongoClient.connect(url, function(err, db) {
-    if (err){
-        reject(err);  
-    }else{ 
-        var dbo = db.db(config.dbName);
-        let now=new Date();
-        let content={ time:now, type:"text", origin:"consultant", text:type+"으로 연락드립니다."}; 
-        dbo.collection("chat").insertOne({type: type,userId:uid,consultantId:consultantId,date: now,progress:true,confirm:false,lastOrigin:"consultant",contents:[content]} ,function(err, res) {
-            if (err){ 
-                reject(err);
-            }else{
-                db.close();
-                console.log("res:"+JSON.stringify(res.ops[0]));
-                resolve(res.ops[0]);
-            }
-        },err=>{
-            reject(err);
-        });
-    }
-  });
+     router.checkRecentChatExistance(type,uid,consultantId).then( value=>{
+        if(value){
+            reject("duplicate chat");
+        }else{
+            MongoClient.connect(url, function(err, db) {
+                if (err){
+                    reject(err);  
+                }else{ 
+                    var dbo = db.db(config.dbName);
+                    let now=new Date();
+                    let content={ time:now, type:"text", origin:"consultant", text:type+"으로 연락드립니다."}; 
+                    dbo.collection("chat").insertOne({type: type,userId:uid,consultantId:consultantId,date: now,progress:true,confirm:false,lastOrigin:"consultant",contents:[content]} ,function(err, res) {
+                        if (err){ 
+                            reject(err);
+                        }else{
+                            db.close();
+                            console.log("res:"+JSON.stringify(res.ops[0]));
+                            resolve(res.ops[0]);
+                        }
+                    },err=>{
+                        reject(err);
+                    });
+                }
+            });
+        }
+     },err=>{
+        reject(err);
+     })
   });
 }
 

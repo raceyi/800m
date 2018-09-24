@@ -1,0 +1,96 @@
+<!--
+  Generated template for the MyPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar hideBackButton>
+  <ion-buttons start>
+      <button style="color:#009fe8;" (click)="close()" ion-button icon-only>
+        <ion-icon name="arrow-back"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>내정보</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content>
+
+<ion-row class="padding-left name-section">
+  <ion-col align-self-center>
+  <span class="name">{{storage.name}}</span> <span class="nim"> 님</span>
+  </ion-col>
+</ion-row>
+<ion-row class="padding-left phone-section">
+  <ion-col align-self-center>
+  {{phoneNumber}}
+  </ion-col>
+  <ion-col align-self-center text-right>
+    <button ion-button outline round>변경하기</button>
+  </ion-col>
+</ion-row>
+ <ion-row class="padding-left email-section">
+   <ion-col align-self-center>
+    {{storage.email}}
+   </ion-col>
+ </ion-row>
+<ion-row class="border-top-bottom">
+  <ion-col align-self-center>
+    <button ion-button clear style="color:#b0b0b0;" (click)="configurePassword()">비밀번호 재설정</button>
+  </ion-col>
+</ion-row>
+<ion-row class="consultant-label padding-left">
+  <ion-col align-self-center>
+  나의 담당 설계사 
+  </ion-col>
+</ion-row>
+<ion-row class="consultant-info">
+  <ion-col col-3 align-self-center>
+    <img src="assets/imgs/songmee.png">
+  </ion-col>
+  <ion-col align-self-center>
+    <ion-row>
+      <ion-col align-self-center>
+      <span class="consultant-name">{{storage.consultantName}}</span> <span class="consultant-label"> 설계사님</span>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col align-self-center class="consultant-phone">
+      {{consultantPhoneNumber}}
+      </ion-col>
+    </ion-row>
+  </ion-col>
+  <ion-col col-3 align-self-center>
+        <a [href]="storage.consultantPhoneHref"  style="border-color:white;border-radius:50%; background:white;" round ion-button outline>
+          <ion-icon style="color:#009fe8;" name="ios-call"></ion-icon>
+        </a>    
+  </ion-col>
+</ion-row>
+<ion-row class="border-top-bottom">
+  <ion-col align-self-center>
+    <button clear (click)="configureBounds()" style="color:#b0b0b0;"  ion-button>
+    계좌잔고 설정
+    </button>
+  </ion-col>
+  <ion-col text-right align-self-center>
+    <button clear ion-button  style="color:#b0b0b0;" (click)="configureBounds()">
+    <ion-icon name="ios-arrow-forward"></ion-icon>
+    </button>
+  </ion-col>
+</ion-row>
+<ion-row class="border-top-bottom">
+  <ion-col align-self-center>
+    <button clear  ion-button style="color:#b0b0b0;">
+    나의 보험 정보
+    </button>
+  </ion-col>
+  <ion-col align-self-center text-right>
+    <button ion-button clear  style="color:#b0b0b0;">
+    <ion-icon name="ios-arrow-forward"></ion-icon>
+    </button>
+  </ion-col>
+</ion-row>
+</ion-content>

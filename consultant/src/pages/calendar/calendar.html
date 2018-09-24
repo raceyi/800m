@@ -7,13 +7,13 @@
 <ion-header>
   <ion-navbar>
     <ion-buttons start>
-    <button style="color:white;" class="month-button" clear (click)="prevMonth()" ><ion-icon style="font-size:4.8vw;" name="ios-arrow-back"></ion-icon></button>
+    <button style="color:black;" class="month-button" clear (click)="prevMonth()" ><ion-icon style="font-size:4.8vw;" name="ios-arrow-back"></ion-icon></button>
   </ion-buttons>
     <ion-title>
       {{viewTitle}}
     </ion-title>
     <ion-buttons end>
-    <button style="color:white;" class="month-button" (click)="nextMonth()" ><ion-icon style="font-size:4.8vw;" name="ios-arrow-forward"></ion-icon></button>
+    <button style="color:black;" class="month-button" (click)="nextMonth()" ><ion-icon style="font-size:4.8vw;" name="ios-arrow-forward"></ion-icon></button>
   </ion-buttons>
   </ion-navbar>
 </ion-header>
@@ -26,32 +26,4 @@
       [currentDate]="calendar.currentDate"
       (onTitleChanged)="onViewTitleChanged($event)">
 </calendar>
-
-<!--
-<ion-row>
-  <ion-col style="color:#41A6FF;font-size:4vw;">
-6월 13일 수요일 
-  </ion-col>
-</ion-row>
-
-<ion-row class="event" style="border:solid 1px #C3E3FF;">
-  <ion-col text-left>
-    <span style="font-size:3.7vw;">홍길동님</span><br>
-    <span style="font-size:3.7vw;color:#8B8B8B;">신규가입 안내 상담</span>
-  </ion-col>
-  <ion-col text-right>
-    전화상담
-  </ion-col>
-</ion-row>
-
-<ion-row class="event" style="border:solid 1px #C3E3FF;">
-  <ion-col text-left>
-    <span style="font-size:3.7vw;">이선영님</span><br>
-    <span style="font-size:3.7vw;color:#8B8B8B;">엽체 납부 상담</span>
-  </ion-col>
-  <ion-col text-right>
-    고객 미팅 
-  </ion-col>
-</ion-row>
--->
 </ion-content>

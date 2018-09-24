@@ -8,6 +8,7 @@ import {SignupPage} from '../pages/signup/signup';
 import {TabsPage} from '../pages/tabs/tabs';
 import { NativeStorage } from '@ionic-native/native-storage';
 import { StorageProvider } from '../providers/storage/storage';
+import { ConfigProvider } from '../providers/config/config';
 import { ServerProvider } from '../providers/server/server';
 import {CustomerInfoPage} from '../pages/customer-info/customer-info';
 
@@ -25,6 +26,7 @@ export class MyApp {
               private nativeStorage:NativeStorage,
               private storage:StorageProvider,
               private serverProvider:ServerProvider, 
+              private config:ConfigProvider,
               splashScreen: SplashScreen) {
     gMyApp=this;
     
@@ -53,8 +55,8 @@ export class MyApp {
               this.rootPage=LoginPage;
           });
       }else{
-              let password="waitee";
-              let email="kalen.lee@takit.biz";
+              let email= config.testId;
+              let password=config.testPassword; 
               let body={email:email,password:password};
               console.log("email:"+email);
               console.log("password:"+password);

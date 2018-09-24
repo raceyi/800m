@@ -244,6 +244,137 @@ router.getUserChats=function(req,res){
     });    
 }
 
+/////////////////////////////////////////////////////
+router.passwordReset=function(req,res){
+	console.log(req.body);
+    let email=req.body.email;
+	if(req.body.email!== null && req.body.phone !==null){
+		//1)user의 email과 phone번호 확인
+        let encryptedUser= util.encryptObj(req.body);
+        console.log("encryptedUser.email:"+encryptedUser.email);
+
+		mongo.findUser(encryptedUser).then((userInfo)=>{
+            //console.log("userInfo:"+JSON.stringify(userInfo));
+			 if(!userInfo || userInfo.length==0){
+				let response = new serverResponse.FailResponse("user not found");
+         	    res.send(JSON.stringify(response));
+            }else{ 
+                let user=userInfo[0];
+                console.log("user.phone:"+user.phone);
+				if(req.body.phone === user.phone){
+					console.log("phone success");
+					//2) random 패스워드 DB set
+					let newPwd = crypto.randomBytes(3).toString('hex');
+					
+					let userInfo = {};
+					userInfo.password = newPwd;
+                    let decryptedUser=util.decryptObj(user);
+					mongo.updateUserPassword(encryptedUser.email,newPwd).then(result=>{
+							let subject="임시 비밀번호";
+							let content=user.name+"님의 임시 비밀번호는 "+newPwd+" 입니다.";
+							
+							notification.sendEmail(email,subject,content,function(err,result){
+								if(err){
+									console.log(err);
+									let response = new serverResponse.FailResponse(err);
+         						    res.send(JSON.stringify(response));
+								}else{
+									let response = new serverResponse.Response("success");
+         						    res.send(JSON.stringify(response));
+								}
+							});
+					},err=>{
+                        let response = new serverResponse.FailResponse(err); 
+                        res.send(JSON.stringify(response));                        
+                    });
+				}else{
+					let response = new serverResponse.FailResponse("phone number is invalid"); 
+         		    res.send(JSON.stringify(response));
+				}
+			}
+		},err=>{
+				let response = new serverResponse.FailResponse("user doesn't exist");
+         	    res.send(JSON.stringify(response));
+        });
+	}else{
+		let response = new serverResponse.FailResponse("email or phone is null");
+        res.send(JSON.stringify(response));
+	}
+}
+
+router.modifyUserPassword=function(req,res){
+	console.log("modifyUserPassword"+JSON.stringify(req.body));
+    let email=req.body.email;
+	if(req.body.email!== null){
+		//1)user의 email과 비밀번호 확인
+        let encryptedUser= util.encryptObj(req.body);
+        console.log("encryptedUser.email:"+encryptedUser.email);
+
+		mongo.findUser(encryptedUser).then((userInfo)=>{
+            //console.log("userInfo:"+JSON.stringify(userInfo));
+			 if(!userInfo || userInfo.length==0){
+				let response = new serverResponse.FailResponse("user not found");
+         	    res.send(JSON.stringify(response));
+            }else{ 
+                let user=userInfo[0];
+                user=util.decryptObj(user);
+                let secretPassword = crypto.createHash('sha256').update(req.body.oldPassword + user.salt).digest('hex');
+                console.log("secretPassword:"+secretPassword);
+                console.log("userInfo.password:"+user.password);
+
+                if (secretPassword === user.password) {
+					mongo.updateUserPassword(encryptedUser.email,req.body.newPassword).then(result=>{
+									let response = new serverResponse.Response("success");
+         						    res.send(JSON.stringify(response));
+					},err=>{
+                        let response = new serverResponse.FailResponse(err); 
+                        res.send(JSON.stringify(response));                        
+                    });
+				}else{
+					let response = new serverResponse.FailResponse("incorrect oldPassword"); 
+         		    res.send(JSON.stringify(response));
+				}
+			}
+		},err=>{
+				let response = new serverResponse.FailResponse("user doesn't exist");
+         	    res.send(JSON.stringify(response));
+        });
+	}else{
+		let response = new serverResponse.FailResponse("email is null");
+        res.send(JSON.stringify(response));
+	}
+}
+
+router.modifyUserPhone=function(req,res){
+    	console.log("modifyUserPassword"+JSON.stringify(req.body));
+	if(req.body.email!== null){
+		//1)user의 email과 비밀번호 확인
+        let encryptedUser= util.encryptObj(req.body);
+        console.log("encryptedUser.email:"+encryptedUser.email);
+
+		mongo.findUser(encryptedUser).then((userInfo)=>{
+            //console.log("userInfo:"+JSON.stringify(userInfo));
+			 if(!userInfo || userInfo.length==0){
+				let response = new serverResponse.FailResponse("user not found");
+         	    res.send(JSON.stringify(response));
+            }else{ 
+					mongo.updateUserPhone(encryptedUser.email,encryptedUser.phone).then(result=>{
+									let response = new serverResponse.Response("success");
+         						    res.send(JSON.stringify(response));
+					},err=>{
+                        let response = new serverResponse.FailResponse(err); 
+                        res.send(JSON.stringify(response));                        
+                    });
+			}
+		},err=>{
+				let response = new serverResponse.FailResponse("user doesn't exist");
+         	    res.send(JSON.stringify(response));
+        });
+	}else{
+		let response = new serverResponse.FailResponse("email is null");
+        res.send(JSON.stringify(response));
+	}
+}
 /*
 mongo.addUser( { email: "kalen985@takib.biz", password: "111Highway 37",salt:"test", phone:"010",name:"이경주",birth:"19750111",sex:"F"}).then((res)=>{
   console.log("res:"+res);

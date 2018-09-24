@@ -7,7 +7,7 @@
 <ion-content>
 <ion-row>
   <ion-col class="app-name" text-center>
-    800M
+    <img src="assets/imgs/login-logo.png">
   </ion-col>
 </ion-row>
 <ion-row no-padding no-margin>
@@ -22,7 +22,9 @@
 </ion-row>
 <ion-row>
   <ion-col text-center class="forgot">
+    <button clear ion-button style="color:white;" (click)="temporaryPassword()">
     비밀번호/이메일을 잊어버리셨나요?
+    </button>
   </ion-col>
 </ion-row>
 <ion-row>
@@ -34,7 +36,7 @@
 <ion-footer>
   <ion-row *ngIf="!inputProgress">
     <ion-col no-padding no-margin>
-  <button no-margin no-padding ion-button full (click)="signup()" style="width:100%;font-size:5.3vw;">회원가입</button>
+  <button no-margin no-padding ion-button full (click)="signup()" style="width:100%;font-size:5.3vw;background:white;color:#009fe8">회원가입</button>
     </ion-col>
   </ion-row>
 </ion-footer>

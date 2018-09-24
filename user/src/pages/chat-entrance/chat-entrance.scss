@@ -1,17 +1,23 @@
 page-chat-entrance {
     ion-title{
         height:calc((44/667)*100vh);
-        background-color:$default-color;
+        background-color:white;
         .toolbar-title-ios{
-            color:white !important;
+            color:#009fe8 !important;
+            font-size:4.5vw;
         }
     }
     .greetings{
         font-size:4.5vw;
-        color:#74787B;
+        color:#009fe8;
         padding-bottom: calc((65/667)*100vh);
     }
     .photo{
-        width:calc((103/375)*100vw);
+        width:calc((194/375)*100vw);
+    }
+
+    .action-button{
+        border-color: #ffef00;
+        color:#000000;
     }
 }

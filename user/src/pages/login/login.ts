@@ -6,6 +6,8 @@ import { NativeStorage } from '@ionic-native/native-storage';
 import {StorageProvider} from '../../providers/storage/storage';
 import {HomePage} from '../home/home';
 import {SearchConsultantPage} from '../search-consultant/search-consultant';
+import {PasswordResetPage} from '../password-reset/password-reset';
+
 /**
  * Generated class for the LoginPage page.
  *
@@ -113,5 +115,7 @@ export class LoginPage {
       })
   }
 
-  
+  temporaryPassword(){
+    this.navCtrl.push(PasswordResetPage);
+  }
 }
