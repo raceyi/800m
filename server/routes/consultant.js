@@ -177,7 +177,7 @@ router.createNewChat=function(req,res){
     let uid="consultantId"+req.session.uid;   
     lock.acquire(uid, function(callback) {
         //console.log("createNewChatByConsultant:"+JSON.stringify(req.body));
-            mongo.createNewChatByConsultant(req.body.type,req.body.userId ,req.session.uid).then(chatInfo=>{
+            mongo.createNewChatByConsultant(req.body.type,req.body.userId ,req.session.uid,req.body.name,req.body.consultantName).then(chatInfo=>{
                 console.log("chatInfo:"+JSON.stringify(chatInfo));
                 let msg={time:chatInfo.date, type:"text",text:"고객님"+req.body.type+"으로 연락드립니다.",chatId: chatInfo._id};        
                 notification.sendToUser(msg,req.body.userId).then((notifyRes)=>{
@@ -244,7 +244,7 @@ router.getMonthChats=function(req,res){
             let month=[];
             for(i=0;i<monthDays;i++)
                 month.push({eachEvent:[]});
-            chats.forEach(chat=>{       // 채팅 목록에 따라 발짜별로 분류한다. (local time과 global time의 문제)
+            chats.forEach(chat=>{       // 채팅 목록에 따라 날짜별로 분류한다. (local time과 global time의 문제)
                 for(i=0;i<chat.contents.length;i++){
                     let eachLine=chat.contents[i];
                     let timeDate=new Date(eachLine.time);
@@ -261,7 +261,7 @@ router.getMonthChats=function(req,res){
                         });
                         console.log("index:"+index);
                         if(index<0){
-                            month[date].eachEvent.push({userId:chat.userId,chatId:chat._id, type:chat.type,starttime:timeDate,endtime:timeDate});
+                            month[date].eachEvent.push({userId:chat.userId,chatId:chat._id, type:chat.type,starttime:timeDate,endtime:timeDate,userName:chat.userName});
                         }else{
                             month[date].eachEvent[index].endtime=timeDate;
                         }
@@ -270,6 +270,17 @@ router.getMonthChats=function(req,res){
                 }
             });
             //console.log("month:"+JSON.stringify(month));
+            let events=[];
+                month.forEach(day=>{
+                    day.eachEvent.forEach(chat=>{
+                        events.push(chat);
+                    })
+                })
+                console.log("events:"+JSON.stringify(events));
+                let response = new serverResponse.Response("success");
+                response.events=events;
+                res.send(JSON.stringify(response));
+         /*            
             for(let i=0;i<month.length;i++)
                 console.log("i:"+i+" "+JSON.stringify( month[i].eachEvent));
             // 고객 이름을 검색한다. 이름정도는 따로 저장하는것도 괜찬다... 동일 고객이 있을수 있음으로 고객 id만 저장한 array를 만드록 가져오자.
@@ -300,11 +311,10 @@ router.getMonthChats=function(req,res){
                                 chat.name=names[index].name;
                             }
                     })
-                });
+                });       
                 let events=[];
                 month.forEach(day=>{
                     day.eachEvent.forEach(chat=>{
-                        delete chat.userId;
                         events.push(chat);
                     })
                 })
@@ -317,6 +327,7 @@ router.getMonthChats=function(req,res){
                 let response = new serverResponse.FailResponse(err);
                 res.send(JSON.stringify(response));
             })
+            */
     }else{
             console.log("chats is undefined");
             let response = new serverResponse.Response("success");

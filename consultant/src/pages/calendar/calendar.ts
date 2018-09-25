@@ -80,7 +80,7 @@ export class CalendarPage {
                        let eventSource=[];
                       res.events.forEach(event=>{
                         eventSource.push({
-                          title:  event.name+ "님 "+event.type +"상담",
+                          title:  event.userName+ "님 "+event.type +"상담",
                           startTime: new Date(event.starttime),
                           endTime: new Date(event.endtime),
                           allDay: false
@@ -140,11 +140,13 @@ export class CalendarPage {
                       let eventSource=[];
                       res.events.forEach(event=>{
                         eventSource.push({
-                          title:  event.name+ "님 "+event.type,
+                          title:  event.userName+ "님 "+event.type+ "상담",
                           startTime: new Date(event.starttime),
                           endTime: new Date(event.endtime),
                           allDay: false
                         });
+
+                        console.log("title:"+ event.userName+ "님 "+event.type+ "상담");
                       })
                       console.log("this.eventSource:"+JSON.stringify(eventSource));
                       this.eventSource=eventSource;

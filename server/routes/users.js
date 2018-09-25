@@ -170,7 +170,7 @@ router.createNewChat=function(req,res){
     let uid="userId"+req.session.uid;
     lock.acquire(uid, function(callback) {
         console.log("createNewChat:"+JSON.stringify(req.body));
-        mongo.createNewChat(req.body.type,req.session.uid,req.body.consultantId).then(chatInfo=>{
+        mongo.createNewChat(req.body.type,req.session.uid,req.body.consultantId,req.body.name,req.body.consultantName).then(chatInfo=>{
             console.log("chatInfo:"+JSON.stringify(chatInfo));
             let msg={time:chatInfo.date, type:"action",action:"response",text:req.body.type+"상담문의"};
             notification.sendToConsultant(msg,req.session.cid).then((notifyRes)=>{

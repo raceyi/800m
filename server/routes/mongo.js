@@ -516,7 +516,7 @@ return new Promise((resolve,reject)=>{
   });
 }
 
-router.createNewChat=function(type,uid,consultantId){
+router.createNewChat=function(type,uid,consultantId,userName,consultantName){
  return new Promise((resolve,reject)=>{ 
     router.findConsultantWithIDNumber(consultantId).then((consultant)=>{
         console.log("call checkRecentChatExistance uid:"+uid+" type:"+type+" cid:"+consultant[0]._id);
@@ -531,7 +531,17 @@ router.createNewChat=function(type,uid,consultantId){
                             var dbo = db.db(config.dbName);
                             let now=new Date();
                             let content={ time:now, type:"action", action:"response", origin:"user", text:type+"상담문의"}; 
-                            dbo.collection("chat").insertOne({type: type,userId:uid,consultantId:consultant[0]._id,startTime:now,date: now,progress:true,confirm:false,lastOrigin:"user",contents:[content]} ,function(err, res) {
+                            dbo.collection("chat").insertOne({type: type,
+                                                              userId:uid,
+                                                              consultantId:consultant[0]._id,
+                                                              startTime:now,
+                                                              date: now,
+                                                              progress:true,
+                                                              confirm:false,
+                                                              lastOrigin:"user",
+                                                              userName:userName,
+                                                              consultantName:consultantName,
+                                                              contents:[content]} ,function(err, res) {
                                 if (err){ 
                                     reject(err);
                                 }else{
@@ -584,7 +594,7 @@ router.checkRecentChatExistance=function(type,userId,consultantId){
  });
 }
 
-router.createNewChatByConsultant=function(type,uid,consultantId){
+router.createNewChatByConsultant=function(type,uid,consultantId,userName,consultantName){
  return new Promise((resolve,reject)=>{ 
      console.log("type:"+type+" userId:"+uid+" consultantId:"+consultantId);
      router.checkRecentChatExistance(type,uid,consultantId).then( value=>{
@@ -600,7 +610,18 @@ router.createNewChatByConsultant=function(type,uid,consultantId){
                     let now=new Date();
                     let content={ time:now, type:"text", origin:"consultant", text:type+"으로 연락드립니다."}; 
                     console.log("insertOne ");
-                    dbo.collection("chat").insertOne({type: type,userId:uid,consultantId:consultantId,date: now,startTime:now,progress:true,confirm:false,lastOrigin:"consultant",contents:[content]} ,function(err, res) {
+                    dbo.collection("chat").insertOne({type: type,
+                                                      userId:uid,
+                                                      consultantId:consultantId,
+                                                      date: now,
+                                                      startTime:now,
+                                                      progress:true,
+                                                      confirm:false,
+                                                      userName:userName,
+                                                      consultantName:consultantName,
+                                                      lastOrigin:"consultant",
+                                                      contents:[content]} ,
+                                                      function(err, res) {
                         if (err){ 
                             reject(err);
                         }else{
