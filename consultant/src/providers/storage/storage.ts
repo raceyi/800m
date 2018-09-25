@@ -127,16 +127,18 @@ export class StorageProvider {
 
         this.chats.sort(function(a,b){
             if(a.date>b.date){
-                return -1;
-            }else if(a.date<b.date){
                 return 1;
+            }else if(a.date<b.date){
+                return -1;
             }
             return 0;
         })
 
         this.chats.forEach(chat=>{
             let index=this.userList.findIndex(function(element){if(element._id==chat.userId) return true;});
-            chat.name=this.userList[index].name;
+            if(index>=0){
+                chat.name=this.userList[index].name;
+            }
             let date=new Date(chat.date);
             chat.time=date.getHours().toString()+":"+date.getMinutes().toString();
         })

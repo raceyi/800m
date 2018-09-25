@@ -518,57 +518,77 @@ return new Promise((resolve,reject)=>{
 
 router.createNewChat=function(type,uid,consultantId){
  return new Promise((resolve,reject)=>{ 
-    router.checkRecentChatExistance(type,uid,consultantId).then( value=>{
-        if(value){
-            reject("duplicate chat");
-        }else{
-                MongoClient.connect(url, function(err, db) {
-                    if (err){
-                        reject(err);  
-                    }else{ 
-                        var dbo = db.db(config.dbName);
-                        let now=new Date();
-                        let content={ time:now, type:"action", action:"response", origin:"user", text:type+"상담문의"}; 
-                        dbo.collection("chat").insertOne({type: type,userId:uid,consultantId:consultantId,startTime:now,date: now,progress:true,confirm:false,lastOrigin:"user",contents:[content]} ,function(err, res) {
-                            if (err){ 
+    router.findConsultantWithIDNumber(consultantId).then((consultant)=>{
+        console.log("call checkRecentChatExistance uid:"+uid+" type:"+type+" cid:"+consultant[0]._id);
+        router.checkRecentChatExistance(type,uid,consultant[0]._id).then( value=>{
+            if(value){
+                reject("duplicate chat");
+            }else{
+                    MongoClient.connect(url, function(err, db) {
+                        if (err){
+                            reject(err);  
+                        }else{ 
+                            var dbo = db.db(config.dbName);
+                            let now=new Date();
+                            let content={ time:now, type:"action", action:"response", origin:"user", text:type+"상담문의"}; 
+                            dbo.collection("chat").insertOne({type: type,userId:uid,consultantId:consultant[0]._id,startTime:now,date: now,progress:true,confirm:false,lastOrigin:"user",contents:[content]} ,function(err, res) {
+                                if (err){ 
+                                    reject(err);
+                                }else{
+                                    db.close();
+                                    console.log("res:"+JSON.stringify(res.ops[0]));
+                                    resolve(res.ops[0]);
+                                }
+                            },err=>{
                                 reject(err);
-                            }else{
-                                db.close();
-                                console.log("res:"+JSON.stringify(res.ops[0]));
-                                resolve(res.ops[0]);
-                            }
-                        },err=>{
-                            reject(err);
-                        });
-                    }
-                });
-        }
+                            });
+                        }
+                    });
+            }
+        },err=>{
+            reject(err);
+        });
+    },err=>{
+        reject(err);
+    })
+ });
+}
+
+router.checkRecentChatExistance=function(type,userId,consultantId){
+// 5 초전에 시작한 채팅이 있는지 확인한다. 만약 있다면 true를 return한다.
+ return new Promise((resolve,reject)=>{ 
+    let now=new Date(); // 5초전 
+    let secondsAgo=new Date(now.getTime()-5*1000);
+    console.log("5초전:"+secondsAgo.toLocaleTimeString());
+    console.log("type:"+type+" userId:"+userId+" consultantId:"+consultantId);
+    MongoClient.connect(url, function(err, db) {
+                if (err){
+                    reject(err);  
+                }else{ 
+                    var dbo = db.db(config.dbName);
+                    dbo.collection("chat").find({ type: type,userId:userId,consultantId:consultantId,startTime: {$gte:secondsAgo}}).toArray(function(err, result) {
+                                if (err){
+                                    console.log("err:"+JSON.stringify(err));
+                                    reject(err);
+                                }else{ 
+                                    console.log("checkRecentChatExistance-result:"+JSON.stringify(result));
+                                    db.close();
+                                    if(result.length>0)
+                                        resolve(true);
+                                    else
+                                        resolve(false);    
+                                }
+                            });
+                }
     });
  });
 }
 
-router.checkRecentChatExistance=function(type,userId,consultantid){
-// 5 초전에 시작한 채팅이 있는지 확인한다. 만약 있다면 true를 return한다.
- let now=new Date(); // 5초전 
- let secondsAgo=new Date(now.getTime()-5*1000);
- console.log("5초전:"+secondsAgo.toLocaleDateString());
- dbo.collection("chat").find({ type: type,userId:userId,consultantId:consultantId,startTime: {$gte,secondsAgo}}).toArray(function(err, result) {
-            if (err){
-                reject(err);
-            }else{ 
-                console.log(result);
-                db.close();
-                if(result.length>0)
-                    resolve(true);
-                else
-                    reject(false);    
-            }
-        });
-}
-
 router.createNewChatByConsultant=function(type,uid,consultantId){
  return new Promise((resolve,reject)=>{ 
+     console.log("type:"+type+" userId:"+uid+" consultantId:"+consultantId);
      router.checkRecentChatExistance(type,uid,consultantId).then( value=>{
+         console.log("checkRecentChatExistance returns "+value);
         if(value){
             reject("duplicate chat");
         }else{
@@ -579,7 +599,8 @@ router.createNewChatByConsultant=function(type,uid,consultantId){
                     var dbo = db.db(config.dbName);
                     let now=new Date();
                     let content={ time:now, type:"text", origin:"consultant", text:type+"으로 연락드립니다."}; 
-                    dbo.collection("chat").insertOne({type: type,userId:uid,consultantId:consultantId,date: now,progress:true,confirm:false,lastOrigin:"consultant",contents:[content]} ,function(err, res) {
+                    console.log("insertOne ");
+                    dbo.collection("chat").insertOne({type: type,userId:uid,consultantId:consultantId,date: now,startTime:now,progress:true,confirm:false,lastOrigin:"consultant",contents:[content]} ,function(err, res) {
                         if (err){ 
                             reject(err);
                         }else{

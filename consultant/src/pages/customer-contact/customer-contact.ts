@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams,App } from 'ionic-angular';
+import { IonicPage, NavController, NavParams,App,AlertController } from 'ionic-angular';
 import {ChatPage} from '../chat/chat';
 import {StorageProvider} from '../../providers/storage/storage';
 import {ServerProvider} from '../../providers/server/server';
@@ -21,12 +21,27 @@ export class CustomerContactPage {
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
               public storage: StorageProvider, 
-              private app:App,               
+              private app:App,      
+              private alertCtrl:AlertController,          
               private server:ServerProvider) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad CustomerContactPage');
+  }
+
+  ionViewWillEnter() {
+        console.log("ionViewWillEnter-CustomerContactPage");
+      //chat정보를 서버로 부터 가져온다.
+      this.server.updateChats().then(()=>{
+
+      },err=>{
+                let alert = this.alertCtrl.create({
+                        title: '서버와 통신에 실패했습니다.',
+                        buttons: ['OK']
+                    });
+                alert.present();    
+      });
   }
 
   chat(userInfo){

@@ -7,6 +7,8 @@ var util=require("./util.js");
 var serverResponse = require("./response");
 var notification=require("./notification");
 var moment=require('moment');
+var AsyncLock = require('async-lock');
+var lock = new AsyncLock();
 
 function validityCheck(email,phone){
     console.log("come validityCheck function");
@@ -171,22 +173,32 @@ router.terminateChat=function(req,res){
 }
 
 router.createNewChat=function(req,res){
-    mongo.createNewChatByConsultant(req.body.type,req.body.userId ,req.session.uid).then(chatInfo=>{
-        console.log("chatInfo:"+JSON.stringify(chatInfo));
-        let msg={time:chatInfo.date, type:"text",text:"고객님"+req.body.type+"으로 연락드립니다.",chatId: chatInfo._id};        
-        notification.sendToUser(msg,req.body.userId).then((notifyRes)=>{
-            let response = new serverResponse.Response("success");
-            console.log("chatId:"+chatInfo._id);
-            response.chatId=chatInfo._id;
-            res.send(JSON.stringify(response));
-        },err=>{
-            let response = new serverResponse.FailResponse(err);
-            res.send(JSON.stringify(response));
-        }) 
-    },err=>{
-        let response = new serverResponse.FailResponse(err);
-        res.send(JSON.stringify(response));
-    })
+    console.log("createNewChatByConsultant:"+JSON.stringify(req.body)); 
+    let uid="consultantId"+req.session.uid;   
+    lock.acquire(uid, function(callback) {
+        //console.log("createNewChatByConsultant:"+JSON.stringify(req.body));
+            mongo.createNewChatByConsultant(req.body.type,req.body.userId ,req.session.uid).then(chatInfo=>{
+                console.log("chatInfo:"+JSON.stringify(chatInfo));
+                let msg={time:chatInfo.date, type:"text",text:"고객님"+req.body.type+"으로 연락드립니다.",chatId: chatInfo._id};        
+                notification.sendToUser(msg,req.body.userId).then((notifyRes)=>{
+                    let response = new serverResponse.Response("success");
+                    console.log("chatId:"+chatInfo._id);
+                    response.chatId=chatInfo._id;
+                    res.send(JSON.stringify(response));
+                    callback(null);
+                },err=>{
+                    let response = new serverResponse.FailResponse(err);
+                    res.send(JSON.stringify(response));
+                    callback(null);
+                }) 
+            },err=>{
+                let response = new serverResponse.FailResponse(err);
+                res.send(JSON.stringify(response));
+                callback(null);
+            })
+    }, function(err, result) {
+        console.log("createNewChatByConsultant done"); 
+    });
 }
 
 router.getUsers=function(req,res){
@@ -254,7 +266,7 @@ router.getMonthChats=function(req,res){
                             month[date].eachEvent[index].endtime=timeDate;
                         }
                     }
-                    console.log("month:"+JSON.stringify(month));
+                    //console.log("month:"+JSON.stringify(month));
                 }
             });
             //console.log("month:"+JSON.stringify(month));

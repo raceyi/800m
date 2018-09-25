@@ -25,6 +25,8 @@ export class ServerProvider {
   pushNotification:PushObject;
   msgAlert=false;
 
+  lastQueryChatTime;
+
   constructor(public http: HttpClient
               ,private storage:StorageProvider
               ,private iab: InAppBrowser
@@ -327,5 +329,48 @@ export class ServerProvider {
     });
   }
 
+    getUserChats(){
+        return new Promise((resolve,reject)=>{
+              let body={ queryTime:this.lastQueryChatTime,limit:10};
+              //server에 저장되는 chatting time이  ios시간인가? 아니면 local time인가??? 확인이 필요하다.ㅜ....
+              this.postWithAuth("/getUserChats",body).then((res:any)=>{
+                  if(res.result=="failure"){
+                      reject(res.error);
+                  }else{
+                    if(res.chats){
+                            let chats=res.chats;
+                            chats.sort(function(a, b){
+                                let aDate=new Date(a.date);
+                                let bDate=new Date(b.date);
+                                if(aDate>bDate){
+                                    return -1;
+                                }else if(aDate<bDate){
+                                    return 1;
+                                }
+                                return 0;
+                            });
+                            let lastIndex=chats.length-1;
+                            if(lastIndex>=0)
+                                this.lastQueryChatTime=chats[lastIndex].date;
+                            chats.forEach(chat=>{
+                                let localTime=new Date(chat.date);
+                                console.log("localTime:"+localTime.toLocaleDateString());
+                                chat.timeString=localTime.getFullYear()+"년 "+(localTime.getMonth()+1)+"월 "+localTime.getDate()+"일";
+                            })    
+                            resolve(chats);
+                    }else{ //no more chats
+                        resolve([]);
+                    }
+                  }
+              },err=>{
+                  let alert = this.alertCtrl.create({
+                                  title: '네트웍상태를 확인해주세요.',
+                                  buttons: ['OK']
+                              });
+                  alert.present();
+                  reject(err);
+              })
+           });
+    }
   
 }

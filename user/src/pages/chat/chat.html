@@ -72,8 +72,8 @@
   </ion-list>
 </ion-content>
 
-<ion-footer style="background-color:#AEB6BD;" *ngIf="chatInfo.progress">
-  <ion-grid>
+<ion-footer style="background-color:#AEB6BD;" >
+  <ion-grid *ngIf="chatInfo.progress">
     <ion-row>
       <!--
       <ion-col col-2 align-self-center>
@@ -91,11 +91,26 @@
         </ion-row>
       </ion-col>
     </ion-row>
+  </ion-grid>
+  <ion-grid *ngIf="!chatInfo.progress" >
     <ion-row>
-      <ion-col>
-        
+      <ion-col text-center>
+      상담 내용에 만족하셨나요?<br>
+      항상 고객님을 위해서 대기중입니다.
       </ion-col>
     </ion-row>
+    <ion-row>
+      <ion-col text-center>
+        <button ion-button clear (click)="terminateChat()">
+          상담나가기 >
+        </button>
+      </ion-col>
+    </ion-row>
+      <ion-col text-center>
+        <button ion-button clear (click)="continueChat()">
+          상담 계속하기 >
+        </button>
+      </ion-col>
   </ion-grid>
 </ion-footer>
 

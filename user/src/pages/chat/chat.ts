@@ -128,18 +128,25 @@ export class ChatPage {
               console.log("class:"+view.getNavParams().get("class"));
               if(view.getNavParams().get("class")=="ChatEntrancePage")  {
                       console.log("remove "+view.getNavParams().get("class"));
-                      this.navCtrl.removeView(view);
+                      this.navCtrl.removeView(view); //Why does it bring error? 
               }
           }
       })
-    if(this.chatInfo.progress){  
+    if(this.chatInfo.progress){
+        this.chatInfo.progress=false;
+    }
+  }
+
+ terminateChat(){
         let body={chatId:this.storage.chatId};
         this.server.postWithAuth("/terminateChat",body).then((res)=>{
+          /*
               let alert = this.alertCtrl.create({
                           title: '상담을 종료합니다.',
                           buttons: ['OK']
               });
               alert.present();
+           */   
         },err=>{
               let alert = this.alertCtrl.create({
                           title: '상담을 종료에 실패했습니다.',
@@ -147,8 +154,11 @@ export class ChatPage {
               });
               alert.present();       
         })
-    }
-  }
+ }
+
+ continueChat(){
+        this.chatInfo.progress=true;
+ }
 
   exitChat(){
     this.navCtrl.pop();  

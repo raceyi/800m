@@ -144,6 +144,7 @@ export class ChatPage {
                 }
             }
         })
+/*        
       //chat정보를 서버로 부터 가져온다.
       this.server.updateChats().then(()=>{
 
@@ -154,6 +155,7 @@ export class ChatPage {
                     });
                 alert.present();    
       });
+*/      
   }
 
   ionViewDidLoad() {

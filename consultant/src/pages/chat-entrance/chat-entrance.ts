@@ -43,6 +43,7 @@ export class ChatEntrancePage {
      let body={type:type ,userId:this.userId};
 
     this.server.postWithAuth("/consultant/createNewChat",body).then((res:any)=>{
+      console.log("createNewChat-res:"+JSON.stringify(res));
         if(res.result=="success"){
             console.log("res:"+JSON.stringify(res));
             this.navCtrl.push(ChatPage, {chatId:res.chatId, class:"ChatPage",name:this.name});
@@ -55,12 +56,15 @@ export class ChatEntrancePage {
           alert.present();
         }
     },err=>{
-        let alert = this.alertCtrl.create({
-                    title: '고객분과 연락에 실패했습니다.',
-                    subTitle:'전화를 사용해 주시기 바랍니다',
-                    buttons: ['OK']
-        });
-        alert.present();
+        console.log("createNewChat-err:"+JSON.stringify(err));
+        if(err!="duplicate chat"){
+          let alert = this.alertCtrl.create({
+                      title: '고객분과 연락에 실패했습니다.',
+                      subTitle:'전화를 사용해 주시기 바랍니다',
+                      buttons: ['OK']
+          });
+          alert.present();
+        }
     })  
   }
 }

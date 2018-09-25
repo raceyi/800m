@@ -45,10 +45,10 @@
 </ion-header>
 
 <ion-content>
-<div padding style="color:#989b9d;font-size:4vw;" *ngIf="chatList.length>0">
+<div padding style="color:#989b9d;font-size:4vw;" *ngIf="storage.chatList.length>0">
 나의 상담기록
 </div>
-<div class="chat-info" *ngFor="let chat of chatList">
+<div class="chat-info" *ngFor="let chat of storage.chatList">
 <ion-row class="date-row">
   <ion-col col-1 text-right align-self-center>
  <!-- 

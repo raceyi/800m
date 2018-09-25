@@ -35,6 +35,7 @@ export class StorageProvider {
     insurances;
 
     chatId;
+    chatList=[];
     
   constructor(private configProvider:ConfigProvider,
               private platform: Platform,private push: Push) {

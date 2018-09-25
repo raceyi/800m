@@ -7,6 +7,8 @@ var serverResponse = require("./response");
 var util=require("./util.js");
 let config = require('../config');
 var notification=require("./notification");
+var AsyncLock = require('async-lock');
+var lock = new AsyncLock();
 
 function validityCheck(email,phone){
     console.log("come validityCheck function");
@@ -165,22 +167,31 @@ router.registrationId=function(req,res){
 }
 
 router.createNewChat=function(req,res){
-    mongo.createNewChat(req.body.type,req.session.uid,req.session.cid).then(chatInfo=>{
-        console.log("chatInfo:"+JSON.stringify(chatInfo));
-        let msg={time:chatInfo.date, type:"action",action:"response",text:req.body.type+"상담문의"};
-        notification.sendToConsultant(msg,req.session.cid).then((notifyRes)=>{
-            let response = new serverResponse.Response("success");
-            console.log("chatId:"+chatInfo._id);
-            response.chatId=chatInfo._id;
-            res.send(JSON.stringify(response));
+    let uid="userId"+req.session.uid;
+    lock.acquire(uid, function(callback) {
+        console.log("createNewChat:"+JSON.stringify(req.body));
+        mongo.createNewChat(req.body.type,req.session.uid,req.body.consultantId).then(chatInfo=>{
+            console.log("chatInfo:"+JSON.stringify(chatInfo));
+            let msg={time:chatInfo.date, type:"action",action:"response",text:req.body.type+"상담문의"};
+            notification.sendToConsultant(msg,req.session.cid).then((notifyRes)=>{
+                let response = new serverResponse.Response("success");
+                console.log("chatId:"+chatInfo._id);
+                response.chatId=chatInfo._id;
+                res.send(JSON.stringify(response));
+                callback(null);
+            },err=>{
+                let response = new serverResponse.FailResponse(err);
+                res.send(JSON.stringify(response));
+                callback(null);
+            }) 
         },err=>{
             let response = new serverResponse.FailResponse(err);
             res.send(JSON.stringify(response));
-        }) 
-    },err=>{
-        let response = new serverResponse.FailResponse(err);
-        res.send(JSON.stringify(response));
-    })
+            callback(null);
+        })
+    }, function(err, result) {
+        console.log("createNewChat done"); 
+    });
 }
 
 router.terminateChat=function(req,res){
