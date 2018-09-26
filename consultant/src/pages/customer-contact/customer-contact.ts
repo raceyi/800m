@@ -39,7 +39,7 @@ export class CustomerContactPage {
       //chat정보를 서버로 부터 가져온다.
       this.server.updateChats().then(()=>{
           //각 종류별로 신규 상담 숫자를 넣어주자.
-          
+
       },err=>{
                 let alert = this.alertCtrl.create({
                         title: '서버와 통신에 실패했습니다.',
@@ -56,5 +56,18 @@ export class CustomerContactPage {
 
   select(type){
     this.selectedType=type;
+  }
+
+  checkListExist(day,selectedType){
+      let index=day.list.findIndex(function(element){
+          if(element.type==selectedType)
+              return true;
+          return false;    
+      })
+      if(index>=0){
+          return false;
+      }
+      return true;
+
   }
 }

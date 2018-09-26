@@ -59,6 +59,16 @@ export class ChatPage {
              //update chatInfo
              this.server.postWithAuth("/consultant/confirmChat",body).then((res:any)=>{
                    //화면에서 나갈때 업데이트한다. 
+                         this.server.updateChats().then(()=>{
+                            //각 종류별로 신규 상담 숫자를 넣어주자.
+                            
+                        },err=>{
+                                    let alert = this.alertCtrl.create({
+                                            title: '서버와 통신에 실패했습니다.',
+                                            buttons: ['OK']
+                                        });
+                                    alert.present();    
+                        });
              },err=>{
                 let alert = this.alertCtrl.create({
                         title: '서버와 통신에 실패했습니다.',

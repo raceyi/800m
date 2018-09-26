@@ -47,9 +47,10 @@
     </ion-col>        
   </ion-row>
   <div *ngFor="let day of storage.contactList;let i = index;">
-  <ion-row>
+  <ion-row [hidden]="checkListExist(day,selectedType)">
     <ion-col padding style="font-size:4.2vw;">
-      <span style="font-size:4.2vw;color:#41A6FF;" *ngIf="day.today==true">오늘</span> <span style="font-size:4.2vw;color:#616a71;">{{day.date}}</span>
+      <span style="font-size:4.2vw;color:#41A6FF;" *ngIf="day.today==true">오늘</span> 
+      <span style="font-size:4.2vw;color:#616a71;">{{day.date}}</span>
     </ion-col>
   </ion-row>
   <div *ngFor="let user of day.list;let j = index;">

@@ -566,7 +566,7 @@ router.createNewChat=function(type,uid,consultantId,userName,consultantName){
  return new Promise((resolve,reject)=>{ 
     router.findConsultantWithIDNumber(consultantId).then((consultant)=>{
         console.log("call checkRecentChatExistance uid:"+uid+" type:"+type+" cid:"+consultant[0]._id);
-        router.checkRecentChatExistance(type,uid,consultant[0]._id).then( value=>{
+        router.checkRecentChatExistance(type,uid,consultant[0]._id.toString()).then( value=>{
             if(value){
                 reject("duplicate chat");
             }else{
@@ -579,7 +579,7 @@ router.createNewChat=function(type,uid,consultantId,userName,consultantName){
                             let content={ time:now, type:"action", action:"response", origin:"user", text:type+"상담문의"}; 
                             dbo.collection("chat").insertOne({type: type,
                                                               userId:uid,
-                                                              consultantId:consultant[0]._id,
+                                                              consultantId:consultant[0]._id.toString(),
                                                               startTime:now,
                                                               date: now,
                                                               progress:true,
