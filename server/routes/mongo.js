@@ -827,7 +827,7 @@ router.getUserMyChatList=function(userId,time,limit){
         reject(err);
     }else{
         var dbo = db.db(config.dbName); 
-        dbo.collection("chat").find({userId:userId, date:{$lt:new Date(time)}}).limit(limit).toArray(function(err, result) {
+        dbo.collection("chat").find({userId:userId, date:{$lte:new Date(time)}}).limit(limit).toArray(function(err, result) {
             if (err){
                 reject(err);
             }else{ 
