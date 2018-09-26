@@ -144,6 +144,20 @@ ionViewCanLeave(){
           }
       })
     console.log("ionViewWillLeave "+this.chatInfo.progress);
+    /*
+    this.server.lastQueryChatTime=new Date();
+    this.storage.chatList=[];
+    this.server.getUserChats().then((chats:any)=>{
+            if(chats.length>0){
+                console.log("more is true");
+                chats.forEach(chat=>{
+                        this.storage.chatList.push(chat);
+                })
+            }else{
+                console.log("more is false");
+            }
+        });
+   */     
   }
 
  terminateChat(){

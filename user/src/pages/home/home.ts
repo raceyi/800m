@@ -40,7 +40,8 @@ export class HomePage {
 
   ionViewWillEnter() {
         console.log("ionViewWillEnter-homePage");
-        this.server.lastQueryChatTime=new Date();
+        let now=new Date();
+        this.server.lastQueryChatTime=new Date(now.getTime()+1*60*1000); // one minute later. 서버의 시차문제가 있을수 있다. 
         this.storage.chatList=[];
         this.server.getUserChats().then((chats:any)=>{
             if(chats.length>0){

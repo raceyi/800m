@@ -349,6 +349,7 @@ export class ServerProvider {
     getUserChats(){
         return new Promise((resolve,reject)=>{
               let body={ queryTime:this.lastQueryChatTime,limit:10};
+              console.log("queryTime:"+JSON.stringify(body));
               //server에 저장되는 chatting time이  ios시간인가? 아니면 local time인가??? 확인이 필요하다.ㅜ....
               this.postWithAuth("/getUserChats",body).then((res:any)=>{
                   if(res.result=="failure"){
@@ -371,7 +372,7 @@ export class ServerProvider {
                                 this.lastQueryChatTime=chats[lastIndex].date;
                             chats.forEach(chat=>{
                                 let localTime=new Date(chat.date);
-                                console.log("localTime:"+localTime.toLocaleDateString());
+                                console.log("localTime:"+localTime.toLocaleDateString()+" type:"+chat.type);
                                 chat.timeString=localTime.getFullYear()+"년 "+(localTime.getMonth()+1)+"월 "+localTime.getDate()+"일";
                             })    
                             resolve(chats);
