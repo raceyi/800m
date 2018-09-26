@@ -8,6 +8,11 @@
     <ion-title style="color:white;">
       {{userName}}님의 {{chatInfo.type}}상담
     </ion-title>
+    <ion-buttons end>
+      <button color="white" ion-button icon-only (click)="customerInfo()">
+        <ion-icon name="ios-person-outline"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
@@ -28,7 +33,9 @@
         </div>
         <div class="chat-message" text-left *ngIf="chat.origin == 'user'">
           <div class="left-bubble">
+            <!--
             <span class="msg-name">{{userName}}님</span>
+            -->
             <span class="msg-date">{{chat.date | date:'short'}}</span>
             <p text-wrap>{{chat.text}}</p>
           </div>
@@ -38,9 +45,13 @@
           </div>        
     </ion-item>
   </ion-list>
+  <div class="dummy">
+  </div> 
+  <div class="dummy" *ngIf="!actionHide">
+  </div> 
 </ion-content>
 
-<ion-footer style="background-color:#AEB6BD;" *ngIf="this.chatInfo.progress">
+<ion-footer style="background-color:#009fe8;" *ngIf="this.chatInfo.progress">
   <ion-grid>
     <ion-row>
       <ion-col col-2 align-self-center *ngIf="actionHide" (click)="showActionButtons(true)">
@@ -60,22 +71,23 @@
         </ion-row>
       </ion-col>
     </ion-row>
-    <ion-row [hidden]="actionHide">
-      <ion-col>
-        <button  ion-button round (click)="doAction('연체예방법')">연체예방법</button>
+    </ion-grid>
+    <ion-row [hidden]="actionHide" style="background-color:white;">
+      <ion-col text-center>
+        <button  ion-button round outline (click)="doAction('연체예방법')">연체예방법</button>
       </ion-col>
-      <ion-col>
-        <button  ion-button round (click)="doAction('납입방법')">납입방법</button>
+      <ion-col text-center>
+        <button  ion-button round outline (click)="doAction('납입방법')">납입방법</button>
       </ion-col>      
     </ion-row>
-    <ion-row [hidden]="actionHide">
-      <ion-col>
-        <button  ion-button round (click)="doAction('청구서류')">청구서류</button>
+    <ion-row [hidden]="actionHide" style="background-color:white;">
+      <ion-col text-center>
+        <button  ion-button round outline (click)="doAction('청구서류')">청구서류</button>
       </ion-col>
-      <ion-col>
-        <button  ion-button round (click)="doAction('납입확인')">납입확인</button>
+      <ion-col text-center> 
+        <button  ion-button round outline (click)="doAction('납입확인')">납입확인</button>
       </ion-col>
     </ion-row>          
-  </ion-grid>
+  
 </ion-footer>
 

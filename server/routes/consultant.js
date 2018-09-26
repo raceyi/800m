@@ -472,6 +472,19 @@ router.passwordReset=function(req,res){
 	}
 }
 
+router.getUserInfo=function(req,res){
+    console.log("getUserInfo:"+JSON.stringify(req.body));
+    mongo.findUserWithId(req.body.userId).then(user=>{
+        let response = new serverResponse.Response("success");
+        util.decryptObj(user);
+        response.user=user;
+        res.send(JSON.stringify(response));
+    },err=>{
+        let response = new serverResponse.FailResponse(err);
+        res.send(JSON.stringify(response));
+    })
+}
+
 /*
 mongo.addConsultant( { email: "kalen02101@takib.biz", password: "111Highway 37",salt:"test", phone:"010",name:"이경주",birth:"19750111",sex:"F"}).then((res)=>{
   console.log("res:"+res);

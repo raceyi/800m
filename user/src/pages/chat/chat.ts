@@ -29,6 +29,7 @@ export class ChatPage {
 
   bankAccount;
   duplicateWithrawl;
+  askTermination=false;
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
@@ -92,8 +93,8 @@ export class ChatPage {
 
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad ChatPage');
+  ionViewDidEnter() {
+    console.log('ionViewDidEnter ChatPage');
     //move scroll to bottom
     this.contentRef.scrollToBottom();
   }
@@ -120,6 +121,16 @@ export class ChatPage {
     this.data.message = '';
   }
 
+ionViewCanLeave(){
+  console.log("ionViewCanLeave");
+    if(this.chatInfo.progress){
+         console.log("ionViewWillLeave askTermination");
+        this.askTermination=true;
+        return false;
+    }
+    return true;
+}
+
   ionViewWillLeave(){
     let views=this.navCtrl.getViews();
       views.forEach(view=>{
@@ -132,9 +143,7 @@ export class ChatPage {
               }
           }
       })
-    if(this.chatInfo.progress){
-        this.chatInfo.progress=false;
-    }
+    console.log("ionViewWillLeave "+this.chatInfo.progress);
   }
 
  terminateChat(){
@@ -147,6 +156,8 @@ export class ChatPage {
               });
               alert.present();
            */   
+            this.chatInfo.progress=false;
+            this.navCtrl.pop();
         },err=>{
               let alert = this.alertCtrl.create({
                           title: '상담을 종료에 실패했습니다.',
@@ -157,7 +168,7 @@ export class ChatPage {
  }
 
  continueChat(){
-        this.chatInfo.progress=true;
+       this.askTermination=false; 
  }
 
   exitChat(){

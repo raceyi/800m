@@ -98,7 +98,7 @@ app.post("/consultant/getMonthChats",consultant.getMonthChats);
 app.post("/consultant/modifyConsultantPassword",consultant.modifyConsultantPassword);
 app.post("/consultant/modifyUserPhone",consultant.modifyUserPhone);
 app.post("/consultant/passwordReset",consultant.passwordReset);
-
+app.post("/consultant/getUserInfo",consultant.getUserInfo);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

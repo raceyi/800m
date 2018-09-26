@@ -2,6 +2,7 @@ import { Component ,ViewChild,NgZone} from '@angular/core';
 import { IonicPage, NavController, Events,NavParams ,AlertController,Content} from 'ionic-angular';
 import {ServerProvider} from '../../providers/server/server';
 import {StorageProvider} from '../../providers/storage/storage';
+import {CustomerInfoPage} from '../customer-info/customer-info';
 /**
  * Generated class for the ChatPage page.
  *
@@ -154,7 +155,7 @@ export class ChatPage {
                 }
             }
         })
-/*        
+        
       //chat정보를 서버로 부터 가져온다.
       this.server.updateChats().then(()=>{
 
@@ -165,7 +166,7 @@ export class ChatPage {
                     });
                 alert.present();    
       });
-*/      
+      
   }
 
   ionViewDidLoad() {
@@ -241,7 +242,7 @@ export class ChatPage {
       }else if(action=='청구서류'){
           body={chatId:this.chatId,msg:{type:"action",text:'청구서류 안내',action:"청구서류"}};  
       }else if(action=='연체예방법'){
-          body={chatId:this.chatId,msg:{type:"action",text:'연체예방법 안내"  ',action:"연체예방법"}};
+          body={chatId:this.chatId,msg:{type:"action",text:'연체예방법 안내',action:"연체예방법"}};
       }else if(action=='납입방법'){
           body={chatId:this.chatId,msg:{type:"action",text:"납입방법 안내",action:"납입방법"}};
       }
@@ -261,5 +262,26 @@ export class ChatPage {
                     });
                 alert.present();    
     })           
+  }
+
+  customerInfo(){
+      let body={userId:this.chatInfo.userId}
+      this.server.postWithAuth("/consultant/getUserInfo",body).then((res:any)=>{
+            if(res.result=="success"){
+                this.navCtrl.push(CustomerInfoPage,{user:res.user,class:"CustomerInfoPage"});
+            }else{
+                let alert = this.alertCtrl.create({
+                        title: '고객정보를 가져오는데 실패했습니다.',
+                        buttons: ['OK']
+                    });
+                alert.present();              
+            }
+      },err=>{
+                let alert = this.alertCtrl.create({
+                        title: '고객정보를 가져오는데 실패했습니다.',
+                        buttons: ['OK']
+                    });
+                alert.present();              
+      })
   }
 }

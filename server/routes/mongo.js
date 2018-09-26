@@ -341,13 +341,12 @@ router.updateUserPhone=function(encryptedEmail,encryptedPhone){
         }else{
             var dbo = db.db(config.dbName);
 
-            dbo.collection("user").updateOne({email:email},{$set:{phone:encryptedPhone}},{upsert:false} ,function(err, res) {
+            dbo.collection("user").updateOne({email:encryptedEmail},{$set:{phone:encryptedPhone}},{upsert:false} ,function(err, res) {
                 // work here
                 if (err) {
                     console.log("mongo-updateUserPhone err:"+JSON.stringify(err));
                     reject(err);
                 } else {
-                    console.log("mongo-updateUserPhone success:"+newPassword);
                     resolve(null);
                 }
             });
@@ -363,13 +362,12 @@ router.updateConsultantPhone=function(encryptedEmail,encryptedPhone){
             reject(err);
         }else{
             var dbo = db.db(config.dbName); 
-            dbo.collection("consultant").updateOne({email:email},{$set:{phone:encryptedPhone}},{upsert:false} ,function(err, res) {
+            dbo.collection("consultant").updateOne({email:encryptedEmail},{$set:{phone:encryptedPhone}},{upsert:false} ,function(err, res) {
                 // work here
                 if (err) {
                     console.log("mongo-updateUserPhone err:"+JSON.stringify(err));
                     reject(err);
                 } else {
-                    console.log("mongo-updateUserPhone success:"+newPassword);
                     resolve(null);
                 }
             });

@@ -81,11 +81,13 @@ export class ServerProvider {
                   console.log("registrationId sent successfully");
                   var result:string=res.result;
                   if(result=="success"){
+                      /*
                         let alert = this.alertCtrl.create({
                                             title: '상담사의 메시지를 받을수 있습니다.',
                                             buttons: ['OK']
                                         });
                          alert.present();
+                         */
                   }else{
                         let alert = this.alertCtrl.create({
                                             title: '상담사의 메시지를 받을수 없습니다.',
