@@ -45,8 +45,12 @@ export class MyApp {
               console.log("email:"+email);
               console.log("password:"+password);
               serverProvider.postWithoutAuth('/consultant/login',body).then((res:any)=>{
+                  if(res.result=="success"){
                     storage.saveLoginInfo(res);
-                    gMyApp.rootPage=TabsPage;  
+                    gMyApp.rootPage=TabsPage;
+                  }else{
+                    gMyApp.rootPage=LoginPage;    
+                  }  
               },err=>{
                   gMyApp.rootPage=LoginPage;  
               })
@@ -61,8 +65,12 @@ export class MyApp {
               console.log("email:"+email);
               console.log("password:"+password);
               serverProvider.postWithoutAuth('/consultant/login',body).then((res:any)=>{
+                    if(res.result=="success"){
                     storage.saveLoginInfo(res);
-                    gMyApp.rootPage=TabsPage;  
+                    gMyApp.rootPage=TabsPage;
+                  }else{
+                    gMyApp.rootPage=LoginPage;    
+                  }  
               },err=>{
                   gMyApp.rootPage=LoginPage;  
               })

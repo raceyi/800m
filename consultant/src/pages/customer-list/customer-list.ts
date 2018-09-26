@@ -17,7 +17,7 @@ import {ChatEntrancePage} from '../chat-entrance/chat-entrance';
   templateUrl: 'customer-list.html',
 })
 export class CustomerListPage {
-  filter="twoMonth";
+  filter= "all";//"twoMonth";
   sortValue="character";
 
   textClasses={

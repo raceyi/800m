@@ -2,11 +2,11 @@ page-chat {
 
 
   .header-ios .toolbar-ios:last-child .toolbar-background-ios {
-    background-color:$default-color;
+    background-color:white;
   }
 
   .toolbar-title-ios{
-    color:white;
+    color: $default-color;
   }
   
   ion-content {

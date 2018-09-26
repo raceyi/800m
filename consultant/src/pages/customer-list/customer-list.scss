@@ -1,9 +1,20 @@
 page-customer-list {
     ion-title{
         height:calc((44/667)*100vh);
-        background-color:$default-color;
+        background-color:white;
         .toolbar-title-ios{
-            color:white !important;
+            color:$default-color !important;
+        }
+    }
+
+    .customer-count-label{
+        font-size:4.2vw;
+        color:#989b9d;
+    }
+    .customer-count{
+        font-size:10.9vw;
+        .unit-label{
+            font-size:4.2vw;
         }
     }
 

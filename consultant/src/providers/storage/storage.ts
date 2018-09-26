@@ -27,11 +27,17 @@ export class StorageProvider {
 
     consultantName;
     consultantId;
+    IDNumber;
 
     contactList=[]; // date, chats
 
     badgeCount=0;
-    
+    reward=0;
+    overdue=0;
+    newSignUp=0;
+    termination=0;
+    etc=0;
+
     sortBy="character"; //one of charactoer or contact
     public certUrl=this.configProvider.getCertUrl();
     public authReturnUrl=this.configProvider.getAuthReturnUrl();
@@ -73,10 +79,12 @@ export class StorageProvider {
                 console.log("res.userInfo.consultant:"+JSON.stringify(res.userInfo.consultant));
                 this.name=res.userInfo.consultant.name;
                 this.phone=res.userInfo.consultant.phone;
+                this.IDNumber=res.userInfo.consultant.IDNumber;
                 this.birthYear=res.userInfo.consultant.birth.substr(0,4);
                 this.birthMonth=res.userInfo.consultant.birth.substr(4,2);
                 this.birthDay=res.userInfo.consultant.birth.substr(6,2);       
                 this.userList=res.userInfo.users;
+                this.email=res.userInfo.consultant.email;
                 this.userList.forEach(user=>{
                     if(user.overdue==1){
                         this.userOneMonthList.push(user);
@@ -174,17 +182,47 @@ export class StorageProvider {
         }
 
         let badgeCount=0;
+        let reward=0;
+        let overdue=0;
+        let newSignUp=0;
+        let termination=0;
+        let etc=0;
+        /*
+            보상: reward
+            연체관리:overdue
+            신규가입: newSignUp
+            해지:termination
+            기타:etc
+        */
+
         this.contactList.forEach(day=>{
             console.log("list:"+JSON.stringify(day.list));
             day.list.forEach(chat=>{
                 if(!chat.confirm && chat.lastOrigin=='user'){
                     ++badgeCount;
+                    //각 type별로 카운트를 한다.
+                    if(chat.type=='보상')
+                        ++reward;
+                    if(chat.type=='연체관리')
+                        ++overdue;
+                    if(chat.type=='신규가입')
+                        ++newSignUp;
+                    if(chat.type=='해지')
+                        ++termination;
+                    if(chat.type=='기타')
+                        ++etc;    
                 }
             })
         })
         //send badgeCount into tabs;
         this.events.publish("badgeCount",badgeCount);
         this.badgeCount=badgeCount;
+
+        this.reward=reward;
+        this.overdue=overdue;
+        this.newSignUp=newSignUp;
+        this.termination=termination;
+        this.etc=etc;
 
         console.log("badgeCount:"+badgeCount);
         console.log("contactList:"+JSON.stringify(this.contactList));

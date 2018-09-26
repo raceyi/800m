@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams,App,AlertController } from 'ionic-a
 import {ChatPage} from '../chat/chat';
 import {StorageProvider} from '../../providers/storage/storage';
 import {ServerProvider} from '../../providers/server/server';
+var gCustomerContactPage;
 
 /**
  * Generated class for the CustomerContactPage page.
@@ -17,6 +18,7 @@ import {ServerProvider} from '../../providers/server/server';
   templateUrl: 'customer-contact.html',
 })
 export class CustomerContactPage {
+  selectedType="보상";
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
@@ -24,17 +26,20 @@ export class CustomerContactPage {
               private app:App,      
               private alertCtrl:AlertController,          
               private server:ServerProvider) {
+       gCustomerContactPage=this;         
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad CustomerContactPage');
+
   }
 
   ionViewWillEnter() {
         console.log("ionViewWillEnter-CustomerContactPage");
       //chat정보를 서버로 부터 가져온다.
       this.server.updateChats().then(()=>{
-
+          //각 종류별로 신규 상담 숫자를 넣어주자.
+          
       },err=>{
                 let alert = this.alertCtrl.create({
                         title: '서버와 통신에 실패했습니다.',
@@ -47,5 +52,9 @@ export class CustomerContactPage {
   chat(userInfo){
     console.log("chat comes "+JSON.stringify(userInfo));
     this.app.getRootNavs()[0].push(ChatPage,{chatId:userInfo._id,name:userInfo.name});
+  }
+
+  select(type){
+    this.selectedType=type;
   }
 }

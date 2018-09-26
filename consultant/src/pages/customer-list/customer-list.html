@@ -8,6 +8,8 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
+      고객관리
+      <!--
      <ion-row class="title">
       <ion-col text-right align-self-center col-7>
       고객관리
@@ -19,20 +21,37 @@
         </ion-select>
       </ion-col>
       </ion-row>
+      -->
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
-<ion-row>
-<ion-col align-self-center class="filter" text-center>
-<ion-select text-center  [style.color]="selectColor()" [(ngModel)]="filter" interface="action-sheet">
-    <ion-option value="twoMonth">2개월 연체 고객</ion-option>
-    <ion-option value="oneMonth">1개월 연체 고객</ion-option>
-    <ion-option value="all">전체고객</ion-option>    
-  </ion-select>
-</ion-col>
-</ion-row>
+  <ion-row>
+    <ion-col class="customer-count-label" text-center align-self-center>
+    나의 모든 고객
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col class="customer-count"text-center align-self-center>
+      {{storage.userList.length}} <span class="unit-label">명</span>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col align-self-center>
+      <ion-select text-center  [style.color]="selectColor()" [(ngModel)]="filter" style="max-width:100%;" interface="action-sheet">
+        <ion-option value="twoMonth">2개월 연체 고객</ion-option>
+        <ion-option value="oneMonth">1개월 연체 고객</ion-option>
+        <ion-option value="all">전체고객</ion-option>    
+      </ion-select>
+    </ion-col>
+    <ion-col align-self-center>
+      <ion-select text-right [(ngModel)]="sortValue" style="max-width:100%;"interface="action-sheet">
+          <ion-option value="character" (click)="sortByCharacter()">가나다순</ion-option>
+          <ion-option value="contact" (click)="sortByContact()" >최근연락순</ion-option>    
+        </ion-select>
+    </ion-col>
+  </ion-row>
 
 <div class="customer" *ngIf="filter=='twoMonth'">
 <ion-row *ngFor="let user of storage.userTwoMonthList;let i = index;" > 

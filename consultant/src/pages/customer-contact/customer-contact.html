@@ -14,30 +14,64 @@
 
 
 <ion-content>
+  <ion-row>
+    <ion-col *ngIf='selectedType=="보상"' style="border-bottom:solid 2px #009fe8 !important;" text-center>
+      <button no-padding no-margin ion-button clear color="black" (click)='select("보상")'>보상<span *ngIf="storage.reward>0">({{storage.reward}})</span></button>
+    </ion-col>
+    <ion-col *ngIf='selectedType!="보상"' text-center>
+      <button no-padding no-margin ion-button clear color="black" (click)='select("보상")'>보상<span *ngIf="storage.reward>0">({{storage.reward}})</span></button>
+    </ion-col>
+    <ion-col *ngIf='selectedType=="연체관리"' style="border-bottom:solid 2px #009fe8;" text-center>
+      <button no-padding no-margin ion-button clear color="black" (click)='select("연체관리")'>연체 <span *ngIf="storage.overdue>0">({{storage.overdue}})</span></button>      
+    </ion-col>
+    <ion-col *ngIf='selectedType!="연체관리"' text-center>
+      <button no-padding no-margin ion-button clear color="black" (click)='select("연체관리")'>연체<span *ngIf="storage.overdue>0">({{storage.overdue}})</span></button>      
+    </ion-col>
+    <ion-col *ngIf='selectedType=="신규가입"' style="border-bottom:solid 2px #009fe8;" text-center>
+      <button no-padding no-margin ion-button clear color="black" (click)='select("신규가입")'>신규<span *ngIf="storage.newSignUp>0">({{storage.newSignUp}})</span></button>      
+    </ion-col>
+    <ion-col *ngIf='selectedType!="신규가입"' text-center>
+      <button no-padding no-margin ion-button clear color="black" (click)='select("신규가입")'>신규<span *ngIf="storage.newSignUp>0">({{storage.newSignUp}})</span></button>      
+    </ion-col>
+    <ion-col *ngIf='selectedType=="해지"' style="border-bottom:solid 2px #009fe8;" text-center>
+      <button no-padding no-margin ion-button clear color="black" (click)='select("해지")'>해지<span *ngIf="storage.termination>0">({{storage.termination}})</span></button>      
+    </ion-col>    
+    <ion-col *ngIf='selectedType!="해지"' text-center>
+      <button no-padding no-margin ion-button clear color="black" (click)='select("해지")'>해지<span *ngIf="storage.termination>0">({{storage.termination}})</span></button>      
+    </ion-col>    
+    <ion-col *ngIf='selectedType=="기타"' style="border-bottom:solid 2px #009fe8;" text-center>
+      <button no-padding no-margin ion-button clear color="black" (click)='select("기타")'>기타<span *ngIf="storage.etc>0">({{storage.etc}})</span></button>      
+    </ion-col>        
+    <ion-col *ngIf='selectedType!="기타"' text-center>
+      <button no-padding no-margin ion-button clear color="black" (click)='select("기타")'>기타<span *ngIf="storage.etc>0">({{storage.etc}})</span></button>      
+    </ion-col>        
+  </ion-row>
   <div *ngFor="let day of storage.contactList;let i = index;">
   <ion-row>
     <ion-col padding style="font-size:4.2vw;">
       <span style="font-size:4.2vw;color:#41A6FF;" *ngIf="day.today==true">오늘</span> <span style="font-size:4.2vw;color:#616a71;">{{day.date}}</span>
     </ion-col>
   </ion-row>
- <div padding *ngFor="let user of day.list;let j = index;" (click)="chat(user)"  class="request" style="border:solid 1px #C3E3FF;">
- <ion-row>
-   <ion-col style="font-size:4.2vw;">
-     {{user.name}}     
-   </ion-col>
-   <ion-col style="font-size:4vw;" text-right>
-     {{user.time}}
-   </ion-col>
- </ion-row>
- <ion-row>
- <ion-col style="font-size:3.7vw;color:#56606c">
-     {{user.type}}
- </ion-col>
- <ion-col *ngIf="!user.confirm && user.lastOrigin=='user'" style="background-color:#ff6e6e;color:white;font-size:2.9vw;border-radius: 10px;" col-2 text-center>
-    <b>NEW</b>
- </ion-col>
- </ion-row>
- </div>
+  <div *ngFor="let user of day.list;let j = index;">
+      <div padding [hidden]="user.type!=selectedType" (click)="chat(user)"  class="request" style="border:solid 1px #C3E3FF;">
+        <ion-row>
+            <ion-col style="font-size:4.2vw;">
+              {{user.name}}     
+            </ion-col>
+            <ion-col style="font-size:4vw;" text-right>
+              {{user.time}}
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col style="font-size:3.7vw;color:#56606c">
+                {{user.type}}
+            </ion-col>
+            <ion-col *ngIf="!user.confirm && user.lastOrigin=='user'" style="background-color:#ff6e6e;color:white;font-size:2.9vw;border-radius: 10px;" col-2 text-center>
+                <b>NEW</b>
+            </ion-col>
+        </ion-row>
+      </div>
+  </div>
   </div>
 
 </ion-content>

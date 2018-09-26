@@ -7,12 +7,57 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>나의 정보</ion-title>
+    <ion-title>프로필</ion-title>
   </ion-navbar>
 
 </ion-header>
-
-
 <ion-content>
-
+<div class="top-border padding-left">  
+<ion-row>
+  <ion-col text-center>
+    <img class="photo" src="assets/imgs/songmee.png">
+  </ion-col>
+</ion-row>
+<ion-row>
+  <ion-col class="name" text-center>
+    {{storage.name}} <span>설계사님</span>
+  </ion-col>  
+</ion-row>
+</div>
+<div class="top-border padding-left">
+<ion-row>
+  <ion-col text-left class="id-label">
+    설계사 ID
+  </ion-col>
+</ion-row>
+<ion-row>
+  <ion-col text-left class="id-number">
+    {{storage.IDNumber}}
+  </ion-col>
+</ion-row>
+</div>
+<div class="top-border padding-left">
+  <ion-row>
+    <ion-col text-left align-self-center>
+        {{phone}}
+    </ion-col>
+    <ion-col text-right align-self-center>
+      <button ion-button outline round class="modify-button" (click)="modifyPhone()">수정하기</button>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col text-left class="email">
+      {{storage.email}}
+    </ion-col>
+  </ion-row>
+</div>
+<div class="top-border">
+  <ion-row>
+    <ion-col align-self-center>
+      <button ion-button clear (click)="modifyPassword()">
+        <span class="configure-password">비밀번호 변경</span>
+      </button>
+    </ion-col>
+  </ion-row>
+</div>
 </ion-content>

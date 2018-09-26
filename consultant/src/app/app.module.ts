@@ -19,6 +19,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { Push, PushObject, PushOptions } from '@ionic-native/push';
 import {ChatEntrancePageModule} from '../pages/chat-entrance/chat-entrance.module';
 import {CustomerInfoPageModule} from '../pages/customer-info/customer-info.module';
+import {ConfigurePasswordPageModule} from '../pages/configure-password/configure-password.module';
+import {PasswordResetPageModule} from '../pages/password-reset/password-reset.module';
+
 import { NativeStorage } from '@ionic-native/native-storage';
 import { ServerProvider } from '../providers/server/server';
 import { HttpWrapperProvider } from '../providers/http-wrapper/http-wrapper';
@@ -41,6 +44,8 @@ registerLocaleData(localeKo);
   ],
   imports: [
     CustomIconsModule,
+    PasswordResetPageModule,
+    ConfigurePasswordPageModule,
     CustomerInfoPageModule,
     ChatEntrancePageModule,
     ChatPageModule,

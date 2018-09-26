@@ -1,10 +1,105 @@
 page-information {
     ion-title{
         height:calc((44/667)*100vh);
-        background-color:$default-color;
+        background-color:white;
         .toolbar-title-ios{
-            color:white !important;
+            color: $default-color !important;
         }
     }
 
+    .top-border{
+        border-top:solid 1px #f5f5f5;    
+    }
+
+    .id-label{
+        font-family: NotoSansKR;
+        font-size: 2.9vw;
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: -0.3px;
+        text-align: left;
+        color: #b0b0b0;
+    }
+
+    .id-number{
+        font-family: NotoSansKR;
+        font-size: 4.2vw;
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: -0.4px;
+        text-align: left;
+        color: #525252;
+    }
+
+    .email{
+        font-family: NotoSansKR;
+        font-size: 4.2vw;
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: -0.4px;
+        text-align: left;
+        color: #525252;
+    }
+    .configure-password{
+        font-family: NotoSansKR;
+        font-size: 3.7vw;
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: -0.3px;
+        text-align: left;
+        color: #b0b0b0;
+    }
+
+    .modify-button{
+        width: calc((44/375)*100vw); 
+        height:calc((30/375)*100vw);
+        border-radius: 15px;
+        background-color: #ffffff;
+        border: solid 1px #ebedee;
+        span{
+            font-family: NotoSansKR;
+            font-size: 3.2vw;
+            font-weight: normal;
+            font-style: normal;
+            font-stretch: normal;
+            line-height: normal;
+            letter-spacing: -0.3px;
+            text-align: center;
+            color: #009fe8;
+        }
+    }
+
+    .name{
+        font-family: NotoSansKR;
+        font-size: 4.8vw;
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: -0.4px;
+        text-align: center;
+        color: #000000;
+        span{
+            color: #989b9d;
+        }
+    }
+
+    .photo{
+        margin-top:calc((32/675)*100vh);
+        margin-bottom:calc((11/675)*100vh);
+        width:calc((81/375)*100vw);
+        height:calc((81/375)*100vw);
+    }
+
+    .padding-left{
+        padding-left:calc((20/375)*100vw);
+    }
 }

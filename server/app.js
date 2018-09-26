@@ -95,6 +95,9 @@ app.post("/consultant/createNewChat",consultant.createNewChat);
 app.post("/consultant/getUsers",consultant.getUsers);
 app.post("/consultant/getUserChats",consultant.getUserChats);
 app.post("/consultant/getMonthChats",consultant.getMonthChats);
+app.post("/consultant/modifyConsultantPassword",consultant.modifyConsultantPassword);
+app.post("/consultant/modifyUserPhone",consultant.modifyUserPhone);
+app.post("/consultant/passwordReset",consultant.passwordReset);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

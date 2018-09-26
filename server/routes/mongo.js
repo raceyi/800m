@@ -308,7 +308,7 @@ router.updateUserPassword=function(email, newPassword){
   });
 }
 
-router.updateUserPhone=function(encryptedEmail,encryptedPhone){
+router.updateConsultantPassword=function(email, newPassword){
   return new Promise((resolve,reject)=>{
     MongoClient.connect(url, function(err, db) {
         if (err) {
@@ -318,6 +318,29 @@ router.updateUserPhone=function(encryptedEmail,encryptedPhone){
             let salt = crypto.randomBytes(16).toString('hex');
             let password = crypto.createHash('sha256').update(newPassword + salt).digest('hex');
  
+            dbo.collection("consultant").updateOne({email:email},{$set:{salt:salt,password:password}},{upsert:false} ,function(err, res) {
+                // work here
+                if (err) {
+                    console.log("mongo-updateOne err:"+JSON.stringify(err));
+                    reject(err);
+                } else {
+                    console.log("mongo-updateOne success:"+newPassword);
+                    resolve(null);
+                }
+            });
+        }
+    });  
+  });
+}
+
+router.updateUserPhone=function(encryptedEmail,encryptedPhone){
+  return new Promise((resolve,reject)=>{
+    MongoClient.connect(url, function(err, db) {
+        if (err) {
+            reject(err);
+        }else{
+            var dbo = db.db(config.dbName);
+
             dbo.collection("user").updateOne({email:email},{$set:{phone:encryptedPhone}},{upsert:false} ,function(err, res) {
                 // work here
                 if (err) {
@@ -332,6 +355,29 @@ router.updateUserPhone=function(encryptedEmail,encryptedPhone){
     });  
   });
 }
+
+router.updateConsultantPhone=function(encryptedEmail,encryptedPhone){
+  return new Promise((resolve,reject)=>{
+    MongoClient.connect(url, function(err, db) {
+        if (err) {
+            reject(err);
+        }else{
+            var dbo = db.db(config.dbName); 
+            dbo.collection("consultant").updateOne({email:email},{$set:{phone:encryptedPhone}},{upsert:false} ,function(err, res) {
+                // work here
+                if (err) {
+                    console.log("mongo-updateUserPhone err:"+JSON.stringify(err));
+                    reject(err);
+                } else {
+                    console.log("mongo-updateUserPhone success:"+newPassword);
+                    resolve(null);
+                }
+            });
+        }
+    });  
+  });
+}
+
 
 router.registerConsultant=function(consultantId,userId){
   // user에 consultantId를 저장하고 consultant에 userId를 저장한다.

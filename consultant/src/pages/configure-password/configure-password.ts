@@ -93,7 +93,7 @@ close(){
                 newPassword:this.newPassword,
                 oldPassword:this.oldPassword };
 
-    this.server.postWithAuth("/modifyUserPassword",body).then((res:any)=>{
+    this.server.postWithAuth("/consultant/modifyConsultantPassword",body).then((res:any)=>{
              console.log("res:"+JSON.stringify(res));
              if(res.result=="success"){
                 var encrypted=this.storage.encryptValue('password',this.newPassword);// save email id 

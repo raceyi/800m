@@ -81,9 +81,18 @@ export class ServerProvider {
                   console.log("registrationId sent successfully");
                   var result:string=res.result;
                   if(result=="success"){
-
+                        let alert = this.alertCtrl.create({
+                                            title: '상담사의 메시지를 받을수 있습니다.',
+                                            buttons: ['OK']
+                                        });
+                         alert.present();
                   }else{
-                    
+                        let alert = this.alertCtrl.create({
+                                            title: '상담사의 메시지를 받을수 없습니다.',
+                                            subTitle:'앱을 다시 실행하여 주시기 바랍니다.',
+                                            buttons: ['OK']
+                                        });
+                         alert.present();                    
                   }
              },(err)=>{
                  if(err=="NetworkFailure"){
@@ -91,6 +100,12 @@ export class ServerProvider {
                         //this.storageProvider.errorReasonSet('네트웍 연결이 원할하지 않습니다'); 
                         //Please move into ErrorPage!
                         //this.app.getRootNav().setRoot(ErrorPage);
+                        let alert = this.alertCtrl.create({
+                                            title: '네트웍 연결이 원할하지 않습니다.',
+                                            subTitle:'앱을 다시 실행하여 주시기 바랍니다.',
+                                            buttons: ['OK']
+                                        });
+                         alert.present();
                  }else{
                      console.log("Hum...registrationId-HttpError");
                  } 
