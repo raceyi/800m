@@ -180,7 +180,7 @@ export class SignupPage {
                 encrypted=this.storage.encryptValue('password',this.password);
                 this.nativeStorage.setItem('password',encodeURI(encrypted));
                 console.log("res:"+JSON.stringify(res));
-                this.storage.consultantId=res.consultantId;
+                this.storage.IDNumber=res.consultantId;                
                 this.navCtrl.push(GreetingPage);
             }else if(res.result=='failure'){
                 if(res.error=="existingUser"){

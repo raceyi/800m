@@ -41,6 +41,7 @@ export class ChatEntrancePage {
 
   chat(type){
      let body={type:type ,userId:this.userId,name:this.name, consultantName:this.storage.consultantName};
+     console.log("chat comes body:"+JSON.stringify(body));
 
     this.server.postWithAuth("/consultant/createNewChat",body).then((res:any)=>{
       console.log("createNewChat-res:"+JSON.stringify(res));

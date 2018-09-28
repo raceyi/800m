@@ -51,36 +51,40 @@ router.sendToConsultant("To 고객님...","5b36e7486654502e8d5941ef");
 
 router.sendToUser=function(msg,id){
      return new Promise((resolve,reject)=>{ 
+                console.log("sendToUser with id:"+id);
          mongo.findUserWithId(id).then((user)=>{
                 console.log("user:"+JSON.stringify(user));
-                let pushId=[user.token];
-                let platform=user.platform;
-                
-                if(platform=="android"){  
-                            let sender = new gcm.Sender(config.userAPIKey);
-                            message = new gcm.Message({
-                                priority: 'high',
-                                collapseKey: '800m',
-                                timeToLive: 3,
-                                data : {
-                                    title : msg.text,
-                                    message : msg.text,
-                                    custom  : JSON.stringify(msg),
-                                    "content-available": 1
-                                }
-                            });
-                            sender.send(message, {"registrationTokens":pushId}, 4, function (err, result) {
-                                if(err){
-                                    console.log("err sender:"+JSON.stringify(err));
-                                    reject(err);
-                                }else{
-                                    console.log("success sender:"+JSON.stringify(result));
-                                    resolve(result);
-                                }
-                            });
-                }else if(platform=="ios"){
-                    reject("Not yet implemented");
-                }
+                if(user.platform && user.token){
+                    let pushId=[user.token];
+                    let platform=user.platform;
+                    
+                    if(platform=="android"){  
+                                let sender = new gcm.Sender(config.userAPIKey);
+                                message = new gcm.Message({
+                                    priority: 'high',
+                                    collapseKey: '800m',
+                                    timeToLive: 3,
+                                    data : {
+                                        title : msg.text,
+                                        message : msg.text,
+                                        custom  : JSON.stringify(msg),
+                                        "content-available": 1
+                                    }
+                                });
+                                sender.send(message, {"registrationTokens":pushId}, 4, function (err, result) {
+                                    if(err){
+                                        console.log("err sender:"+JSON.stringify(err));
+                                        reject(err);
+                                    }else{
+                                        console.log("success sender:"+JSON.stringify(result));
+                                        resolve(result);
+                                    }
+                                });
+                    }else if(platform=="ios"){
+                        reject("Not yet implemented");
+                    }
+            }else
+                reject("user not registered");
          },err=>{
              reject(err);
         })

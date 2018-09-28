@@ -81,6 +81,7 @@ app.post('/getUserChats',users.getUserChats);
 app.post('/passwordReset',users.passwordReset);
 app.post('/modifyUserPassword',users.modifyUserPassword);
 app.post('/modifyUserPhone',users.modifyUserPhone);
+app.post('/checkRegistrationId',users.checkRegistrationId);
 
 app.post('/consultant/signup',consultant.signup);
 app.post('/consultant/login',consultant.login);

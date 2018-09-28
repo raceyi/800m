@@ -128,13 +128,11 @@ export class ServerProvider {
                   console.log("registrationId sent successfully");
                   var result:string=res.result;
                   if(result=="success"){
-                      /*
                         let alert = this.alertCtrl.create({
                                             title: '고객님의 메시지를 받을수 있습니다.',
                                             buttons: ['OK']
                                         });
                          alert.present();
-                         */
                   }else{
                         let alert = this.alertCtrl.create({
                                             title: '고객님의 메시지를 받을수 없습니다.',
@@ -187,8 +185,9 @@ export class ServerProvider {
             loading.dismiss();
             if(res.result=="success")
                 resolve(res);
-            else
-                reject(res.error);    
+            else{
+                reject(res.error);
+            }    
           },err=>{
             console.log("post-err:"+JSON.stringify(err));
                 if(err.hasOwnProperty("status") && err.status==401){

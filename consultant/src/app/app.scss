@@ -23,3 +23,12 @@ $default-color:#41A6FF;
         #{$property}: -moz-calc(#{$expression});
         #{$property}: calc(#{$expression}); 
 } 
+
+@font-face{
+        font-family: NotoSansKR;
+        src:url('../assets/font/NotoSansKR-Regular.otf') format('otf');
+}
+
+*{
+        font-family: NotoSansKR;
+}

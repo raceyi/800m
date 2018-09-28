@@ -74,20 +74,33 @@ export class ServerProvider {
               }else{
                   platform="unknown";
               }
-
+              this.storage.token=response.registrationId;
               let body = {registrationId:response.registrationId, platform: platform};
 
               this.postWithAuth("/registrationId",body).then((res:any)=>{
                   console.log("registrationId sent successfully");
                   var result:string=res.result;
                   if(result=="success"){
-                      /*
-                        let alert = this.alertCtrl.create({
-                                            title: '상담사의 메시지를 받을수 있습니다.',
-                                            buttons: ['OK']
-                                        });
-                         alert.present();
-                         */
+                        //registrationId를 정상으로 가져오는지 확인하자. 만약 가져오지 못할때는 다시 전송하도록 하자.!!!
+                        this.postWithAuth("/checkRegistrationId",{}).then((registered:any)=>{
+                            if(registered.result=="success" && registered.token==response.registrationId){
+                                    console.log("checkRegistrationId is done");
+                                    let alert = this.alertCtrl.create({
+                                                        title: '상담사의 메시지를 받을수 있습니다.',
+                                                        buttons: ['OK']
+                                                    });
+                                    alert.present();                    
+                                    
+                            }else{
+                                let alert = this.alertCtrl.create({
+                                                    title: '상담사의 메시지를 받을수 없습니다.',
+                                                    subTitle:'앱을 다시 실행하여 주시기 바랍니다.',
+                                                    buttons: ['OK']
+                                                });
+                                alert.present();                    
+                                
+                            }
+                        })
                   }else{
                         let alert = this.alertCtrl.create({
                                             title: '상담사의 메시지를 받을수 없습니다.',

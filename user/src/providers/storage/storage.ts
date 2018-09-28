@@ -37,6 +37,8 @@ export class StorageProvider {
     chatId;
     chatList=[];
     
+    token;
+    
   constructor(private configProvider:ConfigProvider,
               private platform: Platform,private push: Push) {
         console.log('Hello StorageProvider Provider');

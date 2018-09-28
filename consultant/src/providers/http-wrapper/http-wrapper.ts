@@ -24,7 +24,7 @@ timeout:number=60; //in seconds;
       return new Promise((resolve,reject)=>{        
         if(this.configProvider.device){ //use native-plugin
               this.http.setDataSerializer("json"); 
-              this.http.setRequestTimeout(this.timeout);
+             // this.http.setRequestTimeout(this.timeout);
               let body = Object.assign({}, bodyIn); 
               body.version=this.configProvider.version;              
               this.http.post(this.configProvider.serverAddress+url,body, {"Content-Type":"application/json"}).then((res:any)=>{

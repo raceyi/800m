@@ -1,15 +1,38 @@
 page-customer-contact {
     ion-title{
-        height:calc((44/667)*100vh);
+        height: calc((26/667)*100vh);;
+        font-family: NotoSansKR;
+        font-size: 17px;
+        font-weight: 500;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: normal;
+        text-align: center;
+        color: #009fe8;
         background-color:white;
         .toolbar-title-ios{
             color:$default-color !important;
         }
+        border-bottom:solid 1px #f5f5f5;
     }
   .request{
         margin-left:calc((10/375)*100vw);
         margin-right:calc((10/375)*100vw);
         margin-top:0;
         margin-bottom:calc((4/375)*100vw);
+        border-radius: calc((5/375)*100vw);
+  }
+
+  .button-name{
+        font-family: NotoSansKR;
+        font-size: 4.2vw;
+        font-weight: bold;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: normal;
+        text-align: left;
+        color: #000000;
   }
 }

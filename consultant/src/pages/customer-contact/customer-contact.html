@@ -10,7 +10,7 @@
     <!--
     <ion-title>고객요청({{storage.badgeCount}})</ion-title>
     -->
-    <ion-title>고객요청</ion-title>    
+    <ion-title>상담문의</ion-title>    
   </ion-navbar>
 
 </ion-header>
@@ -19,7 +19,7 @@
 <ion-content>
   <ion-row>
     <ion-col *ngIf='selectedType=="보상"' style="border-bottom:solid 2px #009fe8 !important;" text-center>
-      <button no-padding no-margin ion-button clear color="black" (click)='select("보상")'>보상<span *ngIf="storage.reward>0">({{storage.reward}})</span></button>
+      <button no-padding no-margin ion-button clear color="black" (click)='select("보상")'><span class="button-name">보상</span><span *ngIf="storage.reward>0">({{storage.reward}})</span></button>
     </ion-col>
     <ion-col *ngIf='selectedType!="보상"' text-center>
       <button no-padding no-margin ion-button clear color="black" (click)='select("보상")'>보상<span *ngIf="storage.reward>0">({{storage.reward}})</span></button>

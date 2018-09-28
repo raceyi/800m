@@ -386,6 +386,18 @@ router.modifyUserPhone=function(req,res){
         res.send(JSON.stringify(response));
 	}
 }
+
+router.checkRegistrationId=function(req,res){
+    mongo.findUserWithId(req.session.uid).then(user=>{
+        let response = new serverResponse.Response("success");
+        response.token=user.token;
+        res.send(JSON.stringify(response));
+    },err=>{
+		let response = new serverResponse.FailResponse(err);
+        res.send(JSON.stringify(response));
+    })
+}
+
 /*
 mongo.addUser( { email: "kalen985@takib.biz", password: "111Highway 37",salt:"test", phone:"010",name:"이경주",birth:"19750111",sex:"F"}).then((res)=>{
   console.log("res:"+res);

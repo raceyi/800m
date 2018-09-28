@@ -182,11 +182,13 @@ router.createNewChat=function(req,res){
                 let msg={time:chatInfo.date, type:"text",text:"고객님"+req.body.type+"으로 연락드립니다.",chatId: chatInfo._id};        
                 notification.sendToUser(msg,req.body.userId).then((notifyRes)=>{
                     let response = new serverResponse.Response("success");
-                    console.log("chatId:"+chatInfo._id);
+                    console.log("done - chatId:"+chatInfo._id);
                     response.chatId=chatInfo._id;
                     res.send(JSON.stringify(response));
+                    console.log("createNewChat response success ");
                     callback(null);
                 },err=>{
+                    console.log("err "+err+ "happens");
                     let response = new serverResponse.FailResponse(err);
                     res.send(JSON.stringify(response));
                     callback(null);

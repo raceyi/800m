@@ -26,7 +26,7 @@ export class StorageProvider {
     chats=[];
 
     consultantName;
-    consultantId;
+    //consultantId;
     IDNumber;
 
     contactList=[]; // date, chats
