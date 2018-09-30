@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams,AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams,AlertController,App } from 'ionic-angular';
 import {StorageProvider} from '../../providers/storage/storage';
 import {BankAccountPage} from '../bank-account/bank-account';
 import{ConfigurePasswordPage} from '../configure-password/configure-password';
 import {ServerProvider} from '../../providers/server/server';
+import { Device } from '@ionic-native/device';
+import {LoginPage} from '../login/login';
 
 /**
  * Generated class for the MyPage page.
@@ -25,10 +27,16 @@ export class MyPage {
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
                 public server:ServerProvider,   
-                private alertCtrl: AlertController,  
+                private alertCtrl: AlertController,
+                public device: Device,  
+                private app:App,
                 public storage: StorageProvider) {
-      this.phoneNumber=this.autoHypenPhone(this.storage.phone);
-      this.consultantPhoneNumber=this.autoHypenPhone(this.storage.consultantPhone);
+      if(this.storage.phone){              
+            this.phoneNumber=this.autoHypenPhone(this.storage.phone);
+      }
+      if(this.storage.consultantPhone){
+            this.consultantPhoneNumber=this.autoHypenPhone(this.storage.consultantPhone);
+      }
   }
 
 configureBounds(){
@@ -131,4 +139,30 @@ configurePassword(){
     })
 
   }
+
+logout(){
+    this.server.postWithAuth("/logout",{}).then((res:any)=>{
+            this.storage.removeStoredInfo(); //only success comes here
+            this.app.getRootNavs()[0].setRoot(LoginPage);
+    },err=>{
+            let alert = this.alertCtrl.create({
+                          subTitle: '로그아웃에 실패했습니다.',
+                          buttons: ['OK']
+                      });
+            alert.present();
+    });
+  }
+
+  unregister(){
+    this.server.postWithAuth("/unregister",{}).then((res:any)=>{
+        this.storage.removeStoredInfo(); //only success comes here
+        this.app.getRootNavs()[0].setRoot(LoginPage);
+    },err=>{
+            let alert = this.alertCtrl.create({
+                          subTitle: '회원탈퇴에 실패했습니다.',
+                          buttons: ['OK']
+                      });
+            alert.present();
+    });
+  }  
 }

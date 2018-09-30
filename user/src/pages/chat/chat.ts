@@ -173,11 +173,21 @@ ionViewCanLeave(){
             this.chatInfo.progress=false;
             this.navCtrl.pop();
         },err=>{
+          if(err=="NetworkFailure"){
               let alert = this.alertCtrl.create({
-                          title: '상담을 종료에 실패했습니다.',
+                          title: '네트웍상태를 확인해주세요.',
                           buttons: ['OK']
               });
-              alert.present();       
+              alert.present();
+          }else{
+              let alert = this.alertCtrl.create({
+                          title: '상담을 정상 종료하는데 실패했습니다.',
+                          buttons: ['OK']
+              });
+              alert.present();
+          }    
+            this.chatInfo.progress=false;   
+            this.navCtrl.pop();          
         })
  }
 

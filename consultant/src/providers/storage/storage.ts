@@ -45,7 +45,9 @@ export class StorageProvider {
     public version=this.configProvider.getVersion();
     public device=this.configProvider.device;
     
-  constructor(private configProvider:ConfigProvider,private events:Events) {
+  constructor(private configProvider:ConfigProvider,
+            private events:Events,
+            private nativeStorage:NativeStorage) {
     console.log('Hello StorageProvider Provider');
   }
 
@@ -215,7 +217,6 @@ export class StorageProvider {
             })
         })
         //send badgeCount into tabs;
-        this.events.publish("badgeCount",badgeCount);
         this.badgeCount=badgeCount;
 
         this.reward=reward;
@@ -224,6 +225,7 @@ export class StorageProvider {
         this.termination=termination;
         this.etc=etc;
 
+        this.events.publish("badgeCount",badgeCount);
         console.log("badgeCount:"+badgeCount);
         console.log("contactList:"+JSON.stringify(this.contactList));
     }
@@ -302,4 +304,8 @@ export class StorageProvider {
                 })    
   }
 
+    removeStoredInfo(){
+        this.nativeStorage.remove("email");
+        this.nativeStorage.remove("password");       
+    }
 }

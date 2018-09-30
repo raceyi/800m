@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams,App,AlertController } from 'ionic-angular';
+import { Component,NgZone } from '@angular/core';
+import { IonicPage, Events,NavController, NavParams,App,AlertController } from 'ionic-angular';
 import {ChatPage} from '../chat/chat';
 import {StorageProvider} from '../../providers/storage/storage';
 import {ServerProvider} from '../../providers/server/server';
@@ -18,15 +18,43 @@ var gCustomerContactPage;
   templateUrl: 'customer-contact.html',
 })
 export class CustomerContactPage {
+  relationship;
+
   selectedType="보상";
+
+    badgeCount=0;
+    reward=0;
+    overdue=0;
+    newSignUp=0;
+    termination=0;
+    etc=0;
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
               public storage: StorageProvider, 
-              private app:App,      
+              private app:App,  
+              public ngZone:NgZone,
+              private events:Events,    
               private alertCtrl:AlertController,          
               private server:ServerProvider) {
-       gCustomerContactPage=this;         
+       gCustomerContactPage=this;   
+
+            this.reward=this.storage.reward;
+            this.overdue=this.storage.overdue;
+            this.newSignUp=this.storage.newSignUp;
+            this.termination=this.storage.termination;
+            this.etc=this.storage.etc;
+
+   this.events.subscribe("badgeCount",param=>{
+      console.log("CustomerContact-badgeCount "+param);
+        this.ngZone.run(()=>{
+            this.reward=this.storage.reward;
+            this.overdue=this.storage.overdue;
+            this.newSignUp=this.storage.newSignUp;
+            this.termination=this.storage.termination;
+            this.etc=this.storage.etc;
+        })
+  });
   }
 
   ionViewDidLoad() {

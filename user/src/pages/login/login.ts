@@ -98,9 +98,9 @@ export class LoginPage {
                 this.storage.storeUserInfo(res);
                 
                 if(!this.storage.consultantId){
-                    this.navCtrl.push(SearchConsultantPage);
+                    this.navCtrl.setRoot(SearchConsultantPage);
                 }else
-                    this.navCtrl.push(HomePage);
+                    this.navCtrl.setRoot(HomePage);
           }else if(res.result=='failure'){
               if(res.error='invalidUserInfo'){
                     let alert = this.alertCtrl.create({

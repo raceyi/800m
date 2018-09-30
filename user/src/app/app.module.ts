@@ -33,6 +33,7 @@ import { Media, MediaObject } from '@ionic-native/media';
 import {CustomIconsModule} from 'ionic2-custom-icons';
 import {PasswordResetPageModule} from '../pages/password-reset/password-reset.module';
 import{ConfigurePasswordPageModule} from '../pages/configure-password/configure-password.module';
+import { Device } from '@ionic-native/device';
 
 @NgModule({
   declarations: [
@@ -71,6 +72,7 @@ import{ConfigurePasswordPageModule} from '../pages/configure-password/configure-
     HTTP,  
     Media,  
     Push,
+    Device,
     NativeStorage,
     InAppBrowser,  
     StorageProvider,

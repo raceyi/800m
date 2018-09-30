@@ -3,6 +3,8 @@ import { IonicPage, NavController, NavParams ,App,AlertController} from 'ionic-a
 import {StorageProvider} from '../../providers/storage/storage';
 import {ServerProvider} from '../../providers/server/server';
 import {ConfigurePasswordPage} from '../configure-password/configure-password';
+import { Device } from '@ionic-native/device';
+import {LoginPage} from '../login/login';
 
 /**
  * Generated class for the InformationPage page.
@@ -23,6 +25,7 @@ export class InformationPage {
               public storage: StorageProvider,  
               private app:App,
               private alertCtrl: AlertController,
+              public device: Device,
               private server:ServerProvider) {
     this.phone=this.autoHypenPhone(storage.phone);
 
@@ -119,5 +122,31 @@ export class InformationPage {
 
   modifyPassword(){
     this.app.getRootNavs()[0].push(ConfigurePasswordPage,{class:'ConfigurePasswordPage'});
+  }
+
+  logout(){
+    this.server.postWithAuth("/consultant/logout",{}).then((res:any)=>{
+            this.storage.removeStoredInfo(); //only success comes here
+            this.app.getRootNavs()[0].setRoot(LoginPage);
+    },err=>{
+            let alert = this.alertCtrl.create({
+                          subTitle: '로그아웃에 실패했습니다.',
+                          buttons: ['OK']
+                      });
+            alert.present();
+    });
+  }
+
+  unregister(){
+    this.server.postWithAuth("/consultant/unregister",{}).then((res:any)=>{
+        this.storage.removeStoredInfo(); //only success comes here
+        this.app.getRootNavs()[0].setRoot(LoginPage);
+    },err=>{
+            let alert = this.alertCtrl.create({
+                          subTitle: '회원탈퇴에 실패했습니다.',
+                          buttons: ['OK']
+                      });
+            alert.present();
+    });
   }
 }

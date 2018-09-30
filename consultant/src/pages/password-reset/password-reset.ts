@@ -55,6 +55,12 @@ export class PasswordResetPage {
                     alert.present().then(()=>{
                          this.navCtrl.pop();
                     });
+          }else if(res.result=='failure' && res.error=="mail sent error"){
+                    let alert = this.alertCtrl.create({
+                                  title: '이메일 전송에 실패했습니다.',
+                                  buttons: ['OK']
+                              });
+                    alert.present();            
           }else if(res.result=='failure'){
                     let alert = this.alertCtrl.create({
                                   title: '회원 정보가 일치하지 않습니다.',

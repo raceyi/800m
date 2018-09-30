@@ -79,7 +79,7 @@ login(){
                 encrypted=this.storage.encryptValue('password',this.password);
                 this.nativeStorage.setItem('password',encodeURI(encrypted));
                 this.storage.saveLoginInfo(res);
-                this.navCtrl.push(TabsPage);
+                this.navCtrl.setRoot(TabsPage);
           }else if(res.result=='failure'){
               if(res.error='invalidUserInfo'){
                     let alert = this.alertCtrl.create({

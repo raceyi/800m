@@ -29,6 +29,7 @@ import { ConfigProvider } from '../providers/config/config';
 import { InAppBrowser } from '@ionic-native/in-app-browser'
 import {HTTP} from '@ionic-native/http'
 import { Media, MediaObject } from '@ionic-native/media';
+import { Device } from '@ionic-native/device';
 
 import {MyErrorHandler} from '../classes/my-error-handler';
 import {CustomIconsModule} from 'ionic2-custom-icons';
@@ -78,6 +79,7 @@ registerLocaleData(localeKo);
     NativeStorage,
     Push,
     Media,
+    Device,
     {provide: LOCALE_ID, useValue: 'ko-KR' },    
     {provide: ErrorHandler, useClass: MyErrorHandler}
   ]

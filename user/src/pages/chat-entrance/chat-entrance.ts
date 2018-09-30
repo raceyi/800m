@@ -66,28 +66,36 @@ export class ChatEntrancePage {
             });
             */
             this.navCtrl.push(ChatPage, {chatId:res.chatId, class:"ChatPage"});
-        }else{
-          if(res.error=="duplicate chat"){
-              console.log("Just ignore it due to duplication chat");
-          }else{
-            let alert = this.alertCtrl.create({
-                      title: '설계사분과 연락에 실패했습니다.',
-                      subTitle:'전화를 사용해 주시기 바랍니다',
-                      buttons: ['OK']
-            });
-            alert.present();
-          }
         }
     },err=>{
       console.log("createNewChat-err:"+JSON.stringify(err));
-      if(err!="duplicate chat"){
+      if(err=="NetworkFailure"){
+                let alert = this.alertCtrl.create({
+                    title: '네트웍 연결을 확인해 주세요.',
+                    buttons: ['OK']
+        });
+        alert.present();
+      }else if(err=="NotRegistered"){
+        let alert = this.alertCtrl.create({
+                    title: '설계사분의 앱이 활성화 상태가 아닙니다.',
+                    subTitle:'전화를 사용해 주시기 바랍니다',
+                    buttons: ['OK']
+        });
+        alert.present();
+      }else if(err=="fcm push error"){
+              let alert = this.alertCtrl.create({
+                    title: '설계사분께 메시지 전달에 실패했습니다.',
+                    buttons: ['OK']
+        });
+        alert.present();  
+      }else if(err!="duplicate chat"){
         let alert = this.alertCtrl.create({
                     title: '설계사분과 연락에 실패했습니다.',
                     subTitle:'전화를 사용해 주시기 바랍니다',
                     buttons: ['OK']
         });
         alert.present();
-      }
+      } 
     })  
   }
 }

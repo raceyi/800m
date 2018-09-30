@@ -35,4 +35,47 @@ page-customer-contact {
         text-align: left;
         color: #000000;
   }
+
+  .button-chars-2{
+        width:calc((32/375)*100vw);
+
+  }
+
+  .button-chars-4{
+        width:calc((64/375)*100vw);
+
+  }
+/////////////////////////////////////////////  
+    $scroll-H:  calc((30/375)*100vw);
+    $latest-W : calc((145/375)*100vw);
+    $latest-H : calc((30/375)*100vw);
+
+    .scroll-latest {
+        height: $scroll-H;
+        .scroll-content{
+            padding: 0;
+        }
+    }
+
+    .scroll-div{
+        .scroll-row-latest{
+            flex-wrap : inherit;
+            height: $latest-H;
+            margin-left: 10px;
+            margin-right: 10px;
+
+            .scroll-col-latest {
+                overflow: inherit; 
+                height: $latest-H;
+                margin-right: 9px;
+            }
+        }    
+    } 
+    .shop-button{
+            height: $latest-H;
+            //background-color:white;
+            //color:$default-color;
+    }
+
+
 }

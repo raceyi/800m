@@ -40,6 +40,8 @@ export class StorageProvider {
     token;
     
   constructor(private configProvider:ConfigProvider,
+              private nativeStorage:NativeStorage,
+              private alertCtrl: AlertController,
               private platform: Platform,private push: Push) {
         console.log('Hello StorageProvider Provider');
   }
@@ -70,6 +72,7 @@ export class StorageProvider {
     }
 
     storeUserInfo(res){ // 로그인시 고객정보를 가져옴
+        if(res && res.userInfo){
                 this.name=res.userInfo.name;
                 this.phone=res.userInfo.phone;
                 this.birthYear=res.userInfo.birth.substr(0,4);
@@ -78,10 +81,16 @@ export class StorageProvider {
                 this.sex=res.userInfo.sex;
 
                 this.consultantId=res.userInfo.consultantId;
-                if(res.userInfo.consultantId){
+                if(res.userInfo.consultantId && res.consultant){                    
                     this.consultantName=res.consultant.name;
                     this.consultantPhone=res.consultant.phone;
                     this.consultantPhoneHref="tel:"+res.consultant.phone;
+                }else if(res.userInfo.consultantId && !res.consultant){
+                    let alert = this.alertCtrl.create({
+                        title: '서버로 부터 설계사 정보를 받지 못했습니다.',
+                        buttons: ['OK']
+                    });
+                    alert.present();
                 }
                 this.insurances=[];
                 if(res.payment){
@@ -101,5 +110,19 @@ export class StorageProvider {
                     else return 0;
                 });
                 console.log("insurances:"+JSON.stringify(this.insurances));
+        }else{
+                    let alert = this.alertCtrl.create({
+                        title: '서버로 부터 회원정보를 받지 못했습니다.',
+                        buttons: ['OK']
+                    });
+                    alert.present();
+
+        }
     }
+
+    removeStoredInfo(){
+        this.nativeStorage.remove("email");
+        this.nativeStorage.remove("password");       
+    }
+
 }

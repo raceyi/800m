@@ -19,8 +19,18 @@
 </ion-header>
 
 <ion-content>
+
+<ng-template #template let-showEventDetail="showEventDetail" let-selectedDate="selectedDate" let-noEventsLabel="noEventsLabel">
+  <ion-item *ngFor="let event of selectedDate.events" (click)="eventSelected(event)"> 
+      <span>
+      {{event.startTime|date: 'HH:mm'}} -{{event.endTime|date: 'HH:mm'}} </span> 
+      {{event.title}}
+  </ion-item>
+</ng-template>
+
 <calendar type="string" format="YYYY-MM-DD" 
       [eventSource]="eventSource" 
+      [monthviewEventDetailTemplate]="template"      
       [calendarMode]="calendar.mode"
       (onCurrentDateChanged)="onCurrentDateChanged($event)" 
       [currentDate]="calendar.currentDate"

@@ -6,6 +6,7 @@ import {StorageProvider} from '../../providers/storage/storage';
 import {ServerProvider} from '../../providers/server/server';
 import {BankAccountPage} from '../bank-account/bank-account';
 import {MyPage} from '../my/my';
+import {SearchConsultantPage} from '../search-consultant/search-consultant';
 
 @Component({
   selector: 'page-home',
@@ -107,5 +108,9 @@ export class HomePage {
       console.log("enterChat:"+JSON.stringify(chat));
       this.storage.chatId=chat._id;
       this.navCtrl.push(ChatPage, {chatId:chat._id, class:"ChatPage"});
+  }
+
+  specifyConsultant(){
+      this.navCtrl.push(SearchConsultantPage);
   }
 }

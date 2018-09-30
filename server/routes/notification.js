@@ -32,11 +32,11 @@ router.sendToConsultant=function(msg,id){
                                     reject(err);
                                 }else{
                                     console.log("success sender:"+JSON.stringify(result));
-                                    if(result.results.length>0){
+                                    if(result.failure>0){
                                         if(result.results[0].error=="NotRegistered"){
                                             reject("NotRegistered");
                                         }else
-                                            resolve(result);
+                                            reject("fcm push error");
                                     }else
                                         resolve(result);
                                 }

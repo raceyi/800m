@@ -1,9 +1,10 @@
 import { Component,ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams,AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams,AlertController,App } from 'ionic-angular';
 import * as moment from 'moment';
 import 'moment/locale/ko';
 import {ServerProvider} from '../../providers/server/server';
 import {StorageProvider} from '../../providers/storage/storage';
+import {ChatPage} from '../chat/chat';
 
 /**
  * Generated class for the CalendarPage page.
@@ -83,7 +84,9 @@ export class CalendarPage {
                           title:  event.userName+ "님 "+event.type +"상담",
                           startTime: new Date(event.starttime),
                           endTime: new Date(event.endtime),
-                          allDay: false
+                          allDay: false,
+                          name:event.userName,
+                          chatId:event.chatId
                         });
                       })
                       console.log("this.eventSource:"+JSON.stringify(eventSource));
@@ -103,11 +106,10 @@ export class CalendarPage {
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
               private storage:StorageProvider,
-              private alertCtrl:AlertController,               
+              private alertCtrl:AlertController,
+              private app:App,               
               public server:ServerProvider) {
       this.eventSource=[];
-      //this.eventSource.push({title:"Event - 0",startTime: new Date("2018-09-25T19:36:00.000Z"),endTime: new Date("2018-09-26T19:57:00.000Z"),allDay:false});
-      
       moment.locale('ko');
   }
 
@@ -139,11 +141,13 @@ export class CalendarPage {
                       //this.eventSource=res.events;
                       let eventSource=[];
                       res.events.forEach(event=>{
+                        console.log("event:"+JSON.stringify(event));
                         eventSource.push({
                           title:  event.userName+ "님 "+event.type+ "상담",
                           startTime: new Date(event.starttime),
                           endTime: new Date(event.endtime),
-                          allDay: false
+                          allDay: false,
+                          info:event
                         });
 
                         console.log("title:"+ event.userName+ "님 "+event.type+ "상담");
@@ -184,4 +188,11 @@ export class CalendarPage {
      let date=new Date(m.format("YYYY-MM-DDTHH:mm:ssZ"));
      this.calendar.currentDate=date;
   }
+
+
+  eventSelected(event) {
+        console.log('Event selected:' + event.startTime + '-' + event.endTime + ',' + event.name+" "+event.chatId);
+        this.app.getRootNavs()[0].push(ChatPage,{chatId:event.chatId,name:event.name});
+  }
+
 }

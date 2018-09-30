@@ -24,13 +24,20 @@
                   고객님을 위한 플랜이 <br>준비되어 있습니다.
           </ion-col>
         </ion-row>
-        <ion-row>
+        <ion-row *ngIf="storage.consultantName">
           <ion-col>
             <button style="color:#009fe8;" class="open-chat" ion-button clear round (click)="openChat()"> 
               상담시작하기>
             </button>
           </ion-col>
         </ion-row>
+        <ion-row *ngIf="!storage.consultantName">
+          <ion-col>
+            <button style="color:#009fe8;" class="open-chat" ion-button clear round (click)="specifyConsultant()">
+            설계사 지정>              
+            </button>
+          </ion-col>
+        </ion-row>        
       </div>
     </div>
     </div>

@@ -14,41 +14,77 @@
   </ion-navbar>
 
 </ion-header>
-
-
 <ion-content>
-  <ion-row>
-    <ion-col *ngIf='selectedType=="보상"' style="border-bottom:solid 2px #009fe8 !important;" text-center>
-      <button no-padding no-margin ion-button clear color="black" (click)='select("보상")'><span class="button-name">보상</span><span *ngIf="storage.reward>0">({{storage.reward}})</span></button>
-    </ion-col>
-    <ion-col *ngIf='selectedType!="보상"' text-center>
-      <button no-padding no-margin ion-button clear color="black" (click)='select("보상")'>보상<span *ngIf="storage.reward>0">({{storage.reward}})</span></button>
-    </ion-col>
-    <ion-col *ngIf='selectedType=="연체관리"' style="border-bottom:solid 2px #009fe8;" text-center>
-      <button no-padding no-margin ion-button clear color="black" (click)='select("연체관리")'>연체 <span *ngIf="storage.overdue>0">({{storage.overdue}})</span></button>      
-    </ion-col>
-    <ion-col *ngIf='selectedType!="연체관리"' text-center>
-      <button no-padding no-margin ion-button clear color="black" (click)='select("연체관리")'>연체<span *ngIf="storage.overdue>0">({{storage.overdue}})</span></button>      
-    </ion-col>
-    <ion-col *ngIf='selectedType=="신규가입"' style="border-bottom:solid 2px #009fe8;" text-center>
-      <button no-padding no-margin ion-button clear color="black" (click)='select("신규가입")'>신규<span *ngIf="storage.newSignUp>0">({{storage.newSignUp}})</span></button>      
-    </ion-col>
-    <ion-col *ngIf='selectedType!="신규가입"' text-center>
-      <button no-padding no-margin ion-button clear color="black" (click)='select("신규가입")'>신규<span *ngIf="storage.newSignUp>0">({{storage.newSignUp}})</span></button>      
-    </ion-col>
-    <ion-col *ngIf='selectedType=="해지"' style="border-bottom:solid 2px #009fe8;" text-center>
-      <button no-padding no-margin ion-button clear color="black" (click)='select("해지")'>해지<span *ngIf="storage.termination>0">({{storage.termination}})</span></button>      
-    </ion-col>    
-    <ion-col *ngIf='selectedType!="해지"' text-center>
-      <button no-padding no-margin ion-button clear color="black" (click)='select("해지")'>해지<span *ngIf="storage.termination>0">({{storage.termination}})</span></button>      
-    </ion-col>    
-    <ion-col *ngIf='selectedType=="기타"' style="border-bottom:solid 2px #009fe8;" text-center>
-      <button no-padding no-margin ion-button clear color="black" (click)='select("기타")'>기타<span *ngIf="storage.etc>0">({{storage.etc}})</span></button>      
-    </ion-col>        
-    <ion-col *ngIf='selectedType!="기타"' text-center>
-      <button no-padding no-margin ion-button clear color="black" (click)='select("기타")'>기타<span *ngIf="storage.etc>0">({{storage.etc}})</span></button>      
-    </ion-col>        
-  </ion-row>
+  <!--
+<div class="scroll-div">
+        <ion-scroll scrollX="true" class="scroll-latest">
+            <ion-row class="scroll-row-latest">
+            <ion-col class="scroll-col-latest"  *ngIf='selectedType=="보상"' style="border-bottom:solid 2px #009fe8 !important;" text-center>
+              <button class="shop-button" no-padding no-margin ion-button clear color="black" (click)='select("보상")'><span class="button-name">보상상담</span><span *ngIf="storage.reward>0">({{storage.reward}})</span></button>
+            </ion-col>
+            <ion-col class="scroll-col-latest"  *ngIf='selectedType!="보상"' text-center>
+              <button class="shop-button" no-padding no-margin ion-button clear color="gray"  (click)='select("보상")'>보상상담<span *ngIf="storage.reward>0">({{storage.reward}})</span></button>
+            </ion-col>
+            <ion-col class="scroll-col-latest" *ngIf='selectedType=="연체관리"' style="border-bottom:solid 2px #009fe8;" text-center>
+              <button class="shop-button" no-padding no-margin ion-button clear color="black" (click)='select("연체관리")'>연체관리상담<span *ngIf="storage.overdue>0">({{storage.overdue}})</span></button>      
+            </ion-col>
+            <ion-col class="scroll-col-latest" *ngIf='selectedType!="연체관리"' text-center>
+              <button class="shop-button" no-padding no-margin ion-button clear color="gray"  (click)='select("연체관리")'>연체관리상담<span *ngIf="storage.overdue>0">({{storage.overdue}})</span></button>      
+            </ion-col>
+            <ion-col class="scroll-col-latest"  *ngIf='selectedType=="신규가입"' style="border-bottom:solid 2px #009fe8;" text-center>
+              <button class="shop-button" no-padding no-margin ion-button clear color="black" (click)='select("신규가입")'>신규가입상담<span *ngIf="storage.newSignUp>0">({{storage.newSignUp}})</span></button>      
+            </ion-col>
+            <ion-col class="scroll-col-latest" *ngIf='selectedType!="신규가입"' text-center>
+              <button class="shop-button" no-padding no-margin ion-button clear color="gray"  (click)='select("신규가입")'>신규가입상담<span *ngIf="storage.newSignUp>0">({{storage.newSignUp}})</span></button>      
+            </ion-col>
+            <ion-col class="scroll-col-latest" *ngIf='selectedType=="해지"' style="border-bottom:solid 2px #009fe8;" text-center>
+              <button class="shop-button" no-padding no-margin ion-button clear color="black" (click)='select("해지")'>해지상담<span *ngIf="storage.termination>0">({{storage.termination}})</span></button>      
+            </ion-col>    
+            <ion-col class="scroll-col-latest" *ngIf='selectedType!="해지"' text-center>
+              <button class="shop-button" no-padding no-margin ion-button clear color="gray"  (click)='select("해지")'>해지상담<span *ngIf="storage.termination>0">({{storage.termination}})</span></button>      
+            </ion-col>    
+            <ion-col class="scroll-col-latest"  *ngIf='selectedType=="기타"' style="border-bottom:solid 2px #009fe8;" text-center >
+              <button class="shop-button" no-padding no-margin ion-button clear color="black" (click)='select("기타")'>기타상담<span *ngIf="storage.etc>0">({{storage.etc}})</span></button>      
+            </ion-col>        
+            <ion-col class="scroll-col-latest"  *ngIf='selectedType!="기타"' text-center>
+              <button class="shop-button" no-padding no-margin ion-button clear color="gray" (click)='select("기타")'>기타상담<span *ngIf="storage.etc>0">({{storage.etc}})</span></button>      
+            </ion-col>
+            </ion-row>
+        </ion-scroll>
+</div>
+-->
+      <ion-row>  
+        <ion-col *ngIf='selectedType=="보상"' style="border-bottom:solid 2px #009fe8 !important;"  text-center>
+          <button no-padding no-margin ion-button clear color="black" (click)='select("보상")'><span class="button-name">보상</span><span *ngIf="reward>0">({{reward}})</span></button>
+        </ion-col>
+        <ion-col *ngIf='selectedType!="보상"' text-center >
+          <button no-padding no-margin ion-button clear color="gray" (click)='select("보상")'>보상<span *ngIf="reward>0">({{reward}})</span></button>
+        </ion-col>
+        <ion-col *ngIf='selectedType=="연체관리"' style="border-bottom:solid 2px #009fe8;" text-center >
+          <button no-padding no-margin ion-button clear color="black" (click)='select("연체관리")'>연체<span *ngIf="overdue>0">({{overdue}})</span></button>      
+        </ion-col>
+        <ion-col *ngIf='selectedType!="연체관리"' text-center >
+          <button no-padding no-margin ion-button clear color="gray"  (click)='select("연체관리")'>연체<span *ngIf="overdue>0">({{overdue}})</span></button>      
+        </ion-col>
+        <ion-col *ngIf='selectedType=="신규가입"' style="border-bottom:solid 2px #009fe8;" text-center >
+          <button no-padding no-margin ion-button clear color="black" (click)='select("신규가입")'>가입<span *ngIf="newSignUp>0">({{newSignUp}})</span></button>      
+        </ion-col>
+        <ion-col *ngIf='selectedType!="신규가입"' text-center >
+          <button no-padding no-margin ion-button clear color="gray"  (click)='select("신규가입")'>가입<span *ngIf="newSignUp>0">({{newSignUp}})</span></button>      
+        </ion-col>
+        <ion-col *ngIf='selectedType=="해지"' style="border-bottom:solid 2px #009fe8;" text-center >
+          <button no-padding no-margin ion-button clear color="black" (click)='select("해지")'>해지<span *ngIf="termination>0">({{termination}})</span></button>      
+        </ion-col>    
+        <ion-col *ngIf='selectedType!="해지"' text-center >
+          <button no-padding no-margin ion-button clear color="gray"  (click)='select("해지")'>해지<span *ngIf="termination>0">({{termination}})</span></button>      
+        </ion-col>    
+        <ion-col *ngIf='selectedType=="기타"' style="border-bottom:solid 2px #009fe8;" text-center >
+          <button no-padding no-margin ion-button clear color="black" (click)='select("기타")'>기타<span *ngIf="etc>0">({{etc}})</span></button>      
+        </ion-col>        
+        <ion-col *ngIf='selectedType!="기타"' text-center>
+          <button no-padding no-margin ion-button clear color="gray"  (click)='select("기타")'>기타<span *ngIf="etc>0">({{etc}})</span></button>      
+        </ion-col>
+      </ion-row>    
   <div *ngFor="let day of storage.contactList;let i = index;">
   <ion-row [hidden]="checkListExist(day,selectedType)">
     <ion-col padding style="font-size:4.2vw;">

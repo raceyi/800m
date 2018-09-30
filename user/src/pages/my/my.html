@@ -42,6 +42,7 @@
     <button ion-button clear style="color:#b0b0b0;" (click)="configurePassword()">비밀번호 재설정</button>
   </ion-col>
 </ion-row>
+<div *ngIf="storage.consultantPhone">
 <ion-row class="consultant-label padding-left">
   <ion-col align-self-center>
   나의 담당 설계사 
@@ -69,6 +70,7 @@
         </a>    
   </ion-col>
 </ion-row>
+</div>
 <ion-row class="border-top-bottom">
   <ion-col align-self-center>
     <button clear (click)="configureBounds()" style="color:#b0b0b0;"  ion-button>
@@ -91,6 +93,22 @@
     <button ion-button clear  style="color:#b0b0b0;">
     <ion-icon name="ios-arrow-forward"></ion-icon>
     </button>
+  </ion-col>
+</ion-row>
+
+<ion-row class="border-top-bottom">
+  <ion-col align-self-center>
+    <button ion-button clear style="color:#b0b0b0;" (click)="logout()">로그아웃</button>
+  </ion-col>
+</ion-row>
+<ion-row class="border-top-bottom">
+  <ion-col align-self-center>
+    <button ion-button clear style="color:#b0b0b0;" (click)="unregister()">회원탈퇴</button>
+  </ion-col>
+</ion-row>
+<ion-row class="border-top-bottom">
+  <ion-col align-self-center>
+    {{device.model}}
   </ion-col>
 </ion-row>
 </ion-content>

@@ -60,4 +60,31 @@
     </ion-col>
   </ion-row>
 </div>
+<div class="top-border">
+  <ion-row>
+    <ion-col align-self-center>
+      <button ion-button clear (click)="logout()">
+        <span class="configure-password">로그아웃</span>
+      </button>
+    </ion-col>
+  </ion-row>
+</div>
+<div class="top-border">
+  <ion-row>
+    <ion-col align-self-center>
+      <button ion-button clear (click)="unregister()">
+        <span class="configure-password">회원탈퇴</span>
+      </button>
+    </ion-col>
+  </ion-row>
+</div>
+
+<div class="top-border">
+  <ion-row>
+    <ion-col align-self-center>
+      {{device.model}}
+    </ion-col>
+  </ion-row>
+</div>
+
 </ion-content>
