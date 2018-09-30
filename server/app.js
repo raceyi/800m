@@ -82,6 +82,8 @@ app.post('/passwordReset',users.passwordReset);
 app.post('/modifyUserPassword',users.modifyUserPassword);
 app.post('/modifyUserPhone',users.modifyUserPhone);
 app.post('/checkRegistrationId',users.checkRegistrationId);
+app.post("/logout",users.logout);
+app.post("/unregister",users.unregister);
 
 app.post('/consultant/signup',consultant.signup);
 app.post('/consultant/login',consultant.login);
@@ -100,6 +102,9 @@ app.post("/consultant/modifyConsultantPassword",consultant.modifyConsultantPassw
 app.post("/consultant/modifyUserPhone",consultant.modifyUserPhone);
 app.post("/consultant/passwordReset",consultant.passwordReset);
 app.post("/consultant/getUserInfo",consultant.getUserInfo);
+app.post("/consultant/logout",consultant.logout);
+app.post("/consultant/unregister",consultant.unregister);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

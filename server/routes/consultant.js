@@ -282,54 +282,6 @@ router.getMonthChats=function(req,res){
                 let response = new serverResponse.Response("success");
                 response.events=events;
                 res.send(JSON.stringify(response));
-         /*            
-            for(let i=0;i<month.length;i++)
-                console.log("i:"+i+" "+JSON.stringify( month[i].eachEvent));
-            // 고객 이름을 검색한다. 이름정도는 따로 저장하는것도 괜찬다... 동일 고객이 있을수 있음으로 고객 id만 저장한 array를 만드록 가져오자.
-            let customer=[];
-            month.forEach(day=>{
-                day.eachEvent.forEach(chat=>{
-                        let index=customer.findIndex(function (element) {
-                            return element.userId==chat.userId;
-                        });
-                        if(index<0){
-                            customer.push(chat.userId);
-                        }
-                })
-            });
-            console.log("month--:"+JSON.stringify(month));            
-            mongo.getCustomerName(customer).then((names)=>{
-                console.log("!!!!names:"+JSON.stringify(names));
-                month.forEach(day=>{
-                    day.eachEvent.forEach(chat=>{
-                            console.log("chat.userId:"+chat.userId);
-                            let index=names.findIndex(function (element) {
-                                console.log("element:"+JSON.stringify(element));
-                                return element._id==chat.userId;
-                            });
-                            if(index<0){
-                                console.log("hum... customer name not found\n");
-                            }else{
-                                chat.name=names[index].name;
-                            }
-                    })
-                });       
-                let events=[];
-                month.forEach(day=>{
-                    day.eachEvent.forEach(chat=>{
-                        events.push(chat);
-                    })
-                })
-                console.log("events:"+JSON.stringify(events));
-                let response = new serverResponse.Response("success");
-                response.events=events;
-                res.send(JSON.stringify(response));
-            },err=>{
-                console.log("err:"+JSON.stringify(err));
-                let response = new serverResponse.FailResponse(err);
-                res.send(JSON.stringify(response));
-            })
-            */
     }else{
             console.log("chats is undefined");
             let response = new serverResponse.Response("success");
@@ -484,6 +436,24 @@ router.getUserInfo=function(req,res){
     },err=>{
         let response = new serverResponse.FailResponse(err);
         res.send(JSON.stringify(response));
+    })
+}
+
+router.logout=function(req,res){
+    //session 정보를 삭제한다.
+    delete req.session.uid;
+    let response = new serverResponse.Response("success");
+    res.send(JSON.stringify(response));    
+}
+
+router.unregister=function(req,res){
+    mongo.removeConsultantWithId(req.session.uid).then((res)=>{    
+        delete req.session.uid;
+        let response = new serverResponse.Response("success");
+        res.send(JSON.stringify(response));    
+    },err=>{
+		let response = new serverResponse.FailResponse(err);
+        res.send(JSON.stringify(response));            
     })
 }
 

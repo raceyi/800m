@@ -398,6 +398,24 @@ router.checkRegistrationId=function(req,res){
     })
 }
 
+router.logout=function(req,res){
+    //session 정보를 삭제한다.
+    delete req.session.uid;
+    let response = new serverResponse.Response("success");
+    res.send(JSON.stringify(response));    
+}
+
+router.unregister=function(req,res){
+    mongo.removeUserWithId(req.session.uid).then((res)=>{    
+        delete req.session.uid;
+        let response = new serverResponse.Response("success");
+        res.send(JSON.stringify(response));    
+    },err=>{
+		let response = new serverResponse.FailResponse(err);
+        res.send(JSON.stringify(response));            
+    })
+}
+
 /*
 mongo.addUser( { email: "kalen985@takib.biz", password: "111Highway 37",salt:"test", phone:"010",name:"이경주",birth:"19750111",sex:"F"}).then((res)=>{
   console.log("res:"+res);

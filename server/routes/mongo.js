@@ -932,6 +932,44 @@ router.getCustomerName=function(customers){
  });
 }
 
+router.removeConsultantWithId=function(consultantId){
+return new Promise((resolve,reject)=>{ 
+  MongoClient.connect(url, function(err, db) {
+    if (err){
+        reject(err);
+    }else{
+        var dbo = db.db(config.dbName);       
+        dbo.collection("consultant").remove({_id: ObjectId(consultantId)},function(err, result) {
+            if(err){
+                reject(err);
+            }else{
+                resolve(result);
+            }   
+        });
+    }
+  });
+});
+}
+
+router.removeUserWithId=function(userId){
+return new Promise((resolve,reject)=>{ 
+  MongoClient.connect(url, function(err, db) {
+    if (err){
+        reject(err);
+    }else{
+        var dbo = db.db(config.dbName);       
+        dbo.collection("user").remove({_id: ObjectId(userId)},function(err, result) {
+            if(err){
+                reject(err);
+            }else{
+                resolve(result);
+            }   
+        });
+    }
+  });
+});
+}
+
 /*
 let time=new Date();
 router.getUserChatList("5b36f2e96654502e8d5945c1","5b36e7486654502e8d5941ef",5,time.toISOString()).then((result)=>{
