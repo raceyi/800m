@@ -32,7 +32,13 @@ router.sendToConsultant=function(msg,id){
                                     reject(err);
                                 }else{
                                     console.log("success sender:"+JSON.stringify(result));
-                                    resolve(result);
+                                    if(result.results.length>0){
+                                        if(result.results[0].error=="NotRegistered"){
+                                            reject("NotRegistered");
+                                        }else
+                                            resolve(result);
+                                    }else
+                                        resolve(result);
                                 }
                             });
                 }else if(platform=="ios"){
